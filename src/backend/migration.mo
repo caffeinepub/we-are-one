@@ -32,6 +32,7 @@ module {
     description : ?Text;
     lineup : ?Text;
     ageRestriction : Text;
+    ticketUrl : ?Text;
   };
 
   type OldPackage = {
@@ -67,7 +68,7 @@ module {
 
   public func run(old : OldActor) : NewActor {
     let festivals = old.festivals.map<OldFestival, NewTypes.Festival>(
-      func(f) { { f with ticketUrl = null } }
+      func(f) { f }
     );
     {
       festivals;

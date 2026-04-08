@@ -1,6 +1,6 @@
-import { c as createLucideIcon, j as jsxRuntimeExports, r as reactExports, X, f as Shield } from "./index-LPyTcEuD.js";
-import { d as useFestivals, h as useAnalytics, i as isComingSoon, j as useSetFestivalTicketUrl, F as FestivalStatus, a as getEventTypeLabel, g as getSeasonLabel, k as getStoredTicketUrls, E as EventType, l as Season, u as useTicketUrls, m as useAddFestival, n as useUpdateFestival, o as useDeleteFestival, p as useToggleFestivalStatus, q as useSetFestivalImage, f as getPackageTypeLabel, e as usePackages, r as useAddPackage, s as useUpdatePackage, t as useDeletePackage, v as useAdminLogin } from "./useBackend-BcWpsFyz.js";
-import { U as Users } from "./users-CoVV3g3Q.js";
+import { c as createLucideIcon, j as jsxRuntimeExports, r as reactExports, X, f as Shield } from "./index-I4kNh_-2.js";
+import { d as useFestivals, h as useAnalytics, i as isComingSoon, j as useSetFestivalTicketUrl, F as FestivalStatus, a as getEventTypeLabel, g as getSeasonLabel, E as EventType, k as Season, u as useTicketUrls, l as useAddFestival, m as useUpdateFestival, n as useDeleteFestival, o as useToggleFestivalStatus, p as useSetFestivalImage, f as getPackageTypeLabel, e as usePackages, q as useAddPackage, r as useUpdatePackage, s as useDeletePackage, t as useAdminLogin } from "./useBackend-BzNY-UOi.js";
+import { U as Users } from "./users-BVsjVNrj.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -488,17 +488,8 @@ function FestivalForm({
     description: (festival == null ? void 0 : festival.description) ?? "",
     lineup: (festival == null ? void 0 : festival.lineup) ?? "",
     imageUrl: (festival == null ? void 0 : festival.imageUrl) ?? "",
-    ticketUrl: ""
+    ticketUrl: (festival == null ? void 0 : festival.ticketUrl) ?? ""
   });
-  reactExports.useEffect(() => {
-    if (festival) {
-      const stored = getStoredTicketUrls();
-      setForm((f) => ({
-        ...f,
-        ticketUrl: stored[festival.id.toString()] ?? ""
-      }));
-    }
-  }, [festival]);
   function handleSubmit(e) {
     e.preventDefault();
     const eventTypeKey = form.eventType;
@@ -519,9 +510,10 @@ function FestivalForm({
       imageUrl: form.imageUrl || void 0,
       description: form.description || void 0,
       lineup: form.lineup || void 0,
-      ageRestriction: form.ageRestriction
+      ageRestriction: form.ageRestriction,
+      ticketUrl: form.ticketUrl.trim() || void 0
     };
-    if (festival) {
+    if (festival && form.ticketUrl.trim() !== (festival.ticketUrl ?? "")) {
       setTicketUrl.mutate({ id: festival.id, ticketUrl: form.ticketUrl });
     }
     onSave(input);

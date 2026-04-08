@@ -1,5 +1,5 @@
-import { c as createLucideIcon, j as jsxRuntimeExports, X, r as reactExports } from "./index-LPyTcEuD.js";
-import { S as Sparkles } from "./sparkles-Bn4HjTis.js";
+import { c as createLucideIcon, j as jsxRuntimeExports, X, r as reactExports } from "./index-I4kNh_-2.js";
+import { S as Sparkles } from "./sparkles-D3ZPADym.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *

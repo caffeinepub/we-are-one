@@ -7,7 +7,7 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _client, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _a, _client2, _currentResult2, _currentMutation, _mutateOptions, _MutationObserver_instances, updateResult_fn, notify_fn2, _b;
-import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, u as utf8ToBytes, E as ExternalError, g as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, R as RequestStatusResponseStatus, U as UnknownError, h as RequestStatusDoneNoReplyErrorCode, i as RejectError, k as CertifiedRejectErrorCode, m as UNREACHABLE_ERROR, I as InputError, n as InvalidReadStateRequestErrorCode, o as ReadRequestType, p as Principal, q as IDL, s as MissingCanisterIdErrorCode, H as HttpAgent, t as encode, Q as QueryResponseStatus, v as UncertifiedRejectErrorCode, w as isV3ResponseBody, x as isV2ResponseBody, y as UncertifiedRejectUpdateErrorCode, z as UnexpectedErrorCode, A as decode, B as Subscribable, D as pendingThenable, F as resolveEnabled, G as shallowEqualObjects, J as resolveStaleTime, K as noop, N as environmentManager, O as isValidTimeout, V as timeUntilStale, W as timeoutManager, Y as focusManager, Z as fetchState, _ as replaceData, $ as notifyManager, a0 as hashKey, a1 as getDefaultState, r as reactExports, a2 as shouldThrowError, a3 as useQueryClient, a4 as useInternetIdentity, a5 as createActorWithConfig, a6 as Variant, a7 as Record, a8 as Opt, a9 as Vec, aa as Service, ab as Func, ac as Nat, ad as Text, ae as Null, af as Bool } from "./index-LPyTcEuD.js";
+import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, u as utf8ToBytes, E as ExternalError, g as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, R as RequestStatusResponseStatus, U as UnknownError, h as RequestStatusDoneNoReplyErrorCode, i as RejectError, k as CertifiedRejectErrorCode, m as UNREACHABLE_ERROR, I as InputError, n as InvalidReadStateRequestErrorCode, o as ReadRequestType, p as Principal, q as IDL, s as MissingCanisterIdErrorCode, H as HttpAgent, t as encode, Q as QueryResponseStatus, v as UncertifiedRejectErrorCode, w as isV3ResponseBody, x as isV2ResponseBody, y as UncertifiedRejectUpdateErrorCode, z as UnexpectedErrorCode, A as decode, B as Subscribable, D as pendingThenable, F as resolveEnabled, G as shallowEqualObjects, J as resolveStaleTime, K as noop, N as environmentManager, O as isValidTimeout, V as timeUntilStale, W as timeoutManager, Y as focusManager, Z as fetchState, _ as replaceData, $ as notifyManager, a0 as hashKey, a1 as getDefaultState, r as reactExports, a2 as shouldThrowError, a3 as useQueryClient, a4 as useInternetIdentity, a5 as createActorWithConfig, a6 as Variant, a7 as Record, a8 as Opt, a9 as Vec, aa as Service, ab as Func, ac as Nat, ad as Text, ae as Null, af as Bool } from "./index-I4kNh_-2.js";
 const FIVE_MINUTES_IN_MSEC = 5 * 60 * 1e3;
 function defaultStrategy() {
   return chain(conditionalDelay(once(), 1e3), backoff(1e3, 1.2), timeout(FIVE_MINUTES_IN_MSEC));
@@ -2248,36 +2248,24 @@ function useSetFestivalImage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] })
   });
 }
-const TICKET_URL_KEY = "wao_ticket_urls";
-function getStoredTicketUrls() {
-  try {
-    return JSON.parse(localStorage.getItem(TICKET_URL_KEY) ?? "{}");
-  } catch {
-    return {};
-  }
-}
 function useSetFestivalTicketUrl() {
   const qc = useQueryClient();
+  const { actor } = useActor(createActor);
   return useMutation({
     mutationFn: async ({ id, ticketUrl }) => {
-      const stored = getStoredTicketUrls();
-      if (ticketUrl.trim()) {
-        stored[id.toString()] = ticketUrl.trim();
-      } else {
-        delete stored[id.toString()];
-      }
-      localStorage.setItem(TICKET_URL_KEY, JSON.stringify(stored));
+      if (actor) return actor.setFestivalTicketUrl(id, ticketUrl.trim());
       return true;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["ticketUrls"] })
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] })
   });
 }
 function useTicketUrls() {
-  return useQuery({
-    queryKey: ["ticketUrls"],
-    queryFn: () => getStoredTicketUrls(),
-    staleTime: 0
-  });
+  const { data: festivals = [] } = useFestivals();
+  const map = {};
+  for (const f of festivals) {
+    if (f.ticketUrl) map[f.id.toString()] = f.ticketUrl;
+  }
+  return { data: map };
 }
 function useAddPackage() {
   const qc = useQueryClient();
@@ -2326,16 +2314,15 @@ export {
   useAnalytics as h,
   isComingSoon as i,
   useSetFestivalTicketUrl as j,
-  getStoredTicketUrls as k,
-  Season as l,
-  useAddFestival as m,
-  useUpdateFestival as n,
-  useDeleteFestival as o,
-  useToggleFestivalStatus as p,
-  useSetFestivalImage as q,
-  useAddPackage as r,
-  useUpdatePackage as s,
-  useDeletePackage as t,
-  useTicketUrls as u,
-  useAdminLogin as v
+  Season as k,
+  useAddFestival as l,
+  useUpdateFestival as m,
+  useDeleteFestival as n,
+  useToggleFestivalStatus as o,
+  useSetFestivalImage as p,
+  useAddPackage as q,
+  useUpdatePackage as r,
+  useDeletePackage as s,
+  useAdminLogin as t,
+  useTicketUrls as u
 };

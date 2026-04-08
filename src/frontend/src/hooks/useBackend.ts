@@ -159,44 +159,27 @@ export function useSetFestivalImage() {
   });
 }
 
-// ── Ticket URL (frontend-only, persisted in localStorage) ─────────────────────
-
-const TICKET_URL_KEY = "wao_ticket_urls";
-
-export function getStoredTicketUrls(): Record<string, string> {
-  try {
-    return JSON.parse(localStorage.getItem(TICKET_URL_KEY) ?? "{}") as Record<
-      string,
-      string
-    >;
-  } catch {
-    return {};
-  }
-}
+// ── Ticket URL (persisted in backend canister) ────────────────────────────────
 
 export function useSetFestivalTicketUrl() {
   const qc = useQueryClient();
+  const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; ticketUrl: string }>({
     mutationFn: async ({ id, ticketUrl }) => {
-      const stored = getStoredTicketUrls();
-      if (ticketUrl.trim()) {
-        stored[id.toString()] = ticketUrl.trim();
-      } else {
-        delete stored[id.toString()];
-      }
-      localStorage.setItem(TICKET_URL_KEY, JSON.stringify(stored));
+      if (actor) return actor.setFestivalTicketUrl(id, ticketUrl.trim());
       return true;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["ticketUrls"] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
 
 export function useTicketUrls() {
-  return useQuery<Record<string, string>>({
-    queryKey: ["ticketUrls"],
-    queryFn: () => getStoredTicketUrls(),
-    staleTime: 0,
-  });
+  const { data: festivals = [] } = useFestivals();
+  const map: Record<string, string> = {};
+  for (const f of festivals) {
+    if (f.ticketUrl) map[f.id.toString()] = f.ticketUrl;
+  }
+  return { data: map };
 }
 
 export function useAddPackage() {

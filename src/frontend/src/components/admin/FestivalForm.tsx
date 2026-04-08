@@ -1,9 +1,6 @@
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
-import {
-  getStoredTicketUrls,
-  useSetFestivalTicketUrl,
-} from "../../hooks/useBackend";
+import { useState } from "react";
+import { useSetFestivalTicketUrl } from "../../hooks/useBackend";
 import {
   EventType,
   FestivalStatus,
@@ -80,19 +77,8 @@ export default function FestivalForm({
     description: festival?.description ?? "",
     lineup: festival?.lineup ?? "",
     imageUrl: festival?.imageUrl ?? "",
-    ticketUrl: "",
+    ticketUrl: festival?.ticketUrl ?? "",
   });
-
-  // Load persisted ticket URL for this festival
-  useEffect(() => {
-    if (festival) {
-      const stored = getStoredTicketUrls();
-      setForm((f) => ({
-        ...f,
-        ticketUrl: stored[festival.id.toString()] ?? "",
-      }));
-    }
-  }, [festival]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -125,9 +111,10 @@ export default function FestivalForm({
       description: form.description || undefined,
       lineup: form.lineup || undefined,
       ageRestriction: form.ageRestriction,
+      ticketUrl: form.ticketUrl.trim() || undefined,
     };
-    // Save ticket URL separately (frontend-only)
-    if (festival) {
+    // For existing festivals, also update ticket URL directly on the backend
+    if (festival && form.ticketUrl.trim() !== (festival.ticketUrl ?? "")) {
       setTicketUrl.mutate({ id: festival.id, ticketUrl: form.ticketUrl });
     }
     onSave(input);

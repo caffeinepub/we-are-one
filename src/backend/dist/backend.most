@@ -70,6 +70,7 @@ type OldFestival__160540471 =
     status : OldFestivalStatus__546078888;
     ticketPriceMax : Nat;
     ticketPriceMin : Nat;
+    ticketUrl : ?Text;
     weekends : Text
   };
 type OldPackageId__799146258 = Nat;
