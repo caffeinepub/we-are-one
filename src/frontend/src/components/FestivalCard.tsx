@@ -1,7 +1,9 @@
 import { Calendar, MapPin, Ticket, Users } from "lucide-react";
 import { useState } from "react";
+import { useTicketUrls } from "../hooks/useBackend";
 import type { Festival } from "../types/festival";
 import {
+  FestivalStatus,
   getEventTypeLabel,
   getSeasonLabel,
   isComingSoon,
@@ -16,12 +18,25 @@ interface FestivalCardProps {
 
 export default function FestivalCard({ festival }: FestivalCardProps) {
   const [showModal, setShowModal] = useState(false);
+  const { data: ticketUrls = {} } = useTicketUrls();
 
   const seasonLabel = getSeasonLabel(festival.season);
   const eventTypeLabel = getEventTypeLabel(festival.eventType);
   const comingSoon = isComingSoon(festival.status);
   const summer = isSummer(festival.season);
   const edm = isEDM(festival.eventType);
+
+  const ticketUrl = ticketUrls[festival.id.toString()];
+  const isActive = festival.status === FestivalStatus.Active;
+  const hasTicketLink = isActive && !!ticketUrl;
+
+  function handleBuyTickets() {
+    if (hasTicketLink) {
+      window.open(ticketUrl, "_blank", "noopener,noreferrer");
+    } else {
+      setShowModal(true);
+    }
+  }
 
   const seasonColor = summer
     ? "oklch(0.65 0.2 180)" // cyan for summer
@@ -219,7 +234,7 @@ export default function FestivalCard({ festival }: FestivalCardProps) {
 
             <button
               type="button"
-              onClick={() => setShowModal(true)}
+              onClick={handleBuyTickets}
               className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
               style={{
                 background: "oklch(0.65 0.2 180 / 0.15)",

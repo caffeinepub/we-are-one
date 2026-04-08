@@ -102,6 +102,7 @@ export interface FestivalInput {
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl?: string;
     description?: string;
     season: Season;
     ageRestriction: string;
@@ -132,6 +133,7 @@ export interface Festival {
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl?: string;
     description?: string;
     season: Season;
     ageRestriction: string;
@@ -187,6 +189,7 @@ export interface backendInterface {
     getFestivals(): Promise<Array<Festival>>;
     getPackages(): Promise<Array<Package>>;
     setFestivalImage(id: FestivalId, imageUrl: string): Promise<boolean>;
+    setFestivalTicketUrl(id: FestivalId, url: string): Promise<boolean>;
     toggleFestivalStatus(id: FestivalId): Promise<boolean>;
     updateFestival(id: FestivalId, input: FestivalInput): Promise<boolean>;
     updatePackage(id: PackageId, input: PackageInput): Promise<boolean>;
@@ -334,6 +337,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async setFestivalTicketUrl(arg0: FestivalId, arg1: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.setFestivalTicketUrl(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.setFestivalTicketUrl(arg0, arg1);
+            return result;
+        }
+    }
     async toggleFestivalStatus(arg0: FestivalId): Promise<boolean> {
         if (this.processError) {
             try {
@@ -412,6 +429,7 @@ function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uin
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl: [] | [string];
     description: [] | [string];
     season: _Season;
     ageRestriction: string;
@@ -431,6 +449,7 @@ function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uin
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl?: string;
     description?: string;
     season: Season;
     ageRestriction: string;
@@ -451,6 +470,7 @@ function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uin
         ticketPriceMin: value.ticketPriceMin,
         weekends: value.weekends,
         name: value.name,
+        ticketUrl: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.ticketUrl)),
         description: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.description)),
         season: from_candid_Season_n19(_uploadFile, _downloadFile, value.season),
         ageRestriction: value.ageRestriction,
@@ -588,6 +608,7 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl?: string;
     description?: string;
     season: Season;
     ageRestriction: string;
@@ -606,6 +627,7 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl: [] | [string];
     description: [] | [string];
     season: _Season;
     ageRestriction: string;
@@ -625,6 +647,7 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         ticketPriceMin: value.ticketPriceMin,
         weekends: value.weekends,
         name: value.name,
+        ticketUrl: value.ticketUrl ? candid_some(value.ticketUrl) : candid_none(),
         description: value.description ? candid_some(value.description) : candid_none(),
         season: to_candid_Season_n5(_uploadFile, _downloadFile, value.season),
         ageRestriction: value.ageRestriction,

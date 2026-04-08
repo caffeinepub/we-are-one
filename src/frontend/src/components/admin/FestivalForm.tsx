@@ -1,5 +1,9 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  getStoredTicketUrls,
+  useSetFestivalTicketUrl,
+} from "../../hooks/useBackend";
 import {
   EventType,
   FestivalStatus,
@@ -48,6 +52,8 @@ export default function FestivalForm({
   onClose,
   isPending,
 }: Props) {
+  const setTicketUrl = useSetFestivalTicketUrl();
+
   const [form, setForm] = useState({
     name: festival?.name ?? "",
     location: festival?.location ?? "",
@@ -74,7 +80,19 @@ export default function FestivalForm({
     description: festival?.description ?? "",
     lineup: festival?.lineup ?? "",
     imageUrl: festival?.imageUrl ?? "",
+    ticketUrl: "",
   });
+
+  // Load persisted ticket URL for this festival
+  useEffect(() => {
+    if (festival) {
+      const stored = getStoredTicketUrls();
+      setForm((f) => ({
+        ...f,
+        ticketUrl: stored[festival.id.toString()] ?? "",
+      }));
+    }
+  }, [festival]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -108,6 +126,10 @@ export default function FestivalForm({
       lineup: form.lineup || undefined,
       ageRestriction: form.ageRestriction,
     };
+    // Save ticket URL separately (frontend-only)
+    if (festival) {
+      setTicketUrl.mutate({ id: festival.id, ticketUrl: form.ticketUrl });
+    }
     onSave(input);
   }
 
@@ -392,6 +414,21 @@ export default function FestivalForm({
               placeholder="https://..."
               value={form.imageUrl}
               onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+            />,
+          )}
+
+          {field(
+            "f-ticket-url",
+            "Ticket Purchase URL",
+            <input
+              id="f-ticket-url"
+              type="url"
+              className={inputClass}
+              style={S.input}
+              placeholder="https://tickets.example.com (optional — only used when Active)"
+              value={form.ticketUrl}
+              onChange={(e) => setForm({ ...form, ticketUrl: e.target.value })}
+              data-ocid="festival-form-ticket-url"
             />,
           )}
 

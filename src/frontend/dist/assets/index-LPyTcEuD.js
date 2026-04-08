@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/HomePage-CXuOQ4L0.js","assets/ComingSoonModal-Dh418tYI.js","assets/sparkles-CiT5FWir.js","assets/useBackend-CpBZk4oq.js","assets/map-pin-BEpvJRaG.js","assets/music-lVWY_fWK.js","assets/users-CjZIl06C.js","assets/star-uQY-jj8L.js","assets/globe-BC0xPA7i.js","assets/FestivalsPage-IKFn2tvt.js","assets/proxy-B6deAPyV.js","assets/index-C85kzK-W.js","assets/building-2-Bfobs7I5.js","assets/PackagesPage-Y1CLuu8e.js","assets/JobsPage-D0bFT2gh.js","assets/ContactPage-BN2-AnJh.js","assets/AdminPage-DZGyxZXC.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/HomePage-DMU-L71S.js","assets/ComingSoonModal-Dg3YpuNs.js","assets/sparkles-Bn4HjTis.js","assets/useBackend-BcWpsFyz.js","assets/map-pin-CoGX7SXE.js","assets/music-7du_IS34.js","assets/users-CoVV3g3Q.js","assets/star-Bp1z5Ab5.js","assets/globe-BowZ4Syz.js","assets/FestivalsPage-rPvUBoo8.js","assets/proxy-BzZarLsy.js","assets/index-BVFHB3wT.js","assets/building-2-X2CdhU1z.js","assets/PackagesPage-Y6ypD0K7.js","assets/JobsPage-BhiXdXc5.js","assets/ContactPage-lb7_fFyV.js","assets/AdminPage-lmeBo2I6.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -32230,12 +32230,12 @@ function Layout({ children }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {})
   ] });
 }
-const HomePage = reactExports.lazy(() => __vitePreload(() => import("./HomePage-CXuOQ4L0.js"), true ? __vite__mapDeps([0,1,2,3,4,5,6,7,8]) : void 0));
-const FestivalsPage = reactExports.lazy(() => __vitePreload(() => import("./FestivalsPage-IKFn2tvt.js"), true ? __vite__mapDeps([9,1,2,3,10,5,11,4,6,12]) : void 0));
-const PackagesPage = reactExports.lazy(() => __vitePreload(() => import("./PackagesPage-Y1CLuu8e.js"), true ? __vite__mapDeps([13,1,2,3,10,11]) : void 0));
-const JobsPage = reactExports.lazy(() => __vitePreload(() => import("./JobsPage-D0bFT2gh.js"), true ? __vite__mapDeps([14,10,2,6,8,7]) : void 0));
-const ContactPage = reactExports.lazy(() => __vitePreload(() => import("./ContactPage-BN2-AnJh.js"), true ? __vite__mapDeps([15,8,12,4]) : void 0));
-const AdminPage = reactExports.lazy(() => __vitePreload(() => import("./AdminPage-DZGyxZXC.js"), true ? __vite__mapDeps([16,3,6]) : void 0));
+const HomePage = reactExports.lazy(() => __vitePreload(() => import("./HomePage-DMU-L71S.js"), true ? __vite__mapDeps([0,1,2,3,4,5,6,7,8]) : void 0));
+const FestivalsPage = reactExports.lazy(() => __vitePreload(() => import("./FestivalsPage-rPvUBoo8.js"), true ? __vite__mapDeps([9,1,2,3,10,5,11,4,6,12]) : void 0));
+const PackagesPage = reactExports.lazy(() => __vitePreload(() => import("./PackagesPage-Y6ypD0K7.js"), true ? __vite__mapDeps([13,1,2,3,10,11]) : void 0));
+const JobsPage = reactExports.lazy(() => __vitePreload(() => import("./JobsPage-BhiXdXc5.js"), true ? __vite__mapDeps([14,10,2,6,8,7]) : void 0));
+const ContactPage = reactExports.lazy(() => __vitePreload(() => import("./ContactPage-lb7_fFyV.js"), true ? __vite__mapDeps([15,8,12,4]) : void 0));
+const AdminPage = reactExports.lazy(() => __vitePreload(() => import("./AdminPage-lmeBo2I6.js"), true ? __vite__mapDeps([16,3,6]) : void 0));
 function PageLoader() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",

@@ -20,6 +20,7 @@ export interface FestivalInput {
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl?: string;
     description?: string;
     season: Season;
     ageRestriction: string;
@@ -50,6 +51,7 @@ export interface Festival {
     ticketPriceMin: bigint;
     weekends: string;
     name: string;
+    ticketUrl?: string;
     description?: string;
     season: Season;
     ageRestriction: string;
@@ -105,6 +107,7 @@ export interface backendInterface {
     getFestivals(): Promise<Array<Festival>>;
     getPackages(): Promise<Array<Package>>;
     setFestivalImage(id: FestivalId, imageUrl: string): Promise<boolean>;
+    setFestivalTicketUrl(id: FestivalId, url: string): Promise<boolean>;
     toggleFestivalStatus(id: FestivalId): Promise<boolean>;
     updateFestival(id: FestivalId, input: FestivalInput): Promise<boolean>;
     updatePackage(id: PackageId, input: PackageInput): Promise<boolean>;

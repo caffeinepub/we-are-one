@@ -159,6 +159,46 @@ export function useSetFestivalImage() {
   });
 }
 
+// ── Ticket URL (frontend-only, persisted in localStorage) ─────────────────────
+
+const TICKET_URL_KEY = "wao_ticket_urls";
+
+export function getStoredTicketUrls(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem(TICKET_URL_KEY) ?? "{}") as Record<
+      string,
+      string
+    >;
+  } catch {
+    return {};
+  }
+}
+
+export function useSetFestivalTicketUrl() {
+  const qc = useQueryClient();
+  return useMutation<boolean, Error, { id: bigint; ticketUrl: string }>({
+    mutationFn: async ({ id, ticketUrl }) => {
+      const stored = getStoredTicketUrls();
+      if (ticketUrl.trim()) {
+        stored[id.toString()] = ticketUrl.trim();
+      } else {
+        delete stored[id.toString()];
+      }
+      localStorage.setItem(TICKET_URL_KEY, JSON.stringify(stored));
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["ticketUrls"] }),
+  });
+}
+
+export function useTicketUrls() {
+  return useQuery<Record<string, string>>({
+    queryKey: ["ticketUrls"],
+    queryFn: () => getStoredTicketUrls(),
+    staleTime: 0,
+  });
+}
+
 export function useAddPackage() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);

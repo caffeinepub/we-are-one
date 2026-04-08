@@ -1,9 +1,11 @@
 import Types "types/festival";
 import FestivalApi "mixins/festival-api";
 import FestivalLib "lib/festival";
+import Migration "migration";
 import List "mo:core/List";
 import Map "mo:core/Map";
 
+(with migration = Migration.run)
 actor {
   let festivals = List.empty<Types.Festival>();
   let packages = List.empty<Types.Package>();
@@ -43,6 +45,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -63,6 +66,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -83,6 +87,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -103,6 +108,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "18+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -123,6 +129,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -143,6 +150,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   // Winter Festivals
@@ -164,6 +172,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -184,6 +193,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -204,6 +214,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -224,6 +235,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -244,6 +256,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   seedFestival({
@@ -264,6 +277,7 @@ actor {
     description = null;
     lineup = null;
     ageRestriction = "14+";
+    ticketUrl = null;
   });
 
   // ── Seed default packages ────────────────────────────────────────────────────

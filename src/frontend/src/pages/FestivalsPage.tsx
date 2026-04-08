@@ -15,10 +15,11 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import ComingSoonModal from "../components/ComingSoonModal";
-import { useFestivals } from "../hooks/useBackend";
+import { useFestivals, useTicketUrls } from "../hooks/useBackend";
 import type { Festival } from "../types/festival";
 import {
   EventType,
+  FestivalStatus,
   STATIC_FESTIVALS,
   getEventTypeLabel,
   getSeasonLabel,
@@ -93,7 +94,7 @@ function FestivalSkeleton() {
 interface DetailPanelProps {
   festival: Festival;
   onClose: () => void;
-  onBuyTickets: () => void;
+  onBuyTickets: (festival: Festival) => void;
 }
 
 function DetailPanel({ festival, onClose, onBuyTickets }: DetailPanelProps) {
@@ -328,7 +329,7 @@ function DetailPanel({ festival, onClose, onBuyTickets }: DetailPanelProps) {
           {/* Buy tickets CTA */}
           <button
             type="button"
-            onClick={onBuyTickets}
+            onClick={() => onBuyTickets(festival)}
             className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 px-6 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
             style={{
               background: accentAlpha(0.15),
@@ -353,7 +354,7 @@ interface GridCardProps {
   festival: Festival;
   isExpanded: boolean;
   onToggle: () => void;
-  onBuyTickets: () => void;
+  onBuyTickets: (festival: Festival) => void;
 }
 
 function GridCard({
@@ -564,7 +565,7 @@ function GridCard({
 
           <button
             type="button"
-            onClick={onBuyTickets}
+            onClick={() => onBuyTickets(festival)}
             className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
             style={{
               background: accentAlpha(0.15),
@@ -592,7 +593,7 @@ interface FestivalSectionProps {
   festivals: Festival[];
   expandedId: bigint | null;
   onToggleExpand: (id: bigint) => void;
-  onBuyTickets: () => void;
+  onBuyTickets: (festival: Festival) => void;
 }
 
 function FestivalSection({
@@ -808,6 +809,7 @@ function FilterBar({
 
 export default function FestivalsPage() {
   const { data, isLoading } = useFestivals();
+  const { data: ticketUrls = {} } = useTicketUrls();
   const festivals = data ?? STATIC_FESTIVALS;
 
   const [seasonFilter, setSeasonFilter] = useState<SeasonFilter>("All");
@@ -818,6 +820,16 @@ export default function FestivalsPage() {
 
   function handleToggleExpand(id: bigint) {
     setExpandedId((prev) => (prev === id ? null : id));
+  }
+
+  function handleBuyTickets(festival: Festival) {
+    const ticketUrl = ticketUrls[festival.id.toString()];
+    const isActive = festival.status === FestivalStatus.Active;
+    if (isActive && ticketUrl) {
+      window.open(ticketUrl, "_blank", "noopener,noreferrer");
+    } else {
+      setShowModal(true);
+    }
   }
 
   const filtered = useMemo(() => {
@@ -1034,7 +1046,7 @@ export default function FestivalsPage() {
               festivals={summerFestivals}
               expandedId={expandedId}
               onToggleExpand={handleToggleExpand}
-              onBuyTickets={() => setShowModal(true)}
+              onBuyTickets={handleBuyTickets}
             />
             <FestivalSection
               title="Winter Festivals"
@@ -1043,7 +1055,7 @@ export default function FestivalsPage() {
               festivals={winterFestivals}
               expandedId={expandedId}
               onToggleExpand={handleToggleExpand}
-              onBuyTickets={() => setShowModal(true)}
+              onBuyTickets={handleBuyTickets}
             />
           </>
         )}

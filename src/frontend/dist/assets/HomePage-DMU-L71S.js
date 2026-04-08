@@ -1,12 +1,12 @@
-import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, L as Link } from "./index-BVWgY9UC.js";
-import { T as Ticket, C as ComingSoonModal, u as useComingSoon, a as ChevronDown } from "./ComingSoonModal-Dh418tYI.js";
-import { g as getSeasonLabel, a as getEventTypeLabel, i as isComingSoon, b as isSummer, c as isEDM, u as useFestivals } from "./useBackend-CpBZk4oq.js";
-import { M as MapPin } from "./map-pin-BEpvJRaG.js";
-import { C as Calendar, M as Music } from "./music-lVWY_fWK.js";
-import { U as Users } from "./users-CjZIl06C.js";
-import { S as Sparkles } from "./sparkles-CiT5FWir.js";
-import { S as Star } from "./star-uQY-jj8L.js";
-import { G as Globe } from "./globe-BC0xPA7i.js";
+import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, L as Link } from "./index-LPyTcEuD.js";
+import { T as Ticket, C as ComingSoonModal, u as useComingSoon, a as ChevronDown } from "./ComingSoonModal-Dg3YpuNs.js";
+import { u as useTicketUrls, g as getSeasonLabel, a as getEventTypeLabel, i as isComingSoon, b as isSummer, c as isEDM, F as FestivalStatus, d as useFestivals } from "./useBackend-BcWpsFyz.js";
+import { M as MapPin } from "./map-pin-CoGX7SXE.js";
+import { C as Calendar, M as Music } from "./music-7du_IS34.js";
+import { U as Users } from "./users-CoVV3g3Q.js";
+import { S as Sparkles } from "./sparkles-Bn4HjTis.js";
+import { S as Star } from "./star-Bp1z5Ab5.js";
+import { G as Globe } from "./globe-BowZ4Syz.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -17,11 +17,22 @@ const __iconNode = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
 const ChevronRight = createLucideIcon("chevron-right", __iconNode);
 function FestivalCard({ festival }) {
   const [showModal, setShowModal] = reactExports.useState(false);
+  const { data: ticketUrls = {} } = useTicketUrls();
   const seasonLabel = getSeasonLabel(festival.season);
   const eventTypeLabel = getEventTypeLabel(festival.eventType);
   const comingSoon = isComingSoon(festival.status);
   const summer = isSummer(festival.season);
   const edm = isEDM(festival.eventType);
+  const ticketUrl = ticketUrls[festival.id.toString()];
+  const isActive = festival.status === FestivalStatus.Active;
+  const hasTicketLink = isActive && !!ticketUrl;
+  function handleBuyTickets() {
+    if (hasTicketLink) {
+      window.open(ticketUrl, "_blank", "noopener,noreferrer");
+    } else {
+      setShowModal(true);
+    }
+  }
   const seasonColor = summer ? "oklch(0.65 0.2 180)" : "oklch(0.6 0.15 250)";
   const seasonBg = summer ? "oklch(0.65 0.2 180 / 0.1)" : "oklch(0.6 0.15 250 / 0.1)";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -230,7 +241,7 @@ function FestivalCard({ festival }) {
                     "button",
                     {
                       type: "button",
-                      onClick: () => setShowModal(true),
+                      onClick: handleBuyTickets,
                       className: "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
                       style: {
                         background: "oklch(0.65 0.2 180 / 0.15)",

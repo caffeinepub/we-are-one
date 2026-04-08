@@ -1,4 +1,4 @@
-// Version: 1.0.0
+// Version: 3.0.0
 type AdminSession__254726568 =
   {expiresAt : Timestamp__301639476; token : Text};
 type Data__791452850<K, V> =
@@ -25,15 +25,66 @@ type Festival__978544918 =
     status : FestivalStatus__412310600;
     ticketPriceMax : Nat;
     ticketPriceMin : Nat;
+    ticketUrl : ?Text;
     weekends : Text
   };
 type Internal__8484328<K, V> =
   {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
 type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
 type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldAdminSession__487083012 =
+  {expiresAt : OldTimestamp__27916213; token : Text};
+type OldEventType__364901030 = {#ClubHotel; #EDM; #Family; #Rave};
+type OldFestivalId__955556392 = Nat;
+type OldFestivalStatus__546078888 = {#Active; #ComingSoon};
+type OldFestival__160540471 =
+  {
+    ageRestriction : Text;
+    company : Text;
+    country : Text;
+    description : ?Text;
+    estimatedRevenueMax : Text;
+    estimatedRevenueMin : Text;
+    eventType : OldEventType__364901030;
+    id : OldFestivalId__955556392;
+    imageUrl : ?Text;
+    lineup : ?Text;
+    location : Text;
+    name : Text;
+    season : OldSeason__93215019;
+    specialNotes : ?Text;
+    status : OldFestivalStatus__546078888;
+    ticketPriceMax : Nat;
+    ticketPriceMin : Nat;
+    weekends : Text
+  };
+type OldPackageId__799146258 = Nat;
+type OldPackage__213779853 =
+  {
+    description : Text;
+    festivalId : ?OldFestivalId__955556392;
+    id : OldPackageId__799146258;
+    includes : [Text];
+    name : Text;
+    packageType : PackageType__306656939;
+    priceGBP : Nat
+  };
+type OldSeason__93215019 = {#Summer; #Winter};
+type OldTimestamp__27916213 = Int;
 type PackageId__581373409 = Nat;
 type PackageType__306656939 =
   {
@@ -57,7 +108,15 @@ type Package__77264284 =
   };
 type Season__1069644239 = {#Summer; #Winter};
 type Timestamp__301639476 = Int;
-actor {
+actor ({
+  in festivals : List__415060402<OldFestival__160540471>;
+  stable var nextFestivalId : Nat;
+  stable var nextPackageId : Nat;
+  in packages : List__415060402<OldPackage__213779853>;
+  in var seedFestivalId : Nat;
+  in var seedPackageId : Nat;
+  in sessions : Map__605269027<Text, OldAdminSession__487083012>
+}, {
   stable festivals :
     {
       var blockIndex : Nat__490723111;
@@ -79,4 +138,4 @@ actor {
       var root : Node__46230540<Text, AdminSession__254726568>;
       var size : Nat__490723111
     }
-};
+}) ;

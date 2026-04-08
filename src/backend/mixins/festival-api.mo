@@ -67,4 +67,8 @@ mixin (
   public func setFestivalImage(id : Common.FestivalId, imageUrl : Text) : async Bool {
     FestivalLib.setFestivalImage(festivals, id, imageUrl)
   };
+
+  public func setFestivalTicketUrl(id : Common.FestivalId, url : Text) : async Bool {
+    FestivalLib.setFestivalTicketUrl(festivals, id, url)
+  };
 };

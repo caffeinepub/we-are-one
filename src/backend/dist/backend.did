@@ -56,6 +56,7 @@ type FestivalInput =
    status: FestivalStatus;
    ticketPriceMax: nat;
    ticketPriceMin: nat;
+   ticketUrl: opt text;
    weekends: text;
  };
 type FestivalId = nat;
@@ -78,6 +79,7 @@ type Festival =
    status: FestivalStatus;
    ticketPriceMax: nat;
    ticketPriceMin: nat;
+   ticketUrl: opt text;
    weekends: text;
  };
 type EventType = 
@@ -105,6 +107,7 @@ service : {
   getFestivals: () -> (vec Festival) query;
   getPackages: () -> (vec Package) query;
   setFestivalImage: (id: FestivalId, imageUrl: text) -> (bool);
+  setFestivalTicketUrl: (id: FestivalId, url: text) -> (bool);
   toggleFestivalStatus: (id: FestivalId) -> (bool);
   updateFestival: (id: FestivalId, input: FestivalInput) -> (bool);
   updatePackage: (id: PackageId, input: PackageInput) -> (bool);

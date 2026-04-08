@@ -1,13 +1,13 @@
-import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, X } from "./index-BVWgY9UC.js";
-import { C as ComingSoonModal, a as ChevronDown, T as Ticket } from "./ComingSoonModal-Dh418tYI.js";
-import { u as useFestivals, S as STATIC_FESTIVALS, b as isSummer, E as EventType, c as isEDM, i as isComingSoon, a as getEventTypeLabel, g as getSeasonLabel } from "./useBackend-CpBZk4oq.js";
-import { m as motion } from "./proxy-B6deAPyV.js";
-import { M as Music, C as Calendar } from "./music-lVWY_fWK.js";
-import { A as AnimatePresence } from "./index-C85kzK-W.js";
-import { M as MapPin } from "./map-pin-BEpvJRaG.js";
-import { U as Users } from "./users-CjZIl06C.js";
-import { B as Building2 } from "./building-2-Bfobs7I5.js";
-import "./sparkles-CiT5FWir.js";
+import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, X } from "./index-LPyTcEuD.js";
+import { C as ComingSoonModal, a as ChevronDown, T as Ticket } from "./ComingSoonModal-Dg3YpuNs.js";
+import { d as useFestivals, u as useTicketUrls, S as STATIC_FESTIVALS, b as isSummer, E as EventType, F as FestivalStatus, c as isEDM, i as isComingSoon, a as getEventTypeLabel, g as getSeasonLabel } from "./useBackend-BcWpsFyz.js";
+import { m as motion } from "./proxy-BzZarLsy.js";
+import { M as Music, C as Calendar } from "./music-7du_IS34.js";
+import { A as AnimatePresence } from "./index-BVFHB3wT.js";
+import { M as MapPin } from "./map-pin-CoGX7SXE.js";
+import { U as Users } from "./users-CoVV3g3Q.js";
+import { B as Building2 } from "./building-2-X2CdhU1z.js";
+import "./sparkles-Bn4HjTis.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -387,7 +387,7 @@ function DetailPanel({ festival, onClose, onBuyTickets }) {
               "button",
               {
                 type: "button",
-                onClick: onBuyTickets,
+                onClick: () => onBuyTickets(festival),
                 className: "w-full flex items-center justify-center gap-2 rounded-xl py-3.5 px-6 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
                 style: {
                   background: accentAlpha(0.15),
@@ -642,7 +642,7 @@ function GridCard({
                   "button",
                   {
                     type: "button",
-                    onClick: onBuyTickets,
+                    onClick: () => onBuyTickets(festival),
                     className: "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
                     style: {
                       background: accentAlpha(0.15),
@@ -855,6 +855,7 @@ function FilterBar({
 }
 function FestivalsPage() {
   const { data, isLoading } = useFestivals();
+  const { data: ticketUrls = {} } = useTicketUrls();
   const festivals = data ?? STATIC_FESTIVALS;
   const [seasonFilter, setSeasonFilter] = reactExports.useState("All");
   const [eventFilter, setEventFilter] = reactExports.useState("All");
@@ -863,6 +864,15 @@ function FestivalsPage() {
   const [showModal, setShowModal] = reactExports.useState(false);
   function handleToggleExpand(id) {
     setExpandedId((prev) => prev === id ? null : id);
+  }
+  function handleBuyTickets(festival) {
+    const ticketUrl = ticketUrls[festival.id.toString()];
+    const isActive = festival.status === FestivalStatus.Active;
+    if (isActive && ticketUrl) {
+      window.open(ticketUrl, "_blank", "noopener,noreferrer");
+    } else {
+      setShowModal(true);
+    }
   }
   const filtered = reactExports.useMemo(() => {
     return festivals.filter((f) => {
@@ -1091,7 +1101,7 @@ function FestivalsPage() {
                 festivals: summerFestivals,
                 expandedId,
                 onToggleExpand: handleToggleExpand,
-                onBuyTickets: () => setShowModal(true)
+                onBuyTickets: handleBuyTickets
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -1103,7 +1113,7 @@ function FestivalsPage() {
                 festivals: winterFestivals,
                 expandedId,
                 onToggleExpand: handleToggleExpand,
-                onBuyTickets: () => setShowModal(true)
+                onBuyTickets: handleBuyTickets
               }
             )
           ] }),

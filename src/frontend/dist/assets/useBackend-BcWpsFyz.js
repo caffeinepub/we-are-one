@@ -7,7 +7,7 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _client, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _a, _client2, _currentResult2, _currentMutation, _mutateOptions, _MutationObserver_instances, updateResult_fn, notify_fn2, _b;
-import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, u as utf8ToBytes, E as ExternalError, g as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, R as RequestStatusResponseStatus, U as UnknownError, h as RequestStatusDoneNoReplyErrorCode, i as RejectError, k as CertifiedRejectErrorCode, m as UNREACHABLE_ERROR, I as InputError, n as InvalidReadStateRequestErrorCode, o as ReadRequestType, p as Principal, q as IDL, s as MissingCanisterIdErrorCode, H as HttpAgent, t as encode, Q as QueryResponseStatus, v as UncertifiedRejectErrorCode, w as isV3ResponseBody, x as isV2ResponseBody, y as UncertifiedRejectUpdateErrorCode, z as UnexpectedErrorCode, A as decode, B as Subscribable, D as pendingThenable, F as resolveEnabled, G as shallowEqualObjects, J as resolveStaleTime, K as noop, N as environmentManager, O as isValidTimeout, V as timeUntilStale, W as timeoutManager, Y as focusManager, Z as fetchState, _ as replaceData, $ as notifyManager, a0 as hashKey, a1 as getDefaultState, r as reactExports, a2 as shouldThrowError, a3 as useQueryClient, a4 as useInternetIdentity, a5 as createActorWithConfig, a6 as Variant, a7 as Record, a8 as Opt, a9 as Vec, aa as Service, ab as Func, ac as Nat, ad as Text, ae as Null, af as Bool } from "./index-BVWgY9UC.js";
+import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, u as utf8ToBytes, E as ExternalError, g as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, R as RequestStatusResponseStatus, U as UnknownError, h as RequestStatusDoneNoReplyErrorCode, i as RejectError, k as CertifiedRejectErrorCode, m as UNREACHABLE_ERROR, I as InputError, n as InvalidReadStateRequestErrorCode, o as ReadRequestType, p as Principal, q as IDL, s as MissingCanisterIdErrorCode, H as HttpAgent, t as encode, Q as QueryResponseStatus, v as UncertifiedRejectErrorCode, w as isV3ResponseBody, x as isV2ResponseBody, y as UncertifiedRejectUpdateErrorCode, z as UnexpectedErrorCode, A as decode, B as Subscribable, D as pendingThenable, F as resolveEnabled, G as shallowEqualObjects, J as resolveStaleTime, K as noop, N as environmentManager, O as isValidTimeout, V as timeUntilStale, W as timeoutManager, Y as focusManager, Z as fetchState, _ as replaceData, $ as notifyManager, a0 as hashKey, a1 as getDefaultState, r as reactExports, a2 as shouldThrowError, a3 as useQueryClient, a4 as useInternetIdentity, a5 as createActorWithConfig, a6 as Variant, a7 as Record, a8 as Opt, a9 as Vec, aa as Service, ab as Func, ac as Nat, ad as Text, ae as Null, af as Bool } from "./index-LPyTcEuD.js";
 const FIVE_MINUTES_IN_MSEC = 5 * 60 * 1e3;
 function defaultStrategy() {
   return chain(conditionalDelay(once(), 1e3), backoff(1e3, 1.2), timeout(FIVE_MINUTES_IN_MSEC));
@@ -1258,6 +1258,7 @@ const FestivalInput = Record({
   "ticketPriceMin": Nat,
   "weekends": Text,
   "name": Text,
+  "ticketUrl": Opt(Text),
   "description": Opt(Text),
   "season": Season$1,
   "ageRestriction": Text,
@@ -1303,6 +1304,7 @@ const Festival = Record({
   "ticketPriceMin": Nat,
   "weekends": Text,
   "name": Text,
+  "ticketUrl": Opt(Text),
   "description": Opt(Text),
   "season": Season$1,
   "ageRestriction": Text,
@@ -1335,6 +1337,7 @@ Service({
   "getFestivals": Func([], [Vec(Festival)], ["query"]),
   "getPackages": Func([], [Vec(Package)], ["query"]),
   "setFestivalImage": Func([FestivalId, Text], [Bool], []),
+  "setFestivalTicketUrl": Func([FestivalId, Text], [Bool], []),
   "toggleFestivalStatus": Func([FestivalId], [Bool], []),
   "updateFestival": Func([FestivalId, FestivalInput], [Bool], []),
   "updatePackage": Func([PackageId, PackageInput], [Bool], [])
@@ -1358,6 +1361,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "ticketPriceMin": IDL2.Nat,
     "weekends": IDL2.Text,
     "name": IDL2.Text,
+    "ticketUrl": IDL2.Opt(IDL2.Text),
     "description": IDL2.Opt(IDL2.Text),
     "season": Season2,
     "ageRestriction": IDL2.Text,
@@ -1403,6 +1407,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "ticketPriceMin": IDL2.Nat,
     "weekends": IDL2.Text,
     "name": IDL2.Text,
+    "ticketUrl": IDL2.Opt(IDL2.Text),
     "description": IDL2.Opt(IDL2.Text),
     "season": Season2,
     "ageRestriction": IDL2.Text,
@@ -1435,6 +1440,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "getFestivals": IDL2.Func([], [IDL2.Vec(Festival2)], ["query"]),
     "getPackages": IDL2.Func([], [IDL2.Vec(Package2)], ["query"]),
     "setFestivalImage": IDL2.Func([FestivalId2, IDL2.Text], [IDL2.Bool], []),
+    "setFestivalTicketUrl": IDL2.Func([FestivalId2, IDL2.Text], [IDL2.Bool], []),
     "toggleFestivalStatus": IDL2.Func([FestivalId2], [IDL2.Bool], []),
     "updateFestival": IDL2.Func([FestivalId2, FestivalInput2], [IDL2.Bool], []),
     "updatePackage": IDL2.Func([PackageId2, PackageInput2], [IDL2.Bool], [])
@@ -1625,6 +1631,20 @@ class Backend {
       return result;
     }
   }
+  async setFestivalTicketUrl(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.setFestivalTicketUrl(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.setFestivalTicketUrl(arg0, arg1);
+      return result;
+    }
+  }
   async toggleFestivalStatus(arg0) {
     if (this.processError) {
       try {
@@ -1704,6 +1724,7 @@ function from_candid_record_n16(_uploadFile, _downloadFile, value) {
     ticketPriceMin: value.ticketPriceMin,
     weekends: value.weekends,
     name: value.name,
+    ticketUrl: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.ticketUrl)),
     description: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.description)),
     season: from_candid_Season_n19(_uploadFile, _downloadFile, value.season),
     ageRestriction: value.ageRestriction,
@@ -1782,6 +1803,7 @@ function to_candid_record_n2(_uploadFile, _downloadFile, value) {
     ticketPriceMin: value.ticketPriceMin,
     weekends: value.weekends,
     name: value.name,
+    ticketUrl: value.ticketUrl ? candid_some(value.ticketUrl) : candid_none(),
     description: value.description ? candid_some(value.description) : candid_none(),
     season: to_candid_Season_n5(_uploadFile, _downloadFile, value.season),
     ageRestriction: value.ageRestriction,
@@ -2226,6 +2248,37 @@ function useSetFestivalImage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] })
   });
 }
+const TICKET_URL_KEY = "wao_ticket_urls";
+function getStoredTicketUrls() {
+  try {
+    return JSON.parse(localStorage.getItem(TICKET_URL_KEY) ?? "{}");
+  } catch {
+    return {};
+  }
+}
+function useSetFestivalTicketUrl() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ticketUrl }) => {
+      const stored = getStoredTicketUrls();
+      if (ticketUrl.trim()) {
+        stored[id.toString()] = ticketUrl.trim();
+      } else {
+        delete stored[id.toString()];
+      }
+      localStorage.setItem(TICKET_URL_KEY, JSON.stringify(stored));
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["ticketUrls"] })
+  });
+}
+function useTicketUrls() {
+  return useQuery({
+    queryKey: ["ticketUrls"],
+    queryFn: () => getStoredTicketUrls(),
+    staleTime: 0
+  });
+}
 function useAddPackage() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
@@ -2266,20 +2319,23 @@ export {
   getEventTypeLabel as a,
   isSummer as b,
   isEDM as c,
-  usePackages as d,
-  getPackageTypeLabel as e,
-  useAnalytics as f,
+  useFestivals as d,
+  usePackages as e,
+  getPackageTypeLabel as f,
   getSeasonLabel as g,
-  Season as h,
+  useAnalytics as h,
   isComingSoon as i,
-  useAddFestival as j,
-  useUpdateFestival as k,
-  useDeleteFestival as l,
-  useToggleFestivalStatus as m,
-  useSetFestivalImage as n,
-  useAddPackage as o,
-  useUpdatePackage as p,
-  useDeletePackage as q,
-  useAdminLogin as r,
-  useFestivals as u
+  useSetFestivalTicketUrl as j,
+  getStoredTicketUrls as k,
+  Season as l,
+  useAddFestival as m,
+  useUpdateFestival as n,
+  useDeleteFestival as o,
+  useToggleFestivalStatus as p,
+  useSetFestivalImage as q,
+  useAddPackage as r,
+  useUpdatePackage as s,
+  useDeletePackage as t,
+  useTicketUrls as u,
+  useAdminLogin as v
 };

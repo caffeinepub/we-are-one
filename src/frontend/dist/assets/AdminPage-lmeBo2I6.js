@@ -1,6 +1,19 @@
-import { c as createLucideIcon, j as jsxRuntimeExports, r as reactExports, X, f as Shield } from "./index-BVWgY9UC.js";
-import { u as useFestivals, f as useAnalytics, i as isComingSoon, F as FestivalStatus, a as getEventTypeLabel, g as getSeasonLabel, E as EventType, h as Season, j as useAddFestival, k as useUpdateFestival, l as useDeleteFestival, m as useToggleFestivalStatus, n as useSetFestivalImage, e as getPackageTypeLabel, d as usePackages, o as useAddPackage, p as useUpdatePackage, q as useDeletePackage, r as useAdminLogin } from "./useBackend-CpBZk4oq.js";
-import { U as Users } from "./users-CjZIl06C.js";
+import { c as createLucideIcon, j as jsxRuntimeExports, r as reactExports, X, f as Shield } from "./index-LPyTcEuD.js";
+import { d as useFestivals, h as useAnalytics, i as isComingSoon, j as useSetFestivalTicketUrl, F as FestivalStatus, a as getEventTypeLabel, g as getSeasonLabel, k as getStoredTicketUrls, E as EventType, l as Season, u as useTicketUrls, m as useAddFestival, n as useUpdateFestival, o as useDeleteFestival, p as useToggleFestivalStatus, q as useSetFestivalImage, f as getPackageTypeLabel, e as usePackages, r as useAddPackage, s as useUpdatePackage, t as useDeletePackage, v as useAdminLogin } from "./useBackend-BcWpsFyz.js";
+import { U as Users } from "./users-CoVV3g3Q.js";
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
+  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
+  ["path", { d: "M18 17V9", key: "2bz60n" }],
+  ["path", { d: "M13 17V5", key: "1frdt8" }],
+  ["path", { d: "M8 17v-3", key: "17ska0" }]
+];
+const ChartColumn = createLucideIcon("chart-column", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -8,19 +21,6 @@ import { U as Users } from "./users-CjZIl06C.js";
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
-  ["path", { d: "M18 17V9", key: "2bz60n" }],
-  ["path", { d: "M13 17V5", key: "1frdt8" }],
-  ["path", { d: "M8 17v-3", key: "17ska0" }]
-];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$c);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$b = [
   [
     "path",
     {
@@ -38,14 +38,14 @@ const __iconNode$b = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$b);
+const EyeOff = createLucideIcon("eye-off", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$a = [
+const __iconNode$b = [
   [
     "path",
     {
@@ -55,7 +55,19 @@ const __iconNode$a = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$a);
+const Eye = createLucideIcon("eye", __iconNode$b);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$a = [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
+  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
+  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
+];
+const Image = createLucideIcon("image", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -63,11 +75,10 @@ const Eye = createLucideIcon("eye", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
-  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
-  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
+  ["path", { d: "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71", key: "1cjeqo" }],
+  ["path", { d: "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71", key: "19qd67" }]
 ];
-const Image = createLucideIcon("image", __iconNode$9);
+const Link = createLucideIcon("link", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -458,6 +469,7 @@ function FestivalForm({
   onClose,
   isPending
 }) {
+  const setTicketUrl = useSetFestivalTicketUrl();
   const [form, setForm] = reactExports.useState({
     name: (festival == null ? void 0 : festival.name) ?? "",
     location: (festival == null ? void 0 : festival.location) ?? "",
@@ -475,8 +487,18 @@ function FestivalForm({
     status: festival ? festival.status === FestivalStatus.ComingSoon ? "ComingSoon" : "Active" : "ComingSoon",
     description: (festival == null ? void 0 : festival.description) ?? "",
     lineup: (festival == null ? void 0 : festival.lineup) ?? "",
-    imageUrl: (festival == null ? void 0 : festival.imageUrl) ?? ""
+    imageUrl: (festival == null ? void 0 : festival.imageUrl) ?? "",
+    ticketUrl: ""
   });
+  reactExports.useEffect(() => {
+    if (festival) {
+      const stored = getStoredTicketUrls();
+      setForm((f) => ({
+        ...f,
+        ticketUrl: stored[festival.id.toString()] ?? ""
+      }));
+    }
+  }, [festival]);
   function handleSubmit(e) {
     e.preventDefault();
     const eventTypeKey = form.eventType;
@@ -499,6 +521,9 @@ function FestivalForm({
       lineup: form.lineup || void 0,
       ageRestriction: form.ageRestriction
     };
+    if (festival) {
+      setTicketUrl.mutate({ id: festival.id, ticketUrl: form.ticketUrl });
+    }
     onSave(input);
   }
   const inputClass = "w-full rounded-xl px-3 py-2.5 text-sm outline-none transition-smooth";
@@ -785,6 +810,23 @@ function FestivalForm({
                 )
               ),
               field(
+                "f-ticket-url",
+                "Ticket Purchase URL",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "f-ticket-url",
+                    type: "url",
+                    className: inputClass,
+                    style: S$4.input,
+                    placeholder: "https://tickets.example.com (optional — only used when Active)",
+                    value: form.ticketUrl,
+                    onChange: (e) => setForm({ ...form, ticketUrl: e.target.value }),
+                    "data-ocid": "festival-form-ticket-url"
+                  }
+                )
+              ),
+              field(
                 "f-notes",
                 "Special Notes",
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -1018,6 +1060,7 @@ const S$2 = {
 };
 function FestivalsTab() {
   const { data: festivals = [] } = useFestivals();
+  const { data: ticketUrls = {} } = useTicketUrls();
   const addFestival = useAddFestival();
   const updateFestival = useUpdateFestival();
   const deleteFestival = useDeleteFestival();
@@ -1110,7 +1153,17 @@ function FestivalsTab() {
                     className: "h-7 w-7 rounded-lg object-cover"
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate max-w-[160px]", children: f.name })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate max-w-[160px]", children: f.name }),
+                ticketUrls[f.id.toString()] && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { title: "Ticket URL set", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Link,
+                  {
+                    size: 12,
+                    style: {
+                      color: "oklch(0.55 0.18 145)",
+                      flexShrink: 0
+                    }
+                  }
+                ) })
               ] }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", style: S$2.tdMuted, children: [
                 f.location,

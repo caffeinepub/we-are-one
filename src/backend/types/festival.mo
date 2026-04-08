@@ -26,6 +26,7 @@ module {
     description : ?Text;
     lineup : ?Text;
     ageRestriction : Text;
+    ticketUrl : ?Text;
   };
 
   public type FestivalInput = {
@@ -46,6 +47,7 @@ module {
     description : ?Text;
     lineup : ?Text;
     ageRestriction : Text;
+    ticketUrl : ?Text;
   };
 
   public type PackageType = {

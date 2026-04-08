@@ -1,6 +1,7 @@
 import {
   Edit2,
   Image,
+  Link,
   Plus,
   ToggleLeft,
   ToggleRight,
@@ -13,6 +14,7 @@ import {
   useDeleteFestival,
   useFestivals,
   useSetFestivalImage,
+  useTicketUrls,
   useToggleFestivalStatus,
   useUpdateFestival,
 } from "../../hooks/useBackend";
@@ -47,6 +49,7 @@ const S = {
 
 export default function FestivalsTab() {
   const { data: festivals = [] } = useFestivals();
+  const { data: ticketUrls = {} } = useTicketUrls();
   const addFestival = useAddFestival();
   const updateFestival = useUpdateFestival();
   const deleteFestival = useDeleteFestival();
@@ -144,6 +147,17 @@ export default function FestivalsTab() {
                       />
                     )}
                     <span className="truncate max-w-[160px]">{f.name}</span>
+                    {ticketUrls[f.id.toString()] && (
+                      <span title="Ticket URL set">
+                        <Link
+                          size={12}
+                          style={{
+                            color: "oklch(0.55 0.18 145)",
+                            flexShrink: 0,
+                          }}
+                        />
+                      </span>
+                    )}
                   </div>
                 </td>
                 <td className="px-4 py-3" style={S.tdMuted}>

@@ -42,6 +42,7 @@ module {
       description = input.description;
       lineup = input.lineup;
       ageRestriction = input.ageRestriction;
+      ticketUrl = input.ticketUrl;
     };
     festivals.add(festival);
     festival
@@ -76,6 +77,7 @@ module {
           description = input.description;
           lineup = input.lineup;
           ageRestriction = input.ageRestriction;
+          ticketUrl = input.ticketUrl;
         });
         true
       };
@@ -123,6 +125,22 @@ module {
       case (?i) {
         let existing = festivals.at(i);
         festivals.put(i, { existing with imageUrl = ?imageUrl });
+        true
+      };
+    }
+  };
+
+  public func setFestivalTicketUrl(
+    festivals : List.List<Types.Festival>,
+    id : Common.FestivalId,
+    url : Text,
+  ) : Bool {
+    let idx = festivals.findIndex(func(f) { f.id == id });
+    switch (idx) {
+      case null { false };
+      case (?i) {
+        let existing = festivals.at(i);
+        festivals.put(i, { existing with ticketUrl = ?url });
         true
       };
     }
