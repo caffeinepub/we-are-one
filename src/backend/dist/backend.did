@@ -1,0 +1,111 @@
+type Season = 
+ variant {
+   Summer;
+   Winter;
+ };
+type PackageType = 
+ variant {
+   Accommodation;
+   FlightPackage;
+   FullWeekend;
+   Transfer;
+   VIP;
+   Weekend1;
+   Weekend2;
+ };
+type PackageInput = 
+ record {
+   description: text;
+   festivalId: opt FestivalId;
+   includes: vec text;
+   name: text;
+   packageType: PackageType;
+   priceGBP: nat;
+ };
+type PackageId = nat;
+type Package = 
+ record {
+   description: text;
+   festivalId: opt FestivalId;
+   id: PackageId;
+   includes: vec text;
+   name: text;
+   packageType: PackageType;
+   priceGBP: nat;
+ };
+type FestivalStatus = 
+ variant {
+   Active;
+   ComingSoon;
+ };
+type FestivalInput = 
+ record {
+   ageRestriction: text;
+   company: text;
+   country: text;
+   description: opt text;
+   estimatedRevenueMax: text;
+   estimatedRevenueMin: text;
+   eventType: EventType;
+   imageUrl: opt text;
+   lineup: opt text;
+   location: text;
+   name: text;
+   season: Season;
+   specialNotes: opt text;
+   status: FestivalStatus;
+   ticketPriceMax: nat;
+   ticketPriceMin: nat;
+   weekends: text;
+ };
+type FestivalId = nat;
+type Festival = 
+ record {
+   ageRestriction: text;
+   company: text;
+   country: text;
+   description: opt text;
+   estimatedRevenueMax: text;
+   estimatedRevenueMin: text;
+   eventType: EventType;
+   id: FestivalId;
+   imageUrl: opt text;
+   lineup: opt text;
+   location: text;
+   name: text;
+   season: Season;
+   specialNotes: opt text;
+   status: FestivalStatus;
+   ticketPriceMax: nat;
+   ticketPriceMin: nat;
+   weekends: text;
+ };
+type EventType = 
+ variant {
+   ClubHotel;
+   EDM;
+   Family;
+   Rave;
+ };
+type Analytics = 
+ record {
+   estimatedAttendance: nat;
+   estimatedRevenue: text;
+   festivalId: FestivalId;
+   ticketsSold: nat;
+ };
+service : {
+  addFestival: (input: FestivalInput) -> (FestivalId);
+  addPackage: (input: PackageInput) -> (PackageId);
+  adminLogin: (password: text) -> (opt text);
+  deleteFestival: (id: FestivalId) -> (bool);
+  deletePackage: (id: PackageId) -> (bool);
+  getAnalytics: () -> (vec Analytics) query;
+  getFestival: (id: FestivalId) -> (opt Festival) query;
+  getFestivals: () -> (vec Festival) query;
+  getPackages: () -> (vec Package) query;
+  setFestivalImage: (id: FestivalId, imageUrl: text) -> (bool);
+  toggleFestivalStatus: (id: FestivalId) -> (bool);
+  updateFestival: (id: FestivalId, input: FestivalInput) -> (bool);
+  updatePackage: (id: PackageId, input: PackageInput) -> (bool);
+}

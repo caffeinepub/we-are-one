@@ -1,0 +1,107 @@
+import {
+  Outlet,
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
+import { Suspense, lazy } from "react";
+import Layout from "./components/Layout";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const FestivalsPage = lazy(() => import("./pages/FestivalsPage"));
+const PackagesPage = lazy(() => import("./pages/PackagesPage"));
+const JobsPage = lazy(() => import("./pages/JobsPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+
+function PageLoader() {
+  return (
+    <div
+      className="flex min-h-[60vh] items-center justify-center"
+      style={{ color: "oklch(0.65 0.2 180)" }}
+    >
+      <div className="flex flex-col items-center gap-4">
+        <div
+          className="h-10 w-10 animate-spin rounded-full"
+          style={{
+            border: "2px solid oklch(0.25 0.02 260)",
+            borderTopColor: "oklch(0.65 0.2 180)",
+          }}
+        />
+        <span className="font-display text-sm uppercase tracking-widest glow-cyan">
+          Loading...
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function RootComponent() {
+  return (
+    <Layout>
+      <Suspense fallback={<PageLoader />}>
+        <Outlet />
+      </Suspense>
+    </Layout>
+  );
+}
+
+const rootRoute = createRootRoute({ component: RootComponent });
+
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: HomePage,
+});
+
+const festivalsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/festivals",
+  component: FestivalsPage,
+});
+
+const packagesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/packages",
+  component: PackagesPage,
+});
+
+const jobsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/jobs",
+  component: JobsPage,
+});
+
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/contact",
+  component: ContactPage,
+});
+
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/admin",
+  component: AdminPage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  festivalsRoute,
+  packagesRoute,
+  jobsRoute,
+  contactRoute,
+  adminRoute,
+]);
+
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}

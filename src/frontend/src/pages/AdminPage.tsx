@@ -1,0 +1,259 @@
+import {
+  BarChart3,
+  Eye,
+  EyeOff,
+  List,
+  LogIn,
+  Package,
+  Shield,
+} from "lucide-react";
+import { useState } from "react";
+import AnalyticsTab from "../components/admin/AnalyticsTab";
+import FestivalsTab from "../components/admin/FestivalsTab";
+import PackagesTab from "../components/admin/PackagesTab";
+import { useAdminLogin } from "../hooks/useBackend";
+
+const LOGO_URL =
+  "https://image2url.com/r2/default/images/1775683614327-346f8e28-9a02-4a59-8ff6-14dd1641405e.png";
+
+type Tab = "festivals" | "packages" | "analytics";
+
+const TABS: { id: Tab; label: string; icon: typeof List }[] = [
+  { id: "festivals", label: "Festivals", icon: List },
+  { id: "packages", label: "Packages", icon: Package },
+  { id: "analytics", label: "Analytics", icon: BarChart3 },
+];
+
+// ── Login Screen ──────────────────────────────────────────────────────────────
+
+function LoginScreen({ onLogin }: { onLogin: (token: string) => void }) {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const loginMutation = useAdminLogin();
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    loginMutation.mutate(password, {
+      onSuccess: (result) => {
+        if (result) {
+          sessionStorage.setItem("adminToken", result);
+          onLogin(result);
+        } else {
+          setError("Invalid password. Please try again.");
+        }
+      },
+      onError: () => setError("Login failed. Please try again."),
+    });
+  }
+
+  return (
+    <section className="flex min-h-screen items-center justify-center px-4">
+      <div
+        className="w-full max-w-sm rounded-2xl p-8"
+        style={{
+          background: "oklch(0.1 0.02 260)",
+          border: "2px solid oklch(0.65 0.18 70 / 0.35)",
+          boxShadow: "0 0 60px oklch(0.65 0.18 70 / 0.08)",
+        }}
+      >
+        {/* Logo + title */}
+        <div className="mb-7 flex flex-col items-center gap-4 text-center">
+          <img
+            src={LOGO_URL}
+            alt="WE ARE ONE"
+            className="h-16 w-auto object-contain"
+          />
+          <div>
+            <h1
+              className="font-display text-2xl font-black uppercase tracking-wider glow-amber"
+              style={{ color: "oklch(0.65 0.18 70)" }}
+            >
+              Admin Panel
+            </h1>
+            <p
+              className="mt-1 text-xs font-display uppercase tracking-widest"
+              style={{ color: "oklch(0.45 0 0)" }}
+            >
+              WE ARE ONE Festival Management
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="admin-password"
+              className="mb-1.5 block text-xs font-display uppercase tracking-wider"
+              style={{ color: "oklch(0.5 0 0)" }}
+            >
+              Admin Password
+            </label>
+            <div className="relative">
+              <input
+                id="admin-password"
+                type={showPassword ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="w-full rounded-xl px-4 py-3 pr-12 text-sm outline-none transition-smooth"
+                style={{
+                  background: "oklch(0.07 0.02 260)",
+                  border: `1px solid ${error ? "oklch(0.55 0.22 25 / 0.6)" : "oklch(0.25 0.02 260 / 0.5)"}`,
+                  color: "oklch(0.9 0 0)",
+                }}
+                data-ocid="admin-password-input"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 transition-smooth hover:opacity-70"
+                style={{ color: "oklch(0.45 0 0)" }}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            {error && (
+              <p
+                className="mt-1.5 text-xs"
+                style={{ color: "oklch(0.65 0.22 25)" }}
+              >
+                {error}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={loginMutation.isPending}
+            className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              background:
+                "linear-gradient(135deg, oklch(0.65 0.18 70 / 0.9), oklch(0.6 0.15 45 / 0.9))",
+              color: "oklch(0.08 0 0)",
+              boxShadow: "0 0 25px oklch(0.65 0.18 70 / 0.3)",
+            }}
+            data-ocid="admin-login-btn"
+          >
+            <LogIn size={16} />
+            {loginMutation.isPending ? "Logging in…" : "Login"}
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+
+function Dashboard({ onLogout }: { onLogout: () => void }) {
+  const [activeTab, setActiveTab] = useState<Tab>("festivals");
+
+  return (
+    <section className="min-h-screen">
+      {/* Top bar */}
+      <header
+        className="sticky top-0 z-30 px-4 py-3"
+        style={{
+          background: "oklch(0.08 0.02 260 / 0.92)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid oklch(0.25 0.02 260 / 0.4)",
+        }}
+      >
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src={LOGO_URL}
+              alt="WE ARE ONE"
+              className="h-8 w-auto object-contain"
+            />
+            <div>
+              <span
+                className="hidden font-display text-sm font-black uppercase tracking-wider sm:inline glow-amber"
+                style={{ color: "oklch(0.65 0.18 70)" }}
+              >
+                Admin Dashboard
+              </span>
+              <Shield
+                size={16}
+                className="inline sm:hidden"
+                style={{ color: "oklch(0.65 0.18 70)" }}
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="rounded-xl px-4 py-2 text-xs font-display font-medium uppercase tracking-wider transition-smooth hover:opacity-80"
+            style={{
+              border: "1px solid oklch(0.55 0.22 25 / 0.4)",
+              color: "oklch(0.55 0.22 25)",
+            }}
+            data-ocid="admin-logout-btn"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Content */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Tab bar */}
+        <div
+          className="mb-8 flex overflow-hidden rounded-2xl w-fit"
+          style={{ border: "1px solid oklch(0.25 0.02 260 / 0.4)" }}
+        >
+          {TABS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setActiveTab(id)}
+              className="flex items-center gap-2 px-5 py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth"
+              style={
+                activeTab === id
+                  ? {
+                      background: "oklch(0.65 0.2 180 / 0.12)",
+                      color: "oklch(0.65 0.2 180)",
+                      borderBottom: "2px solid oklch(0.65 0.2 180)",
+                    }
+                  : { background: "transparent", color: "oklch(0.5 0 0)" }
+              }
+              data-ocid={`admin-tab-${id}`}
+            >
+              <Icon size={14} />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab content */}
+        {activeTab === "festivals" && <FestivalsTab />}
+        {activeTab === "packages" && <PackagesTab />}
+        {activeTab === "analytics" && <AnalyticsTab />}
+      </div>
+    </section>
+  );
+}
+
+// ── Page export ───────────────────────────────────────────────────────────────
+
+export default function AdminPage() {
+  const [token, setToken] = useState<string | null>(() =>
+    sessionStorage.getItem("adminToken"),
+  );
+
+  function handleLogout() {
+    sessionStorage.removeItem("adminToken");
+    setToken(null);
+  }
+
+  if (!token) {
+    return <LoginScreen onLogin={setToken} />;
+  }
+
+  return <Dashboard onLogout={handleLogout} />;
+}

@@ -1,0 +1,82 @@
+// Version: 1.0.0
+type AdminSession__254726568 =
+  {expiresAt : Timestamp__301639476; token : Text};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type EventType__202790818 = {#ClubHotel; #EDM; #Family; #Rave};
+type FestivalId__1051950078 = Nat;
+type FestivalStatus__412310600 = {#Active; #ComingSoon};
+type Festival__978544918 =
+  {
+    ageRestriction : Text;
+    company : Text;
+    country : Text;
+    description : ?Text;
+    estimatedRevenueMax : Text;
+    estimatedRevenueMin : Text;
+    eventType : EventType__202790818;
+    id : FestivalId__1051950078;
+    imageUrl : ?Text;
+    lineup : ?Text;
+    location : Text;
+    name : Text;
+    season : Season__1069644239;
+    specialNotes : ?Text;
+    status : FestivalStatus__412310600;
+    ticketPriceMax : Nat;
+    ticketPriceMin : Nat;
+    weekends : Text
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PackageId__581373409 = Nat;
+type PackageType__306656939 =
+  {
+    #Accommodation;
+    #FlightPackage;
+    #FullWeekend;
+    #Transfer;
+    #VIP;
+    #Weekend1;
+    #Weekend2
+  };
+type Package__77264284 =
+  {
+    description : Text;
+    festivalId : ?FestivalId__1051950078;
+    id : PackageId__581373409;
+    includes : [Text];
+    name : Text;
+    packageType : PackageType__306656939;
+    priceGBP : Nat
+  };
+type Season__1069644239 = {#Summer; #Winter};
+type Timestamp__301639476 = Int;
+actor {
+  stable festivals :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Festival__978544918]];
+      var elementIndex : Nat__490723111
+    };
+  stable var nextFestivalId : Nat;
+  stable var nextPackageId : Nat;
+  stable packages :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Package__77264284]];
+      var elementIndex : Nat__490723111
+    };
+  stable var seedFestivalId : Nat;
+  stable var seedPackageId : Nat;
+  stable sessions :
+    {
+      var root : Node__46230540<Text, AdminSession__254726568>;
+      var size : Nat__490723111
+    }
+};
