@@ -25,8 +25,6 @@ module {
     siteEvents : List.List<EventTypes.SiteEvent>;
     raveSets : List.List<EventTypes.RaveSet>;
     nightclubSets : List.List<EventTypes.NightclubSet>;
-    seedFestivalId : Nat;
-    seedPackageId : Nat;
   };
 
   type NewActor = {

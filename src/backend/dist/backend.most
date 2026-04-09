@@ -196,8 +196,6 @@ actor ({
   in packages : List__415060402<Package__77264284>;
   in raveEvents : List__415060402<RaveEvent__304621381>;
   in raveSets : List__415060402<RaveSet__774648751>;
-  in seedFestivalId : Nat;
-  in seedPackageId : Nat;
   stable sessions :
     {
       var root : Node__46230540<Text, AdminSession__254726568>;

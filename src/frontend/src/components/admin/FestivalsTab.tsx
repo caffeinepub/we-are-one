@@ -3,12 +3,13 @@ import {
   Image,
   Link,
   Plus,
+  Search,
   ToggleLeft,
   ToggleRight,
   Trash2,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   useAddFestival,
   useDeleteFestival,
@@ -60,6 +61,18 @@ export default function FestivalsTab() {
 
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredFestivals = useMemo(() => {
+    if (!search.trim()) return festivals;
+    const q = search.trim().toLowerCase();
+    return festivals.filter(
+      (f) =>
+        f.name.toLowerCase().includes(q) ||
+        f.location.toLowerCase().includes(q) ||
+        f.country.toLowerCase().includes(q),
+    );
+  }, [festivals, search]);
 
   function handleSave(input: FestivalInput) {
     if (modal.type === "add") {
@@ -115,6 +128,57 @@ export default function FestivalsTab() {
         </button>
       </div>
 
+      {/* Search bar */}
+      <div className="flex flex-col gap-2">
+        <div className="relative">
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ color: "oklch(0.5 0 0)" }}
+          />
+          <input
+            type="text"
+            placeholder="Search festivals by name, city or country..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl py-2.5 pl-9 pr-9 text-sm font-body outline-none transition-smooth"
+            style={{
+              background: "oklch(0.12 0.02 260)",
+              border: "1px solid oklch(0.25 0.03 260 / 0.5)",
+              color: "oklch(0.9 0 0)",
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "oklch(0.65 0.2 180 / 0.8)";
+              e.currentTarget.style.boxShadow =
+                "0 0 0 2px oklch(0.65 0.2 180 / 0.15)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "oklch(0.25 0.03 260 / 0.5)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+            data-ocid="admin-festival-search"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 transition-smooth hover:scale-110"
+              style={{ color: "oklch(0.5 0 0)" }}
+              aria-label="Clear search"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+        <p
+          className="text-xs font-display uppercase tracking-wider"
+          style={S.th}
+        >
+          Showing {filteredFestivals.length} of {festivals.length} festival
+          {festivals.length !== 1 ? "s" : ""}
+        </p>
+      </div>
+
       {/* Table */}
       <div className="overflow-x-auto rounded-2xl" style={S.card}>
         <table className="w-full text-sm">
@@ -140,7 +204,7 @@ export default function FestivalsTab() {
             </tr>
           </thead>
           <tbody>
-            {festivals.map((f) => (
+            {filteredFestivals.map((f) => (
               <tr
                 key={f.id.toString()}
                 style={S.rowBorder}
@@ -299,13 +363,15 @@ export default function FestivalsTab() {
             ))}
           </tbody>
         </table>
-        {festivals.length === 0 && (
+        {filteredFestivals.length === 0 && (
           <div className="py-16 text-center" data-ocid="admin-festivals-empty">
             <p
               className="font-display text-sm uppercase tracking-wider"
               style={S.th}
             >
-              No festivals yet. Add your first festival above.
+              {search.trim()
+                ? `No festivals match "${search}". Try a different search.`
+                : "No festivals yet. Add your first festival above."}
             </p>
           </div>
         )}
