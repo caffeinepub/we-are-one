@@ -30,7 +30,9 @@ actor {
   let raveSets = List.empty<EventTypes.RaveSet>();
   let nightclubSets = List.empty<EventTypes.NightclubSet>();
 
-  // ── Seed festivals ───────────────────────────────────────────────────────────
+  // ── Seed festivals (only on first deploy when list is empty) ─────────────────
+
+  if (festivals.size() == 0) {
 
   var seedFestivalId : Nat = 1;
   var seedPackageId : Nat = 1;
@@ -607,6 +609,8 @@ actor {
     packageType = #Accommodation;
     festivalId = null;
   });
+
+  }; // end seeding guard
 
   // ── Mixin composition ────────────────────────────────────────────────────────
 
