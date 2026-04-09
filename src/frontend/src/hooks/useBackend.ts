@@ -3,14 +3,26 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createActor } from "../backend";
 import type {
   Analytics,
+  CategoryInput,
+  DonationGoal,
+  DonationGoalInput,
+  EventCategory,
   Festival,
   FestivalInput,
   LineupEntry,
   LineupInput,
   NewsArticle,
   NewsInput,
+  NightclubEvent,
+  NightclubEventInput,
   Package,
   PackageInput,
+  RaveEvent,
+  RaveEventInput,
+  SiteEvent,
+  SiteEventInput,
+  Sponsor,
+  SponsorInput,
 } from "../backend";
 import {
   STATIC_ANALYTICS,
@@ -358,5 +370,432 @@ export function useDeleteLineupEntry() {
       qc.invalidateQueries({
         queryKey: ["lineup", vars.festivalId.toString()],
       }),
+  });
+}
+
+// ──────────────────────────────────────────────
+// Donation Goal Hooks
+// ──────────────────────────────────────────────
+
+export function useDonationGoals() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<DonationGoal[]>({
+    queryKey: ["donationGoals"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getDonationGoals();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useDonationGoal(id: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<DonationGoal | null>({
+    queryKey: ["donationGoal", id.toString()],
+    queryFn: async () => {
+      if (!actor) return null;
+      try {
+        return await actor.getDonationGoal(id);
+      } catch {
+        return null;
+      }
+    },
+    enabled: !isFetching,
+  });
+}
+
+export function useAddDonationGoal() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, DonationGoalInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addDonationGoal(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["donationGoals"] }),
+  });
+}
+
+export function useUpdateDonationGoal() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: bigint; input: DonationGoalInput }>({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateDonationGoal(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["donationGoals"] }),
+  });
+}
+
+export function useDeleteDonationGoal() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, bigint>({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteDonationGoal(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["donationGoals"] }),
+  });
+}
+
+// ──────────────────────────────────────────────
+// Sponsor Hooks
+// ──────────────────────────────────────────────
+
+export function useSponsors() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<Sponsor[]>({
+    queryKey: ["sponsors"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getSponsors();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useSponsorsByFestival(festivalId: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<Sponsor[]>({
+    queryKey: ["sponsors", "festival", festivalId.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getSponsorsByFestival(festivalId);
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useAddSponsor() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, SponsorInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addSponsor(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["sponsors"] }),
+  });
+}
+
+export function useUpdateSponsor() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: bigint; input: SponsorInput }>({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateSponsor(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["sponsors"] }),
+  });
+}
+
+export function useDeleteSponsor() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, bigint>({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteSponsor(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["sponsors"] }),
+  });
+}
+
+// ──────────────────────────────────────────────
+// Event Category Hooks
+// ──────────────────────────────────────────────
+
+export function useCategories() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<EventCategory[]>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getCategories();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useAddCategory() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, CategoryInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addCategory(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
+  });
+}
+
+export function useUpdateCategory() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: bigint; input: CategoryInput }>({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateCategory(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
+  });
+}
+
+export function useDeleteCategory() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, bigint>({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteCategory(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
+  });
+}
+
+// ──────────────────────────────────────────────
+// Rave Event Hooks
+// ──────────────────────────────────────────────
+
+export function useRaveEvents() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<RaveEvent[]>({
+    queryKey: ["raveEvents"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getRaveEvents();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useRaveEvent(id: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<RaveEvent | null>({
+    queryKey: ["raveEvent", id.toString()],
+    queryFn: async () => {
+      if (!actor) return null;
+      try {
+        return await actor.getRaveEvent(id);
+      } catch {
+        return null;
+      }
+    },
+    enabled: !isFetching,
+  });
+}
+
+export function useAddRaveEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, RaveEventInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addRaveEvent(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["raveEvents"] }),
+  });
+}
+
+export function useUpdateRaveEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: bigint; input: RaveEventInput }>({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateRaveEvent(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["raveEvents"] }),
+  });
+}
+
+export function useDeleteRaveEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, bigint>({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteRaveEvent(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["raveEvents"] }),
+  });
+}
+
+// ──────────────────────────────────────────────
+// Nightclub Event Hooks
+// ──────────────────────────────────────────────
+
+export function useNightclubEvents() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<NightclubEvent[]>({
+    queryKey: ["nightclubEvents"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getNightclubEvents();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useNightclubEvent(id: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<NightclubEvent | null>({
+    queryKey: ["nightclubEvent", id.toString()],
+    queryFn: async () => {
+      if (!actor) return null;
+      try {
+        return await actor.getNightclubEvent(id);
+      } catch {
+        return null;
+      }
+    },
+    enabled: !isFetching,
+  });
+}
+
+export function useAddNightclubEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, NightclubEventInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addNightclubEvent(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
+  });
+}
+
+export function useUpdateNightclubEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<
+    boolean,
+    Error,
+    { id: bigint; input: NightclubEventInput }
+  >({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateNightclubEvent(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
+  });
+}
+
+export function useDeleteNightclubEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, bigint>({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteNightclubEvent(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
+  });
+}
+
+// ──────────────────────────────────────────────
+// Site Event Hooks
+// ──────────────────────────────────────────────
+
+export function useSiteEvents() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<SiteEvent[]>({
+    queryKey: ["siteEvents"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getSiteEvents();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useSiteEvent(id: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<SiteEvent | null>({
+    queryKey: ["siteEvent", id.toString()],
+    queryFn: async () => {
+      if (!actor) return null;
+      try {
+        return await actor.getSiteEvent(id);
+      } catch {
+        return null;
+      }
+    },
+    enabled: !isFetching,
+  });
+}
+
+export function useAddSiteEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, SiteEventInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addSiteEvent(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["siteEvents"] }),
+  });
+}
+
+export function useUpdateSiteEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: bigint; input: SiteEventInput }>({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateSiteEvent(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["siteEvents"] }),
+  });
+}
+
+export function useDeleteSiteEvent() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, bigint>({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteSiteEvent(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["siteEvents"] }),
   });
 }

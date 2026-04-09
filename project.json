@@ -1,25 +1,27 @@
 {
-  "overview": "WE ARE ONE festival website with 12 global EDM and family festivals. Features a public site with festival listings, packages, news, lineup pages, jobs, and contact — plus a full admin dashboard to manage all content.",
+  "overview": "WE ARE ONE is a vibrant Tomorrowland-inspired festival website showcasing 12 global EDM and family festivals. Features a polished public-facing site with festival info, news, lineups, donations, sponsors, and pre/post-festival events, plus a full admin dashboard for managing all content with database persistence.",
   "features": [
-    "Public news page with articles and images",
-    "Festival lineup pages per event",
-    "Admin news management (add/edit/delete)",
-    "Admin lineup editing per festival",
-    "All data persisted in backend database",
-    "12 global EDM and family festivals",
-    "Ticket link management",
-    "Admin dashboard with festival/package/analytics management",
-    "Vibrant Tomorrowland-inspired animated design"
+    "12 pre-loaded global festivals (EDM, Family, Rave, Nightclub)",
+    "Public Donations page with global and per-festival fundraising goals",
+    "Sponsors showcase on main page and individual festival pages",
+    "Rave (pre-festival) and Nightclub (post-festival) event sections",
+    "Admin dashboard with full CRUD for all content",
+    "News page with admin-editable articles",
+    "Per-festival lineup management",
+    "Permanent deletion of all admin content",
+    "All data persisted to backend database",
+    "Vibrant Tomorrowland-inspired design with LED animations"
   ],
   "category": "entertainment",
   "tags": [
     "festival",
     "music",
-    "events",
     "edm",
-    "lineup",
-    "news",
-    "admin"
+    "events",
+    "entertainment",
+    "admin",
+    "donations",
+    "sponsors"
   ],
-  "last_updated": "2026-04-09T07:35:11.374Z"
+  "last_updated": "2026-04-09T09:28:37.106Z"
 }

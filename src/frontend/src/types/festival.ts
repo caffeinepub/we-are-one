@@ -1,6 +1,10 @@
 // Re-export all types and enums from the generated backend bindings
 export type {
   Analytics,
+  CategoryInput,
+  DonationGoal,
+  DonationGoalInput,
+  EventCategory,
   Festival,
   FestivalId,
   FestivalInput,
@@ -10,9 +14,17 @@ export type {
   NewsArticle,
   NewsId,
   NewsInput,
+  NightclubEvent,
+  NightclubEventInput,
   Package,
   PackageId,
   PackageInput,
+  RaveEvent,
+  RaveEventInput,
+  SiteEvent,
+  SiteEventInput,
+  Sponsor,
+  SponsorInput,
 } from "../backend";
 export {
   EventType,

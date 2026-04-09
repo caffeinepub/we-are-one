@@ -16,7 +16,11 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import ComingSoonModal from "../components/ComingSoonModal";
-import { useFestivals, useTicketUrls } from "../hooks/useBackend";
+import {
+  useFestivals,
+  useSponsorsByFestival,
+  useTicketUrls,
+} from "../hooks/useBackend";
 import type { Festival } from "../types/festival";
 import {
   EventType,
@@ -85,6 +89,65 @@ function FestivalSkeleton() {
             style={{ background: "oklch(0.2 0.02 260)" }}
           />
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Festival Sponsors Strip ───────────────────────────────────────────────────
+
+function FestivalSponsors({
+  festivalId,
+  accentColor,
+}: { festivalId: bigint; accentColor: string }) {
+  const { data: sponsors = [] } = useSponsorsByFestival(festivalId);
+  if (!sponsors.length) return null;
+  const accentAlpha = (a: number) => accentColor.replace(")", ` / ${a})`);
+  return (
+    <div
+      className="rounded-xl p-4"
+      style={{
+        background: accentAlpha(0.05),
+        border: `1px solid ${accentAlpha(0.15)}`,
+      }}
+    >
+      <p
+        className="mb-3 text-xs font-display font-bold uppercase tracking-widest"
+        style={{ color: accentColor }}
+      >
+        Festival Sponsors
+      </p>
+      <div className="flex flex-wrap gap-3">
+        {sponsors.map((s) =>
+          s.logoUrl ? (
+            <a
+              key={s.id.toString()}
+              href={s.websiteUrl || undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={s.name}
+              className="flex h-9 w-14 items-center justify-center overflow-hidden rounded-lg transition-smooth hover:scale-105"
+              style={{
+                background: "oklch(0.18 0.02 260)",
+                textDecoration: "none",
+              }}
+            >
+              <img
+                src={s.logoUrl}
+                alt={s.name}
+                className="h-full w-full object-contain p-1"
+              />
+            </a>
+          ) : (
+            <span
+              key={s.id.toString()}
+              className="flex h-9 items-center rounded-lg px-3 text-xs font-display font-bold uppercase tracking-wider"
+              style={{ background: "oklch(0.18 0.02 260)", color: accentColor }}
+            >
+              {s.name}
+            </span>
+          ),
+        )}
       </div>
     </div>
   );
@@ -359,6 +422,12 @@ function DetailPanel({ festival, onClose, onBuyTickets }: DetailPanelProps) {
               Lineup
             </Link>
           </div>
+
+          {/* Festival Sponsors */}
+          <FestivalSponsors
+            festivalId={festival.id}
+            accentColor={accentColor}
+          />
         </div>
       </div>
     </motion.div>

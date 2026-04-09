@@ -8,7 +8,33 @@ export interface None {
 }
 export type Option<T> = Some<T> | None;
 export type Timestamp = bigint;
-export type NewsId = bigint;
+export type SiteEventId = bigint;
+export interface SiteEvent {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}
+export interface EventCategory {
+    id: bigint;
+    name: string;
+    createdAt: bigint;
+    description: string;
+}
+export interface Sponsor {
+    id: bigint;
+    websiteUrl: string;
+    festivalIds: Array<bigint>;
+    name: string;
+    createdAt: bigint;
+    tier: string;
+    logoUrl: string;
+}
 export interface PackageInput {
     packageType: PackageType;
     name: string;
@@ -17,7 +43,70 @@ export interface PackageInput {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export interface NightclubEventInput {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}
 export type LineupId = bigint;
+export interface CategoryInput {
+    name: string;
+    description: string;
+}
+export interface DonationGoal {
+    id: bigint;
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    createdAt: bigint;
+    description: string;
+    festivalId?: bigint;
+    targetAmount: bigint;
+    currentAmount: bigint;
+}
+export interface RaveEvent {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+    eventType: string;
+}
+export interface Analytics {
+    festivalId: FestivalId;
+    estimatedRevenue: string;
+    estimatedAttendance: bigint;
+    ticketsSold: bigint;
+}
+export type EventCategoryId = bigint;
+export type PackageId = bigint;
+export type RaveEventId = bigint;
+export interface LineupInput {
+    stage: string;
+    festivalId: FestivalId;
+    artistName: string;
+    timeSlot: string;
+}
+export interface NewsInput {
+    title: string;
+    content: string;
+    publishDate: Timestamp;
+    imageUrl: string;
+}
+export type SponsorId = bigint;
+export type DonationGoalId = bigint;
+export type NewsId = bigint;
+export type NightclubEventId = bigint;
 export interface Festival {
     id: FestivalId;
     status: FestivalStatus;
@@ -48,18 +137,24 @@ export interface Package {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export interface NightclubEvent {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}
 export interface LineupEntry {
     id: LineupId;
     stage: string;
     festivalId: FestivalId;
     artistName: string;
     timeSlot: string;
-}
-export interface Analytics {
-    festivalId: FestivalId;
-    estimatedRevenue: string;
-    estimatedAttendance: bigint;
-    ticketsSold: bigint;
 }
 export interface FestivalInput {
     status: FestivalStatus;
@@ -81,7 +176,22 @@ export interface FestivalInput {
     specialNotes?: string;
     eventType: EventType;
 }
-export type PackageId = bigint;
+export interface SponsorInput {
+    websiteUrl: string;
+    festivalIds: Array<bigint>;
+    name: string;
+    tier: string;
+    logoUrl: string;
+}
+export interface DonationGoalInput {
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    description: string;
+    festivalId?: bigint;
+    targetAmount: bigint;
+    currentAmount: bigint;
+}
 export interface NewsArticle {
     id: NewsId;
     title: string;
@@ -91,17 +201,25 @@ export interface NewsArticle {
     imageUrl: string;
 }
 export type FestivalId = bigint;
-export interface NewsInput {
-    title: string;
-    content: string;
-    publishDate: Timestamp;
+export interface RaveEventInput {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
     imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+    eventType: string;
 }
-export interface LineupInput {
-    stage: string;
-    festivalId: FestivalId;
-    artistName: string;
-    timeSlot: string;
+export interface SiteEventInput {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
 }
 export enum EventType {
     EDM = "EDM",
@@ -127,27 +245,58 @@ export enum Season {
     Summer = "Summer"
 }
 export interface backendInterface {
+    addCategory(input: CategoryInput): Promise<EventCategoryId>;
+    addDonationGoal(input: DonationGoalInput): Promise<DonationGoalId>;
     addFestival(input: FestivalInput): Promise<FestivalId>;
     addLineupEntry(input: LineupInput): Promise<LineupId>;
     addNews(input: NewsInput): Promise<NewsId>;
+    addNightclubEvent(input: NightclubEventInput): Promise<NightclubEventId>;
     addPackage(input: PackageInput): Promise<PackageId>;
+    addRaveEvent(input: RaveEventInput): Promise<RaveEventId>;
+    addSiteEvent(input: SiteEventInput): Promise<SiteEventId>;
+    addSponsor(input: SponsorInput): Promise<SponsorId>;
     adminLogin(password: string): Promise<string | null>;
+    deleteCategory(id: EventCategoryId): Promise<boolean>;
+    deleteDonationGoal(id: DonationGoalId): Promise<boolean>;
     deleteFestival(id: FestivalId): Promise<boolean>;
     deleteLineupEntry(id: LineupId): Promise<boolean>;
     deleteNews(id: NewsId): Promise<boolean>;
+    deleteNightclubEvent(id: NightclubEventId): Promise<boolean>;
     deletePackage(id: PackageId): Promise<boolean>;
+    deleteRaveEvent(id: RaveEventId): Promise<boolean>;
+    deleteSiteEvent(id: SiteEventId): Promise<boolean>;
+    deleteSponsor(id: SponsorId): Promise<boolean>;
     getAnalytics(): Promise<Array<Analytics>>;
+    getCategories(): Promise<Array<EventCategory>>;
+    getCategory(id: EventCategoryId): Promise<EventCategory | null>;
+    getDonationGoal(id: DonationGoalId): Promise<DonationGoal | null>;
+    getDonationGoals(): Promise<Array<DonationGoal>>;
     getFestival(id: FestivalId): Promise<Festival | null>;
     getFestivals(): Promise<Array<Festival>>;
     getLineup(festivalId: FestivalId): Promise<Array<LineupEntry>>;
     getNews(): Promise<Array<NewsArticle>>;
     getNewsArticle(id: NewsId): Promise<NewsArticle | null>;
+    getNightclubEvent(id: NightclubEventId): Promise<NightclubEvent | null>;
+    getNightclubEvents(): Promise<Array<NightclubEvent>>;
     getPackages(): Promise<Array<Package>>;
+    getRaveEvent(id: RaveEventId): Promise<RaveEvent | null>;
+    getRaveEvents(): Promise<Array<RaveEvent>>;
+    getSiteEvent(id: SiteEventId): Promise<SiteEvent | null>;
+    getSiteEvents(): Promise<Array<SiteEvent>>;
+    getSponsor(id: SponsorId): Promise<Sponsor | null>;
+    getSponsors(): Promise<Array<Sponsor>>;
+    getSponsorsByFestival(festivalId: FestivalId): Promise<Array<Sponsor>>;
     setFestivalImage(id: FestivalId, imageUrl: string): Promise<boolean>;
     setFestivalTicketUrl(id: FestivalId, url: string): Promise<boolean>;
     toggleFestivalStatus(id: FestivalId): Promise<boolean>;
+    updateCategory(id: EventCategoryId, input: CategoryInput): Promise<boolean>;
+    updateDonationGoal(id: DonationGoalId, input: DonationGoalInput): Promise<boolean>;
     updateFestival(id: FestivalId, input: FestivalInput): Promise<boolean>;
     updateLineupEntry(id: LineupId, input: LineupInput): Promise<boolean>;
     updateNews(id: NewsId, input: NewsInput): Promise<boolean>;
+    updateNightclubEvent(id: NightclubEventId, input: NightclubEventInput): Promise<boolean>;
     updatePackage(id: PackageId, input: PackageInput): Promise<boolean>;
+    updateRaveEvent(id: RaveEventId, input: RaveEventInput): Promise<boolean>;
+    updateSiteEvent(id: SiteEventId, input: SiteEventInput): Promise<boolean>;
+    updateSponsor(id: SponsorId, input: SponsorInput): Promise<boolean>;
 }

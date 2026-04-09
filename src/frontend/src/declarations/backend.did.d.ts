@@ -16,6 +16,35 @@ export interface Analytics {
   'estimatedAttendance' : bigint,
   'ticketsSold' : bigint,
 }
+export interface CategoryInput { 'name' : string, 'description' : string }
+export interface DonationGoal {
+  'id' : bigint,
+  'isGlobal' : boolean,
+  'donationUrl' : string,
+  'title' : string,
+  'createdAt' : bigint,
+  'description' : string,
+  'festivalId' : [] | [bigint],
+  'targetAmount' : bigint,
+  'currentAmount' : bigint,
+}
+export type DonationGoalId = bigint;
+export interface DonationGoalInput {
+  'isGlobal' : boolean,
+  'donationUrl' : string,
+  'title' : string,
+  'description' : string,
+  'festivalId' : [] | [bigint],
+  'targetAmount' : bigint,
+  'currentAmount' : bigint,
+}
+export interface EventCategory {
+  'id' : bigint,
+  'name' : string,
+  'createdAt' : bigint,
+  'description' : string,
+}
+export type EventCategoryId = bigint;
 export type EventType = { 'EDM' : null } |
   { 'Family' : null } |
   { 'Rave' : null } |
@@ -93,6 +122,29 @@ export interface NewsInput {
   'publishDate' : Timestamp,
   'imageUrl' : string,
 }
+export interface NightclubEvent {
+  'id' : bigint,
+  'categoryId' : [] | [bigint],
+  'date' : string,
+  'name' : string,
+  'createdAt' : bigint,
+  'description' : string,
+  'isStandalone' : boolean,
+  'imageUrl' : string,
+  'festivalId' : [] | [bigint],
+  'location' : string,
+}
+export type NightclubEventId = bigint;
+export interface NightclubEventInput {
+  'categoryId' : [] | [bigint],
+  'date' : string,
+  'name' : string,
+  'description' : string,
+  'isStandalone' : boolean,
+  'imageUrl' : string,
+  'festivalId' : [] | [bigint],
+  'location' : string,
+}
 export interface Package {
   'id' : PackageId,
   'packageType' : PackageType,
@@ -118,33 +170,133 @@ export type PackageType = { 'VIP' : null } |
   { 'Accommodation' : null } |
   { 'Transfer' : null } |
   { 'FlightPackage' : null };
+export interface RaveEvent {
+  'id' : bigint,
+  'categoryId' : [] | [bigint],
+  'date' : string,
+  'name' : string,
+  'createdAt' : bigint,
+  'description' : string,
+  'isStandalone' : boolean,
+  'imageUrl' : string,
+  'festivalId' : [] | [bigint],
+  'location' : string,
+  'eventType' : string,
+}
+export type RaveEventId = bigint;
+export interface RaveEventInput {
+  'categoryId' : [] | [bigint],
+  'date' : string,
+  'name' : string,
+  'description' : string,
+  'isStandalone' : boolean,
+  'imageUrl' : string,
+  'festivalId' : [] | [bigint],
+  'location' : string,
+  'eventType' : string,
+}
 export type Season = { 'Winter' : null } |
   { 'Summer' : null };
+export interface SiteEvent {
+  'id' : bigint,
+  'categoryId' : [] | [bigint],
+  'date' : string,
+  'name' : string,
+  'createdAt' : bigint,
+  'description' : string,
+  'imageUrl' : string,
+  'festivalId' : [] | [bigint],
+  'location' : string,
+}
+export type SiteEventId = bigint;
+export interface SiteEventInput {
+  'categoryId' : [] | [bigint],
+  'date' : string,
+  'name' : string,
+  'description' : string,
+  'imageUrl' : string,
+  'festivalId' : [] | [bigint],
+  'location' : string,
+}
+export interface Sponsor {
+  'id' : bigint,
+  'websiteUrl' : string,
+  'festivalIds' : Array<bigint>,
+  'name' : string,
+  'createdAt' : bigint,
+  'tier' : string,
+  'logoUrl' : string,
+}
+export type SponsorId = bigint;
+export interface SponsorInput {
+  'websiteUrl' : string,
+  'festivalIds' : Array<bigint>,
+  'name' : string,
+  'tier' : string,
+  'logoUrl' : string,
+}
 export type Timestamp = bigint;
 export interface _SERVICE {
+  'addCategory' : ActorMethod<[CategoryInput], EventCategoryId>,
+  'addDonationGoal' : ActorMethod<[DonationGoalInput], DonationGoalId>,
   'addFestival' : ActorMethod<[FestivalInput], FestivalId>,
   'addLineupEntry' : ActorMethod<[LineupInput], LineupId>,
   'addNews' : ActorMethod<[NewsInput], NewsId>,
+  'addNightclubEvent' : ActorMethod<[NightclubEventInput], NightclubEventId>,
   'addPackage' : ActorMethod<[PackageInput], PackageId>,
+  'addRaveEvent' : ActorMethod<[RaveEventInput], RaveEventId>,
+  'addSiteEvent' : ActorMethod<[SiteEventInput], SiteEventId>,
+  'addSponsor' : ActorMethod<[SponsorInput], SponsorId>,
   'adminLogin' : ActorMethod<[string], [] | [string]>,
+  'deleteCategory' : ActorMethod<[EventCategoryId], boolean>,
+  'deleteDonationGoal' : ActorMethod<[DonationGoalId], boolean>,
   'deleteFestival' : ActorMethod<[FestivalId], boolean>,
   'deleteLineupEntry' : ActorMethod<[LineupId], boolean>,
   'deleteNews' : ActorMethod<[NewsId], boolean>,
+  'deleteNightclubEvent' : ActorMethod<[NightclubEventId], boolean>,
   'deletePackage' : ActorMethod<[PackageId], boolean>,
+  'deleteRaveEvent' : ActorMethod<[RaveEventId], boolean>,
+  'deleteSiteEvent' : ActorMethod<[SiteEventId], boolean>,
+  'deleteSponsor' : ActorMethod<[SponsorId], boolean>,
   'getAnalytics' : ActorMethod<[], Array<Analytics>>,
+  'getCategories' : ActorMethod<[], Array<EventCategory>>,
+  'getCategory' : ActorMethod<[EventCategoryId], [] | [EventCategory]>,
+  'getDonationGoal' : ActorMethod<[DonationGoalId], [] | [DonationGoal]>,
+  'getDonationGoals' : ActorMethod<[], Array<DonationGoal>>,
   'getFestival' : ActorMethod<[FestivalId], [] | [Festival]>,
   'getFestivals' : ActorMethod<[], Array<Festival>>,
   'getLineup' : ActorMethod<[FestivalId], Array<LineupEntry>>,
   'getNews' : ActorMethod<[], Array<NewsArticle>>,
   'getNewsArticle' : ActorMethod<[NewsId], [] | [NewsArticle]>,
+  'getNightclubEvent' : ActorMethod<[NightclubEventId], [] | [NightclubEvent]>,
+  'getNightclubEvents' : ActorMethod<[], Array<NightclubEvent>>,
   'getPackages' : ActorMethod<[], Array<Package>>,
+  'getRaveEvent' : ActorMethod<[RaveEventId], [] | [RaveEvent]>,
+  'getRaveEvents' : ActorMethod<[], Array<RaveEvent>>,
+  'getSiteEvent' : ActorMethod<[SiteEventId], [] | [SiteEvent]>,
+  'getSiteEvents' : ActorMethod<[], Array<SiteEvent>>,
+  'getSponsor' : ActorMethod<[SponsorId], [] | [Sponsor]>,
+  'getSponsors' : ActorMethod<[], Array<Sponsor>>,
+  'getSponsorsByFestival' : ActorMethod<[FestivalId], Array<Sponsor>>,
   'setFestivalImage' : ActorMethod<[FestivalId, string], boolean>,
   'setFestivalTicketUrl' : ActorMethod<[FestivalId, string], boolean>,
   'toggleFestivalStatus' : ActorMethod<[FestivalId], boolean>,
+  'updateCategory' : ActorMethod<[EventCategoryId, CategoryInput], boolean>,
+  'updateDonationGoal' : ActorMethod<
+    [DonationGoalId, DonationGoalInput],
+    boolean
+  >,
   'updateFestival' : ActorMethod<[FestivalId, FestivalInput], boolean>,
   'updateLineupEntry' : ActorMethod<[LineupId, LineupInput], boolean>,
   'updateNews' : ActorMethod<[NewsId, NewsInput], boolean>,
+  'updateNightclubEvent' : ActorMethod<
+    [NightclubEventId, NightclubEventInput],
+    boolean
+  >,
   'updatePackage' : ActorMethod<[PackageId, PackageInput], boolean>,
+  'updateRaveEvent' : ActorMethod<[RaveEventId, RaveEventInput], boolean>,
+  'updateSiteEvent' : ActorMethod<[SiteEventId, SiteEventInput], boolean>,
+  'updateSponsor' : ActorMethod<[SponsorId, SponsorInput], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

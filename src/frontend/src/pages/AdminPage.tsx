@@ -1,26 +1,45 @@
 import {
   BarChart3,
+  CalendarDays,
+  DollarSign,
   Eye,
   EyeOff,
+  FolderOpen,
   List,
   LogIn,
   Music,
   Newspaper,
   Package,
   Shield,
+  Star,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 import AnalyticsTab from "../components/admin/AnalyticsTab";
+import DonationsTab from "../components/admin/DonationsTab";
+import EventsCategoriesTab from "../components/admin/EventsCategoriesTab";
 import FestivalsTab from "../components/admin/FestivalsTab";
 import LineupTab from "../components/admin/LineupTab";
 import NewsTab from "../components/admin/NewsTab";
 import PackagesTab from "../components/admin/PackagesTab";
+import RaveNightclubTab from "../components/admin/RaveNightclubTab";
+import SponsorsTab from "../components/admin/SponsorsTab";
 import { useAdminLogin } from "../hooks/useBackend";
 
 const LOGO_URL =
   "https://image2url.com/r2/default/images/1775683614327-346f8e28-9a02-4a59-8ff6-14dd1641405e.png";
 
-type Tab = "festivals" | "packages" | "analytics" | "news" | "lineup";
+type Tab =
+  | "festivals"
+  | "packages"
+  | "news"
+  | "lineup"
+  | "analytics"
+  | "donations"
+  | "sponsors"
+  | "rave-nightclub"
+  | "events"
+  | "categories";
 
 const TABS: { id: Tab; label: string; icon: typeof List }[] = [
   { id: "festivals", label: "Festivals", icon: List },
@@ -28,6 +47,11 @@ const TABS: { id: Tab; label: string; icon: typeof List }[] = [
   { id: "news", label: "News", icon: Newspaper },
   { id: "lineup", label: "Lineup", icon: Music },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
+  { id: "donations", label: "Donations", icon: DollarSign },
+  { id: "sponsors", label: "Sponsors", icon: Star },
+  { id: "rave-nightclub", label: "Rave & Nightclub", icon: Zap },
+  { id: "events", label: "Events", icon: CalendarDays },
+  { id: "categories", label: "Categories", icon: FolderOpen },
 ];
 
 // ── Login Screen ──────────────────────────────────────────────────────────────
@@ -218,7 +242,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               key={id}
               type="button"
               onClick={() => setActiveTab(id)}
-              className="flex items-center gap-2 px-5 py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth"
+              className="flex items-center gap-2 px-5 py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth whitespace-nowrap"
               style={
                 activeTab === id
                   ? {
@@ -242,6 +266,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         {activeTab === "news" && <NewsTab />}
         {activeTab === "lineup" && <LineupTab />}
         {activeTab === "analytics" && <AnalyticsTab />}
+        {activeTab === "donations" && <DonationsTab />}
+        {activeTab === "sponsors" && <SponsorsTab />}
+        {activeTab === "rave-nightclub" && <RaveNightclubTab />}
+        {activeTab === "events" && <EventsCategoriesTab />}
+        {activeTab === "categories" && <EventsCategoriesTab />}
       </div>
     </section>
   );

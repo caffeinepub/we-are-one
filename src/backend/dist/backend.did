@@ -1,8 +1,77 @@
 type Timestamp = int;
+type SponsorInput = 
+ record {
+   festivalIds: vec nat;
+   logoUrl: text;
+   name: text;
+   tier: text;
+   websiteUrl: text;
+ };
+type SponsorId = nat;
+type Sponsor = 
+ record {
+   createdAt: int;
+   festivalIds: vec nat;
+   id: nat;
+   logoUrl: text;
+   name: text;
+   tier: text;
+   websiteUrl: text;
+ };
+type SiteEventInput = 
+ record {
+   categoryId: opt nat;
+   date: text;
+   description: text;
+   festivalId: opt nat;
+   imageUrl: text;
+   location: text;
+   name: text;
+ };
+type SiteEventId = nat;
+type SiteEvent = 
+ record {
+   categoryId: opt nat;
+   createdAt: int;
+   date: text;
+   description: text;
+   festivalId: opt nat;
+   id: nat;
+   imageUrl: text;
+   location: text;
+   name: text;
+ };
 type Season = 
  variant {
    Summer;
    Winter;
+ };
+type RaveEventInput = 
+ record {
+   categoryId: opt nat;
+   date: text;
+   description: text;
+   eventType: text;
+   festivalId: opt nat;
+   imageUrl: text;
+   isStandalone: bool;
+   location: text;
+   name: text;
+ };
+type RaveEventId = nat;
+type RaveEvent = 
+ record {
+   categoryId: opt nat;
+   createdAt: int;
+   date: text;
+   description: text;
+   eventType: text;
+   festivalId: opt nat;
+   id: nat;
+   imageUrl: text;
+   isStandalone: bool;
+   location: text;
+   name: text;
  };
 type PackageType = 
  variant {
@@ -33,6 +102,31 @@ type Package =
    name: text;
    packageType: PackageType;
    priceGBP: nat;
+ };
+type NightclubEventInput = 
+ record {
+   categoryId: opt nat;
+   date: text;
+   description: text;
+   festivalId: opt nat;
+   imageUrl: text;
+   isStandalone: bool;
+   location: text;
+   name: text;
+ };
+type NightclubEventId = nat;
+type NightclubEvent = 
+ record {
+   categoryId: opt nat;
+   createdAt: int;
+   date: text;
+   description: text;
+   festivalId: opt nat;
+   id: nat;
+   imageUrl: text;
+   isStandalone: bool;
+   location: text;
+   name: text;
  };
 type NewsInput = 
  record {
@@ -123,6 +217,42 @@ type EventType =
    Family;
    Rave;
  };
+type EventCategoryId = nat;
+type EventCategory = 
+ record {
+   createdAt: int;
+   description: text;
+   id: nat;
+   name: text;
+ };
+type DonationGoalInput = 
+ record {
+   currentAmount: nat;
+   description: text;
+   donationUrl: text;
+   festivalId: opt nat;
+   isGlobal: bool;
+   targetAmount: nat;
+   title: text;
+ };
+type DonationGoalId = nat;
+type DonationGoal = 
+ record {
+   createdAt: int;
+   currentAmount: nat;
+   description: text;
+   donationUrl: text;
+   festivalId: opt nat;
+   id: nat;
+   isGlobal: bool;
+   targetAmount: nat;
+   title: text;
+ };
+type CategoryInput = 
+ record {
+   description: text;
+   name: text;
+ };
 type Analytics = 
  record {
    estimatedAttendance: nat;
@@ -131,27 +261,60 @@ type Analytics =
    ticketsSold: nat;
  };
 service : {
+  addCategory: (input: CategoryInput) -> (EventCategoryId);
+  addDonationGoal: (input: DonationGoalInput) -> (DonationGoalId);
   addFestival: (input: FestivalInput) -> (FestivalId);
   addLineupEntry: (input: LineupInput) -> (LineupId);
   addNews: (input: NewsInput) -> (NewsId);
+  addNightclubEvent: (input: NightclubEventInput) -> (NightclubEventId);
   addPackage: (input: PackageInput) -> (PackageId);
+  addRaveEvent: (input: RaveEventInput) -> (RaveEventId);
+  addSiteEvent: (input: SiteEventInput) -> (SiteEventId);
+  addSponsor: (input: SponsorInput) -> (SponsorId);
   adminLogin: (password: text) -> (opt text);
+  deleteCategory: (id: EventCategoryId) -> (bool);
+  deleteDonationGoal: (id: DonationGoalId) -> (bool);
   deleteFestival: (id: FestivalId) -> (bool);
   deleteLineupEntry: (id: LineupId) -> (bool);
   deleteNews: (id: NewsId) -> (bool);
+  deleteNightclubEvent: (id: NightclubEventId) -> (bool);
   deletePackage: (id: PackageId) -> (bool);
+  deleteRaveEvent: (id: RaveEventId) -> (bool);
+  deleteSiteEvent: (id: SiteEventId) -> (bool);
+  deleteSponsor: (id: SponsorId) -> (bool);
   getAnalytics: () -> (vec Analytics) query;
+  getCategories: () -> (vec EventCategory) query;
+  getCategory: (id: EventCategoryId) -> (opt EventCategory) query;
+  getDonationGoal: (id: DonationGoalId) -> (opt DonationGoal) query;
+  getDonationGoals: () -> (vec DonationGoal) query;
   getFestival: (id: FestivalId) -> (opt Festival) query;
   getFestivals: () -> (vec Festival) query;
   getLineup: (festivalId: FestivalId) -> (vec LineupEntry) query;
   getNews: () -> (vec NewsArticle) query;
   getNewsArticle: (id: NewsId) -> (opt NewsArticle) query;
+  getNightclubEvent: (id: NightclubEventId) -> (opt NightclubEvent) query;
+  getNightclubEvents: () -> (vec NightclubEvent) query;
   getPackages: () -> (vec Package) query;
+  getRaveEvent: (id: RaveEventId) -> (opt RaveEvent) query;
+  getRaveEvents: () -> (vec RaveEvent) query;
+  getSiteEvent: (id: SiteEventId) -> (opt SiteEvent) query;
+  getSiteEvents: () -> (vec SiteEvent) query;
+  getSponsor: (id: SponsorId) -> (opt Sponsor) query;
+  getSponsors: () -> (vec Sponsor) query;
+  getSponsorsByFestival: (festivalId: FestivalId) -> (vec Sponsor) query;
   setFestivalImage: (id: FestivalId, imageUrl: text) -> (bool);
   setFestivalTicketUrl: (id: FestivalId, url: text) -> (bool);
   toggleFestivalStatus: (id: FestivalId) -> (bool);
+  updateCategory: (id: EventCategoryId, input: CategoryInput) -> (bool);
+  updateDonationGoal: (id: DonationGoalId, input: DonationGoalInput) ->
+   (bool);
   updateFestival: (id: FestivalId, input: FestivalInput) -> (bool);
   updateLineupEntry: (id: LineupId, input: LineupInput) -> (bool);
   updateNews: (id: NewsId, input: NewsInput) -> (bool);
+  updateNightclubEvent: (id: NightclubEventId, input: NightclubEventInput) ->
+   (bool);
   updatePackage: (id: PackageId, input: PackageInput) -> (bool);
+  updateRaveEvent: (id: RaveEventId, input: RaveEventInput) -> (bool);
+  updateSiteEvent: (id: SiteEventId, input: SiteEventInput) -> (bool);
+  updateSponsor: (id: SponsorId, input: SponsorInput) -> (bool);
 }

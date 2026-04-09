@@ -16,6 +16,10 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const NewsPage = lazy(() => import("./pages/NewsPage"));
 const LineupPage = lazy(() => import("./pages/LineupPage"));
+const DonationsPage = lazy(() => import("./pages/DonationsPage"));
+const SponsorsPage = lazy(() => import("./pages/SponsorsPage"));
+const RavePage = lazy(() => import("./pages/RavePage"));
+const NightclubPage = lazy(() => import("./pages/NightclubPage"));
 
 function PageLoader() {
   return (
@@ -99,6 +103,30 @@ const lineupRoute = createRoute({
   component: LineupPage,
 });
 
+const donationsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/donations",
+  component: DonationsPage,
+});
+
+const sponsorsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/sponsors",
+  component: SponsorsPage,
+});
+
+const raveRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/rave",
+  component: RavePage,
+});
+
+const nightclubRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/nightclub",
+  component: NightclubPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   festivalsRoute,
@@ -108,6 +136,10 @@ const routeTree = rootRoute.addChildren([
   adminRoute,
   newsRoute,
   lineupRoute,
+  donationsRoute,
+  sponsorsRoute,
+  raveRoute,
+  nightclubRoute,
 ]);
 
 const router = createRouter({ routeTree });

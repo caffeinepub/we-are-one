@@ -3,6 +3,20 @@ type AdminSession__254726568 =
   {expiresAt : Timestamp__301639476; token : Text};
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DonationGoal__9242658 =
+  {
+    createdAt : Int;
+    currentAmount : Nat;
+    description : Text;
+    donationUrl : Text;
+    festivalId : ?Nat;
+    id : Nat;
+    isGlobal : Bool;
+    targetAmount : Nat;
+    title : Text
+  };
+type EventCategory__543662769 =
+  {createdAt : Int; description : Text; id : Nat; name : Text};
 type EventType__202790818 = {#ClubHotel; #EDM; #Family; #Rave};
 type FestivalId__1051950078 = Nat;
 type FestivalStatus__412310600 = {#Active; #ComingSoon};
@@ -52,6 +66,19 @@ type NewsArticle__407119424 =
     title : Text
   };
 type NewsId__369553967 = Nat;
+type NightclubEvent__711891276 =
+  {
+    categoryId : ?Nat;
+    createdAt : Int;
+    date : Text;
+    description : Text;
+    festivalId : ?Nat;
+    id : Nat;
+    imageUrl : Text;
+    isStandalone : Bool;
+    location : Text;
+    name : Text
+  };
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
 type PackageId__581373409 = Nat;
@@ -75,9 +102,57 @@ type Package__77264284 =
     packageType : PackageType__306656939;
     priceGBP : Nat
   };
+type RaveEvent__304621381 =
+  {
+    categoryId : ?Nat;
+    createdAt : Int;
+    date : Text;
+    description : Text;
+    eventType : Text;
+    festivalId : ?Nat;
+    id : Nat;
+    imageUrl : Text;
+    isStandalone : Bool;
+    location : Text;
+    name : Text
+  };
 type Season__1069644239 = {#Summer; #Winter};
+type SiteEvent__221521398 =
+  {
+    categoryId : ?Nat;
+    createdAt : Int;
+    date : Text;
+    description : Text;
+    festivalId : ?Nat;
+    id : Nat;
+    imageUrl : Text;
+    location : Text;
+    name : Text
+  };
+type Sponsor__865634980 =
+  {
+    createdAt : Int;
+    festivalIds : [Nat];
+    id : Nat;
+    logoUrl : Text;
+    name : Text;
+    tier : Text;
+    websiteUrl : Text
+  };
 type Timestamp__301639476 = Int;
 actor {
+  stable categories :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?EventCategory__543662769]];
+      var elementIndex : Nat__490723111
+    };
+  stable donationGoals :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?DonationGoal__9242658]];
+      var elementIndex : Nat__490723111
+    };
   stable festivals :
     {
       var blockIndex : Nat__490723111;
@@ -96,14 +171,32 @@ actor {
       var blocks : [var [var ?NewsArticle__407119424]];
       var elementIndex : Nat__490723111
     };
+  stable var nextCategoryId : Nat;
+  stable var nextDonationGoalId : Nat;
   stable var nextFestivalId : Nat;
   stable var nextLineupId : Nat;
   stable var nextNewsId : Nat;
+  stable var nextNightclubEventId : Nat;
   stable var nextPackageId : Nat;
+  stable var nextRaveEventId : Nat;
+  stable var nextSiteEventId : Nat;
+  stable var nextSponsorId : Nat;
+  stable nightclubEvents :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?NightclubEvent__711891276]];
+      var elementIndex : Nat__490723111
+    };
   stable packages :
     {
       var blockIndex : Nat__490723111;
       var blocks : [var [var ?Package__77264284]];
+      var elementIndex : Nat__490723111
+    };
+  stable raveEvents :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?RaveEvent__304621381]];
       var elementIndex : Nat__490723111
     };
   stable var seedFestivalId : Nat;
@@ -112,5 +205,17 @@ actor {
     {
       var root : Node__46230540<Text, AdminSession__254726568>;
       var size : Nat__490723111
+    };
+  stable siteEvents :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?SiteEvent__221521398]];
+      var elementIndex : Nat__490723111
+    };
+  stable sponsors :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Sponsor__865634980]];
+      var elementIndex : Nat__490723111
     }
 };

@@ -6,8 +6,12 @@ const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/festivals", label: "Festivals" },
   { to: "/packages", label: "Packages" },
-  { to: "/jobs", label: "Jobs" },
+  { to: "/rave", label: "Rave" },
+  { to: "/nightclub", label: "Nightclub" },
   { to: "/news", label: "News" },
+  { to: "/donations", label: "Donations" },
+  { to: "/sponsors", label: "Sponsors" },
+  { to: "/jobs", label: "Jobs" },
   { to: "/contact", label: "Contact" },
 ];
 

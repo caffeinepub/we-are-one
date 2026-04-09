@@ -90,7 +90,33 @@ export class ExternalBlob {
     }
 }
 export type Timestamp = bigint;
-export type NewsId = bigint;
+export type SiteEventId = bigint;
+export interface SiteEvent {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}
+export interface EventCategory {
+    id: bigint;
+    name: string;
+    createdAt: bigint;
+    description: string;
+}
+export interface Sponsor {
+    id: bigint;
+    websiteUrl: string;
+    festivalIds: Array<bigint>;
+    name: string;
+    createdAt: bigint;
+    tier: string;
+    logoUrl: string;
+}
 export interface PackageInput {
     packageType: PackageType;
     name: string;
@@ -99,7 +125,70 @@ export interface PackageInput {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export interface NightclubEventInput {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}
 export type LineupId = bigint;
+export interface CategoryInput {
+    name: string;
+    description: string;
+}
+export interface DonationGoal {
+    id: bigint;
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    createdAt: bigint;
+    description: string;
+    festivalId?: bigint;
+    targetAmount: bigint;
+    currentAmount: bigint;
+}
+export interface RaveEvent {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+    eventType: string;
+}
+export interface Analytics {
+    festivalId: FestivalId;
+    estimatedRevenue: string;
+    estimatedAttendance: bigint;
+    ticketsSold: bigint;
+}
+export type EventCategoryId = bigint;
+export type PackageId = bigint;
+export type RaveEventId = bigint;
+export interface LineupInput {
+    stage: string;
+    festivalId: FestivalId;
+    artistName: string;
+    timeSlot: string;
+}
+export interface NewsInput {
+    title: string;
+    content: string;
+    publishDate: Timestamp;
+    imageUrl: string;
+}
+export type SponsorId = bigint;
+export type DonationGoalId = bigint;
+export type NewsId = bigint;
+export type NightclubEventId = bigint;
 export interface Festival {
     id: FestivalId;
     status: FestivalStatus;
@@ -130,18 +219,24 @@ export interface Package {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export interface NightclubEvent {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}
 export interface LineupEntry {
     id: LineupId;
     stage: string;
     festivalId: FestivalId;
     artistName: string;
     timeSlot: string;
-}
-export interface Analytics {
-    festivalId: FestivalId;
-    estimatedRevenue: string;
-    estimatedAttendance: bigint;
-    ticketsSold: bigint;
 }
 export interface FestivalInput {
     status: FestivalStatus;
@@ -163,7 +258,22 @@ export interface FestivalInput {
     specialNotes?: string;
     eventType: EventType;
 }
-export type PackageId = bigint;
+export interface SponsorInput {
+    websiteUrl: string;
+    festivalIds: Array<bigint>;
+    name: string;
+    tier: string;
+    logoUrl: string;
+}
+export interface DonationGoalInput {
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    description: string;
+    festivalId?: bigint;
+    targetAmount: bigint;
+    currentAmount: bigint;
+}
 export interface NewsArticle {
     id: NewsId;
     title: string;
@@ -173,17 +283,25 @@ export interface NewsArticle {
     imageUrl: string;
 }
 export type FestivalId = bigint;
-export interface NewsInput {
-    title: string;
-    content: string;
-    publishDate: Timestamp;
+export interface RaveEventInput {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
     imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+    eventType: string;
 }
-export interface LineupInput {
-    stage: string;
-    festivalId: FestivalId;
-    artistName: string;
-    timeSlot: string;
+export interface SiteEventInput {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
 }
 export enum EventType {
     EDM = "EDM",
@@ -209,44 +327,103 @@ export enum Season {
     Summer = "Summer"
 }
 export interface backendInterface {
+    addCategory(input: CategoryInput): Promise<EventCategoryId>;
+    addDonationGoal(input: DonationGoalInput): Promise<DonationGoalId>;
     addFestival(input: FestivalInput): Promise<FestivalId>;
     addLineupEntry(input: LineupInput): Promise<LineupId>;
     addNews(input: NewsInput): Promise<NewsId>;
+    addNightclubEvent(input: NightclubEventInput): Promise<NightclubEventId>;
     addPackage(input: PackageInput): Promise<PackageId>;
+    addRaveEvent(input: RaveEventInput): Promise<RaveEventId>;
+    addSiteEvent(input: SiteEventInput): Promise<SiteEventId>;
+    addSponsor(input: SponsorInput): Promise<SponsorId>;
     adminLogin(password: string): Promise<string | null>;
+    deleteCategory(id: EventCategoryId): Promise<boolean>;
+    deleteDonationGoal(id: DonationGoalId): Promise<boolean>;
     deleteFestival(id: FestivalId): Promise<boolean>;
     deleteLineupEntry(id: LineupId): Promise<boolean>;
     deleteNews(id: NewsId): Promise<boolean>;
+    deleteNightclubEvent(id: NightclubEventId): Promise<boolean>;
     deletePackage(id: PackageId): Promise<boolean>;
+    deleteRaveEvent(id: RaveEventId): Promise<boolean>;
+    deleteSiteEvent(id: SiteEventId): Promise<boolean>;
+    deleteSponsor(id: SponsorId): Promise<boolean>;
     getAnalytics(): Promise<Array<Analytics>>;
+    getCategories(): Promise<Array<EventCategory>>;
+    getCategory(id: EventCategoryId): Promise<EventCategory | null>;
+    getDonationGoal(id: DonationGoalId): Promise<DonationGoal | null>;
+    getDonationGoals(): Promise<Array<DonationGoal>>;
     getFestival(id: FestivalId): Promise<Festival | null>;
     getFestivals(): Promise<Array<Festival>>;
     getLineup(festivalId: FestivalId): Promise<Array<LineupEntry>>;
     getNews(): Promise<Array<NewsArticle>>;
     getNewsArticle(id: NewsId): Promise<NewsArticle | null>;
+    getNightclubEvent(id: NightclubEventId): Promise<NightclubEvent | null>;
+    getNightclubEvents(): Promise<Array<NightclubEvent>>;
     getPackages(): Promise<Array<Package>>;
+    getRaveEvent(id: RaveEventId): Promise<RaveEvent | null>;
+    getRaveEvents(): Promise<Array<RaveEvent>>;
+    getSiteEvent(id: SiteEventId): Promise<SiteEvent | null>;
+    getSiteEvents(): Promise<Array<SiteEvent>>;
+    getSponsor(id: SponsorId): Promise<Sponsor | null>;
+    getSponsors(): Promise<Array<Sponsor>>;
+    getSponsorsByFestival(festivalId: FestivalId): Promise<Array<Sponsor>>;
     setFestivalImage(id: FestivalId, imageUrl: string): Promise<boolean>;
     setFestivalTicketUrl(id: FestivalId, url: string): Promise<boolean>;
     toggleFestivalStatus(id: FestivalId): Promise<boolean>;
+    updateCategory(id: EventCategoryId, input: CategoryInput): Promise<boolean>;
+    updateDonationGoal(id: DonationGoalId, input: DonationGoalInput): Promise<boolean>;
     updateFestival(id: FestivalId, input: FestivalInput): Promise<boolean>;
     updateLineupEntry(id: LineupId, input: LineupInput): Promise<boolean>;
     updateNews(id: NewsId, input: NewsInput): Promise<boolean>;
+    updateNightclubEvent(id: NightclubEventId, input: NightclubEventInput): Promise<boolean>;
     updatePackage(id: PackageId, input: PackageInput): Promise<boolean>;
+    updateRaveEvent(id: RaveEventId, input: RaveEventInput): Promise<boolean>;
+    updateSiteEvent(id: SiteEventId, input: SiteEventInput): Promise<boolean>;
+    updateSponsor(id: SponsorId, input: SponsorInput): Promise<boolean>;
 }
-import type { EventType as _EventType, Festival as _Festival, FestivalId as _FestivalId, FestivalInput as _FestivalInput, FestivalStatus as _FestivalStatus, NewsArticle as _NewsArticle, Package as _Package, PackageId as _PackageId, PackageInput as _PackageInput, PackageType as _PackageType, Season as _Season } from "./declarations/backend.did.d.ts";
+import type { DonationGoal as _DonationGoal, DonationGoalInput as _DonationGoalInput, EventCategory as _EventCategory, EventType as _EventType, Festival as _Festival, FestivalId as _FestivalId, FestivalInput as _FestivalInput, FestivalStatus as _FestivalStatus, NewsArticle as _NewsArticle, NightclubEvent as _NightclubEvent, NightclubEventInput as _NightclubEventInput, Package as _Package, PackageId as _PackageId, PackageInput as _PackageInput, PackageType as _PackageType, RaveEvent as _RaveEvent, RaveEventInput as _RaveEventInput, Season as _Season, SiteEvent as _SiteEvent, SiteEventInput as _SiteEventInput, Sponsor as _Sponsor } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async addFestival(arg0: FestivalInput): Promise<FestivalId> {
+    async addCategory(arg0: CategoryInput): Promise<EventCategoryId> {
         if (this.processError) {
             try {
-                const result = await this.actor.addFestival(to_candid_FestivalInput_n1(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.addCategory(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addFestival(to_candid_FestivalInput_n1(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.addCategory(arg0);
+            return result;
+        }
+    }
+    async addDonationGoal(arg0: DonationGoalInput): Promise<DonationGoalId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addDonationGoal(to_candid_DonationGoalInput_n1(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addDonationGoal(to_candid_DonationGoalInput_n1(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async addFestival(arg0: FestivalInput): Promise<FestivalId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addFestival(to_candid_FestivalInput_n3(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addFestival(to_candid_FestivalInput_n3(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
@@ -278,17 +455,73 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async addPackage(arg0: PackageInput): Promise<PackageId> {
+    async addNightclubEvent(arg0: NightclubEventInput): Promise<NightclubEventId> {
         if (this.processError) {
             try {
-                const result = await this.actor.addPackage(to_candid_PackageInput_n9(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.addNightclubEvent(to_candid_NightclubEventInput_n11(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addPackage(to_candid_PackageInput_n9(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.addNightclubEvent(to_candid_NightclubEventInput_n11(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async addPackage(arg0: PackageInput): Promise<PackageId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addPackage(to_candid_PackageInput_n13(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addPackage(to_candid_PackageInput_n13(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async addRaveEvent(arg0: RaveEventInput): Promise<RaveEventId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addRaveEvent(to_candid_RaveEventInput_n17(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addRaveEvent(to_candid_RaveEventInput_n17(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async addSiteEvent(arg0: SiteEventInput): Promise<SiteEventId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addSiteEvent(to_candid_SiteEventInput_n19(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addSiteEvent(to_candid_SiteEventInput_n19(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async addSponsor(arg0: SponsorInput): Promise<SponsorId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addSponsor(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addSponsor(arg0);
             return result;
         }
     }
@@ -296,14 +529,42 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.adminLogin(arg0);
-                return from_candid_opt_n13(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n21(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.adminLogin(arg0);
-            return from_candid_opt_n13(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n21(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async deleteCategory(arg0: EventCategoryId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteCategory(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteCategory(arg0);
+            return result;
+        }
+    }
+    async deleteDonationGoal(arg0: DonationGoalId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteDonationGoal(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteDonationGoal(arg0);
+            return result;
         }
     }
     async deleteFestival(arg0: FestivalId): Promise<boolean> {
@@ -348,6 +609,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async deleteNightclubEvent(arg0: NightclubEventId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteNightclubEvent(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteNightclubEvent(arg0);
+            return result;
+        }
+    }
     async deletePackage(arg0: PackageId): Promise<boolean> {
         if (this.processError) {
             try {
@@ -359,6 +634,48 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.deletePackage(arg0);
+            return result;
+        }
+    }
+    async deleteRaveEvent(arg0: RaveEventId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteRaveEvent(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteRaveEvent(arg0);
+            return result;
+        }
+    }
+    async deleteSiteEvent(arg0: SiteEventId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteSiteEvent(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteSiteEvent(arg0);
+            return result;
+        }
+    }
+    async deleteSponsor(arg0: SponsorId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteSponsor(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteSponsor(arg0);
             return result;
         }
     }
@@ -376,32 +693,88 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getCategories(): Promise<Array<EventCategory>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCategories();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCategories();
+            return result;
+        }
+    }
+    async getCategory(arg0: EventCategoryId): Promise<EventCategory | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCategory(arg0);
+                return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCategory(arg0);
+            return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getDonationGoal(arg0: DonationGoalId): Promise<DonationGoal | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getDonationGoal(arg0);
+                return from_candid_opt_n23(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getDonationGoal(arg0);
+            return from_candid_opt_n23(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getDonationGoals(): Promise<Array<DonationGoal>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getDonationGoals();
+                return from_candid_vec_n27(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getDonationGoals();
+            return from_candid_vec_n27(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getFestival(arg0: FestivalId): Promise<Festival | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getFestival(arg0);
-                return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n28(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getFestival(arg0);
-            return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n28(this._uploadFile, this._downloadFile, result);
         }
     }
     async getFestivals(): Promise<Array<Festival>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getFestivals();
-                return from_candid_vec_n23(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n37(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getFestivals();
-            return from_candid_vec_n23(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n37(this._uploadFile, this._downloadFile, result);
         }
     }
     async getLineup(arg0: FestivalId): Promise<Array<LineupEntry>> {
@@ -436,28 +809,154 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getNewsArticle(arg0);
-                return from_candid_opt_n24(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getNewsArticle(arg0);
-            return from_candid_opt_n24(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getNightclubEvent(arg0: NightclubEventId): Promise<NightclubEvent | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getNightclubEvent(arg0);
+                return from_candid_opt_n39(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getNightclubEvent(arg0);
+            return from_candid_opt_n39(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getNightclubEvents(): Promise<Array<NightclubEvent>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getNightclubEvents();
+                return from_candid_vec_n42(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getNightclubEvents();
+            return from_candid_vec_n42(this._uploadFile, this._downloadFile, result);
         }
     }
     async getPackages(): Promise<Array<Package>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getPackages();
-                return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n43(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getPackages();
-            return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n43(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getRaveEvent(arg0: RaveEventId): Promise<RaveEvent | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRaveEvent(arg0);
+                return from_candid_opt_n49(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRaveEvent(arg0);
+            return from_candid_opt_n49(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getRaveEvents(): Promise<Array<RaveEvent>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRaveEvents();
+                return from_candid_vec_n52(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRaveEvents();
+            return from_candid_vec_n52(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getSiteEvent(arg0: SiteEventId): Promise<SiteEvent | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSiteEvent(arg0);
+                return from_candid_opt_n53(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSiteEvent(arg0);
+            return from_candid_opt_n53(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getSiteEvents(): Promise<Array<SiteEvent>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSiteEvents();
+                return from_candid_vec_n56(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSiteEvents();
+            return from_candid_vec_n56(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getSponsor(arg0: SponsorId): Promise<Sponsor | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSponsor(arg0);
+                return from_candid_opt_n57(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSponsor(arg0);
+            return from_candid_opt_n57(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getSponsors(): Promise<Array<Sponsor>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSponsors();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSponsors();
+            return result;
+        }
+    }
+    async getSponsorsByFestival(arg0: FestivalId): Promise<Array<Sponsor>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSponsorsByFestival(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSponsorsByFestival(arg0);
+            return result;
         }
     }
     async setFestivalImage(arg0: FestivalId, arg1: string): Promise<boolean> {
@@ -502,17 +1001,45 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async updateFestival(arg0: FestivalId, arg1: FestivalInput): Promise<boolean> {
+    async updateCategory(arg0: EventCategoryId, arg1: CategoryInput): Promise<boolean> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateFestival(arg0, to_candid_FestivalInput_n1(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.updateCategory(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateFestival(arg0, to_candid_FestivalInput_n1(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.updateCategory(arg0, arg1);
+            return result;
+        }
+    }
+    async updateDonationGoal(arg0: DonationGoalId, arg1: DonationGoalInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateDonationGoal(arg0, to_candid_DonationGoalInput_n1(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateDonationGoal(arg0, to_candid_DonationGoalInput_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async updateFestival(arg0: FestivalId, arg1: FestivalInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateFestival(arg0, to_candid_FestivalInput_n3(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateFestival(arg0, to_candid_FestivalInput_n3(this._uploadFile, this._downloadFile, arg1));
             return result;
         }
     }
@@ -544,52 +1071,174 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async updatePackage(arg0: PackageId, arg1: PackageInput): Promise<boolean> {
+    async updateNightclubEvent(arg0: NightclubEventId, arg1: NightclubEventInput): Promise<boolean> {
         if (this.processError) {
             try {
-                const result = await this.actor.updatePackage(arg0, to_candid_PackageInput_n9(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.updateNightclubEvent(arg0, to_candid_NightclubEventInput_n11(this._uploadFile, this._downloadFile, arg1));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updatePackage(arg0, to_candid_PackageInput_n9(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.updateNightclubEvent(arg0, to_candid_NightclubEventInput_n11(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async updatePackage(arg0: PackageId, arg1: PackageInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updatePackage(arg0, to_candid_PackageInput_n13(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updatePackage(arg0, to_candid_PackageInput_n13(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async updateRaveEvent(arg0: RaveEventId, arg1: RaveEventInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateRaveEvent(arg0, to_candid_RaveEventInput_n17(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateRaveEvent(arg0, to_candid_RaveEventInput_n17(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async updateSiteEvent(arg0: SiteEventId, arg1: SiteEventInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateSiteEvent(arg0, to_candid_SiteEventInput_n19(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateSiteEvent(arg0, to_candid_SiteEventInput_n19(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async updateSponsor(arg0: SponsorId, arg1: SponsorInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateSponsor(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateSponsor(arg0, arg1);
             return result;
         }
     }
 }
-function from_candid_EventType_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _EventType): EventType {
-    return from_candid_variant_n22(_uploadFile, _downloadFile, value);
+function from_candid_DonationGoal_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DonationGoal): DonationGoal {
+    return from_candid_record_n25(_uploadFile, _downloadFile, value);
 }
-function from_candid_FestivalStatus_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _FestivalStatus): FestivalStatus {
-    return from_candid_variant_n18(_uploadFile, _downloadFile, value);
+function from_candid_EventType_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _EventType): EventType {
+    return from_candid_variant_n36(_uploadFile, _downloadFile, value);
 }
-function from_candid_Festival_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Festival): Festival {
-    return from_candid_record_n16(_uploadFile, _downloadFile, value);
+function from_candid_FestivalStatus_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _FestivalStatus): FestivalStatus {
+    return from_candid_variant_n32(_uploadFile, _downloadFile, value);
 }
-function from_candid_PackageType_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PackageType): PackageType {
-    return from_candid_variant_n29(_uploadFile, _downloadFile, value);
+function from_candid_Festival_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Festival): Festival {
+    return from_candid_record_n30(_uploadFile, _downloadFile, value);
 }
-function from_candid_Package_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Package): Package {
-    return from_candid_record_n27(_uploadFile, _downloadFile, value);
+function from_candid_NightclubEvent_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _NightclubEvent): NightclubEvent {
+    return from_candid_record_n41(_uploadFile, _downloadFile, value);
 }
-function from_candid_Season_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Season): Season {
-    return from_candid_variant_n20(_uploadFile, _downloadFile, value);
+function from_candid_PackageType_n46(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PackageType): PackageType {
+    return from_candid_variant_n47(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+function from_candid_Package_n44(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Package): Package {
+    return from_candid_record_n45(_uploadFile, _downloadFile, value);
+}
+function from_candid_RaveEvent_n50(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _RaveEvent): RaveEvent {
+    return from_candid_record_n51(_uploadFile, _downloadFile, value);
+}
+function from_candid_Season_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Season): Season {
+    return from_candid_variant_n34(_uploadFile, _downloadFile, value);
+}
+function from_candid_SiteEvent_n54(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SiteEvent): SiteEvent {
+    return from_candid_record_n55(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Festival]): Festival | null {
-    return value.length === 0 ? null : from_candid_Festival_n15(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_NewsArticle]): NewsArticle | null {
+function from_candid_opt_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_EventCategory]): EventCategory | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_FestivalId]): FestivalId | null {
+function from_candid_opt_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_DonationGoal]): DonationGoal | null {
+    return value.length === 0 ? null : from_candid_DonationGoal_n24(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_opt_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Festival]): Festival | null {
+    return value.length === 0 ? null : from_candid_Festival_n29(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n38(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_NewsArticle]): NewsArticle | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n39(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_NightclubEvent]): NightclubEvent | null {
+    return value.length === 0 ? null : from_candid_NightclubEvent_n40(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_FestivalId]): FestivalId | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n49(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_RaveEvent]): RaveEvent | null {
+    return value.length === 0 ? null : from_candid_RaveEvent_n50(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n53(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SiteEvent]): SiteEvent | null {
+    return value.length === 0 ? null : from_candid_SiteEvent_n54(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n57(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Sponsor]): Sponsor | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: bigint;
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    createdAt: bigint;
+    description: string;
+    festivalId: [] | [bigint];
+    targetAmount: bigint;
+    currentAmount: bigint;
+}): {
+    id: bigint;
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    createdAt: bigint;
+    description: string;
+    festivalId?: bigint;
+    targetAmount: bigint;
+    currentAmount: bigint;
+} {
+    return {
+        id: value.id,
+        isGlobal: value.isGlobal,
+        donationUrl: value.donationUrl,
+        title: value.title,
+        createdAt: value.createdAt,
+        description: value.description,
+        festivalId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.festivalId)),
+        targetAmount: value.targetAmount,
+        currentAmount: value.currentAmount
+    };
+}
+function from_candid_record_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _FestivalId;
     status: _FestivalStatus;
     country: string;
@@ -632,27 +1281,63 @@ function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         id: value.id,
-        status: from_candid_FestivalStatus_n17(_uploadFile, _downloadFile, value.status),
+        status: from_candid_FestivalStatus_n31(_uploadFile, _downloadFile, value.status),
         country: value.country,
         ticketPriceMax: value.ticketPriceMax,
         ticketPriceMin: value.ticketPriceMin,
         weekends: value.weekends,
         name: value.name,
-        ticketUrl: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.ticketUrl)),
-        description: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.description)),
-        season: from_candid_Season_n19(_uploadFile, _downloadFile, value.season),
+        ticketUrl: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.ticketUrl)),
+        description: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.description)),
+        season: from_candid_Season_n33(_uploadFile, _downloadFile, value.season),
         ageRestriction: value.ageRestriction,
         company: value.company,
-        imageUrl: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.imageUrl)),
+        imageUrl: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.imageUrl)),
         estimatedRevenueMax: value.estimatedRevenueMax,
         estimatedRevenueMin: value.estimatedRevenueMin,
         location: value.location,
-        lineup: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.lineup)),
-        specialNotes: record_opt_to_undefined(from_candid_opt_n13(_uploadFile, _downloadFile, value.specialNotes)),
-        eventType: from_candid_EventType_n21(_uploadFile, _downloadFile, value.eventType)
+        lineup: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.lineup)),
+        specialNotes: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.specialNotes)),
+        eventType: from_candid_EventType_n35(_uploadFile, _downloadFile, value.eventType)
     };
 }
-function from_candid_record_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n41(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: bigint;
+    categoryId: [] | [bigint];
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId: [] | [bigint];
+    location: string;
+}): {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+} {
+    return {
+        id: value.id,
+        categoryId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.categoryId)),
+        date: value.date,
+        name: value.name,
+        createdAt: value.createdAt,
+        description: value.description,
+        isStandalone: value.isStandalone,
+        imageUrl: value.imageUrl,
+        festivalId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.festivalId)),
+        location: value.location
+    };
+}
+function from_candid_record_n45(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _PackageId;
     packageType: _PackageType;
     name: string;
@@ -671,29 +1356,101 @@ function from_candid_record_n27(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         id: value.id,
-        packageType: from_candid_PackageType_n28(_uploadFile, _downloadFile, value.packageType),
+        packageType: from_candid_PackageType_n46(_uploadFile, _downloadFile, value.packageType),
         name: value.name,
         description: value.description,
         includes: value.includes,
-        festivalId: record_opt_to_undefined(from_candid_opt_n30(_uploadFile, _downloadFile, value.festivalId)),
+        festivalId: record_opt_to_undefined(from_candid_opt_n48(_uploadFile, _downloadFile, value.festivalId)),
         priceGBP: value.priceGBP
     };
 }
-function from_candid_variant_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: bigint;
+    categoryId: [] | [bigint];
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId: [] | [bigint];
+    location: string;
+    eventType: string;
+}): {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+    eventType: string;
+} {
+    return {
+        id: value.id,
+        categoryId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.categoryId)),
+        date: value.date,
+        name: value.name,
+        createdAt: value.createdAt,
+        description: value.description,
+        isStandalone: value.isStandalone,
+        imageUrl: value.imageUrl,
+        festivalId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.festivalId)),
+        location: value.location,
+        eventType: value.eventType
+    };
+}
+function from_candid_record_n55(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: bigint;
+    categoryId: [] | [bigint];
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    imageUrl: string;
+    festivalId: [] | [bigint];
+    location: string;
+}): {
+    id: bigint;
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    createdAt: bigint;
+    description: string;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+} {
+    return {
+        id: value.id,
+        categoryId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.categoryId)),
+        date: value.date,
+        name: value.name,
+        createdAt: value.createdAt,
+        description: value.description,
+        imageUrl: value.imageUrl,
+        festivalId: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.festivalId)),
+        location: value.location
+    };
+}
+function from_candid_variant_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     Active: null;
 } | {
     ComingSoon: null;
 }): FestivalStatus {
     return "Active" in value ? FestivalStatus.Active : "ComingSoon" in value ? FestivalStatus.ComingSoon : value;
 }
-function from_candid_variant_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     Winter: null;
 } | {
     Summer: null;
 }): Season {
     return "Winter" in value ? Season.Winter : "Summer" in value ? Season.Summer : value;
 }
-function from_candid_variant_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     EDM: null;
 } | {
     Family: null;
@@ -704,7 +1461,7 @@ function from_candid_variant_n22(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): EventType {
     return "EDM" in value ? EventType.EDM : "Family" in value ? EventType.Family : "Rave" in value ? EventType.Rave : "ClubHotel" in value ? EventType.ClubHotel : value;
 }
-function from_candid_variant_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n47(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     VIP: null;
 } | {
     Weekend1: null;
@@ -721,31 +1478,85 @@ function from_candid_variant_n29(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): PackageType {
     return "VIP" in value ? PackageType.VIP : "Weekend1" in value ? PackageType.Weekend1 : "Weekend2" in value ? PackageType.Weekend2 : "FullWeekend" in value ? PackageType.FullWeekend : "Accommodation" in value ? PackageType.Accommodation : "Transfer" in value ? PackageType.Transfer : "FlightPackage" in value ? PackageType.FlightPackage : value;
 }
-function from_candid_vec_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Festival>): Array<Festival> {
-    return value.map((x)=>from_candid_Festival_n15(_uploadFile, _downloadFile, x));
+function from_candid_vec_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_DonationGoal>): Array<DonationGoal> {
+    return value.map((x)=>from_candid_DonationGoal_n24(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Package>): Array<Package> {
-    return value.map((x)=>from_candid_Package_n26(_uploadFile, _downloadFile, x));
+function from_candid_vec_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Festival>): Array<Festival> {
+    return value.map((x)=>from_candid_Festival_n29(_uploadFile, _downloadFile, x));
 }
-function to_candid_EventType_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: EventType): _EventType {
-    return to_candid_variant_n8(_uploadFile, _downloadFile, value);
+function from_candid_vec_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_NightclubEvent>): Array<NightclubEvent> {
+    return value.map((x)=>from_candid_NightclubEvent_n40(_uploadFile, _downloadFile, x));
 }
-function to_candid_FestivalInput_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FestivalInput): _FestivalInput {
+function from_candid_vec_n43(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Package>): Array<Package> {
+    return value.map((x)=>from_candid_Package_n44(_uploadFile, _downloadFile, x));
+}
+function from_candid_vec_n52(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_RaveEvent>): Array<RaveEvent> {
+    return value.map((x)=>from_candid_RaveEvent_n50(_uploadFile, _downloadFile, x));
+}
+function from_candid_vec_n56(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_SiteEvent>): Array<SiteEvent> {
+    return value.map((x)=>from_candid_SiteEvent_n54(_uploadFile, _downloadFile, x));
+}
+function to_candid_DonationGoalInput_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DonationGoalInput): _DonationGoalInput {
     return to_candid_record_n2(_uploadFile, _downloadFile, value);
 }
-function to_candid_FestivalStatus_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FestivalStatus): _FestivalStatus {
-    return to_candid_variant_n4(_uploadFile, _downloadFile, value);
+function to_candid_EventType_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: EventType): _EventType {
+    return to_candid_variant_n10(_uploadFile, _downloadFile, value);
 }
-function to_candid_PackageInput_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PackageInput): _PackageInput {
-    return to_candid_record_n10(_uploadFile, _downloadFile, value);
+function to_candid_FestivalInput_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FestivalInput): _FestivalInput {
+    return to_candid_record_n4(_uploadFile, _downloadFile, value);
 }
-function to_candid_PackageType_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PackageType): _PackageType {
-    return to_candid_variant_n12(_uploadFile, _downloadFile, value);
-}
-function to_candid_Season_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Season): _Season {
+function to_candid_FestivalStatus_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FestivalStatus): _FestivalStatus {
     return to_candid_variant_n6(_uploadFile, _downloadFile, value);
 }
-function to_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_NightclubEventInput_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: NightclubEventInput): _NightclubEventInput {
+    return to_candid_record_n12(_uploadFile, _downloadFile, value);
+}
+function to_candid_PackageInput_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PackageInput): _PackageInput {
+    return to_candid_record_n14(_uploadFile, _downloadFile, value);
+}
+function to_candid_PackageType_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PackageType): _PackageType {
+    return to_candid_variant_n16(_uploadFile, _downloadFile, value);
+}
+function to_candid_RaveEventInput_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: RaveEventInput): _RaveEventInput {
+    return to_candid_record_n18(_uploadFile, _downloadFile, value);
+}
+function to_candid_Season_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Season): _Season {
+    return to_candid_variant_n8(_uploadFile, _downloadFile, value);
+}
+function to_candid_SiteEventInput_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SiteEventInput): _SiteEventInput {
+    return to_candid_record_n20(_uploadFile, _downloadFile, value);
+}
+function to_candid_record_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}): {
+    categoryId: [] | [bigint];
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId: [] | [bigint];
+    location: string;
+} {
+    return {
+        categoryId: value.categoryId ? candid_some(value.categoryId) : candid_none(),
+        date: value.date,
+        name: value.name,
+        description: value.description,
+        isStandalone: value.isStandalone,
+        imageUrl: value.imageUrl,
+        festivalId: value.festivalId ? candid_some(value.festivalId) : candid_none(),
+        location: value.location
+    };
+}
+function to_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     packageType: PackageType;
     name: string;
     description: string;
@@ -761,7 +1572,7 @@ function to_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8
     priceGBP: bigint;
 } {
     return {
-        packageType: to_candid_PackageType_n11(_uploadFile, _downloadFile, value.packageType),
+        packageType: to_candid_PackageType_n15(_uploadFile, _downloadFile, value.packageType),
         name: value.name,
         description: value.description,
         includes: value.includes,
@@ -769,7 +1580,94 @@ function to_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         priceGBP: value.priceGBP
     };
 }
+function to_candid_record_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+    eventType: string;
+}): {
+    categoryId: [] | [bigint];
+    date: string;
+    name: string;
+    description: string;
+    isStandalone: boolean;
+    imageUrl: string;
+    festivalId: [] | [bigint];
+    location: string;
+    eventType: string;
+} {
+    return {
+        categoryId: value.categoryId ? candid_some(value.categoryId) : candid_none(),
+        date: value.date,
+        name: value.name,
+        description: value.description,
+        isStandalone: value.isStandalone,
+        imageUrl: value.imageUrl,
+        festivalId: value.festivalId ? candid_some(value.festivalId) : candid_none(),
+        location: value.location,
+        eventType: value.eventType
+    };
+}
 function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    description: string;
+    festivalId?: bigint;
+    targetAmount: bigint;
+    currentAmount: bigint;
+}): {
+    isGlobal: boolean;
+    donationUrl: string;
+    title: string;
+    description: string;
+    festivalId: [] | [bigint];
+    targetAmount: bigint;
+    currentAmount: bigint;
+} {
+    return {
+        isGlobal: value.isGlobal,
+        donationUrl: value.donationUrl,
+        title: value.title,
+        description: value.description,
+        festivalId: value.festivalId ? candid_some(value.festivalId) : candid_none(),
+        targetAmount: value.targetAmount,
+        currentAmount: value.currentAmount
+    };
+}
+function to_candid_record_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    categoryId?: bigint;
+    date: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    festivalId?: bigint;
+    location: string;
+}): {
+    categoryId: [] | [bigint];
+    date: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    festivalId: [] | [bigint];
+    location: string;
+} {
+    return {
+        categoryId: value.categoryId ? candid_some(value.categoryId) : candid_none(),
+        date: value.date,
+        name: value.name,
+        description: value.description,
+        imageUrl: value.imageUrl,
+        festivalId: value.festivalId ? candid_some(value.festivalId) : candid_none(),
+        location: value.location
+    };
+}
+function to_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     status: FestivalStatus;
     country: string;
     ticketPriceMax: bigint;
@@ -809,7 +1707,7 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
     eventType: _EventType;
 } {
     return {
-        status: to_candid_FestivalStatus_n3(_uploadFile, _downloadFile, value.status),
+        status: to_candid_FestivalStatus_n5(_uploadFile, _downloadFile, value.status),
         country: value.country,
         ticketPriceMax: value.ticketPriceMax,
         ticketPriceMin: value.ticketPriceMin,
@@ -817,7 +1715,7 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         name: value.name,
         ticketUrl: value.ticketUrl ? candid_some(value.ticketUrl) : candid_none(),
         description: value.description ? candid_some(value.description) : candid_none(),
-        season: to_candid_Season_n5(_uploadFile, _downloadFile, value.season),
+        season: to_candid_Season_n7(_uploadFile, _downloadFile, value.season),
         ageRestriction: value.ageRestriction,
         company: value.company,
         imageUrl: value.imageUrl ? candid_some(value.imageUrl) : candid_none(),
@@ -826,10 +1724,29 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         location: value.location,
         lineup: value.lineup ? candid_some(value.lineup) : candid_none(),
         specialNotes: value.specialNotes ? candid_some(value.specialNotes) : candid_none(),
-        eventType: to_candid_EventType_n7(_uploadFile, _downloadFile, value.eventType)
+        eventType: to_candid_EventType_n9(_uploadFile, _downloadFile, value.eventType)
     };
 }
-function to_candid_variant_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PackageType): {
+function to_candid_variant_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: EventType): {
+    EDM: null;
+} | {
+    Family: null;
+} | {
+    Rave: null;
+} | {
+    ClubHotel: null;
+} {
+    return value == EventType.EDM ? {
+        EDM: null
+    } : value == EventType.Family ? {
+        Family: null
+    } : value == EventType.Rave ? {
+        Rave: null
+    } : value == EventType.ClubHotel ? {
+        ClubHotel: null
+    } : value;
+}
+function to_candid_variant_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PackageType): {
     VIP: null;
 } | {
     Weekend1: null;
@@ -860,7 +1777,7 @@ function to_candid_variant_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint
         FlightPackage: null
     } : value;
 }
-function to_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FestivalStatus): {
+function to_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: FestivalStatus): {
     Active: null;
 } | {
     ComingSoon: null;
@@ -871,7 +1788,7 @@ function to_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         ComingSoon: null
     } : value;
 }
-function to_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Season): {
+function to_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Season): {
     Winter: null;
 } | {
     Summer: null;
@@ -880,25 +1797,6 @@ function to_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         Winter: null
     } : value == Season.Summer ? {
         Summer: null
-    } : value;
-}
-function to_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: EventType): {
-    EDM: null;
-} | {
-    Family: null;
-} | {
-    Rave: null;
-} | {
-    ClubHotel: null;
-} {
-    return value == EventType.EDM ? {
-        EDM: null
-    } : value == EventType.Family ? {
-        Family: null
-    } : value == EventType.Rave ? {
-        Rave: null
-    } : value == EventType.ClubHotel ? {
-        ClubHotel: null
     } : value;
 }
 export interface CreateActorOptions {
