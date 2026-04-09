@@ -1,15 +1,19 @@
 import Types "types/festival";
+import NewsTypes "types/news";
 import FestivalApi "mixins/festival-api";
+import NewsLineupApi "mixins/news-lineup-api";
 import FestivalLib "lib/festival";
-import Migration "migration";
+
 import List "mo:core/List";
 import Map "mo:core/Map";
 
-(with migration = Migration.run)
+
 actor {
   let festivals = List.empty<Types.Festival>();
   let packages = List.empty<Types.Package>();
   let sessions = Map.empty<Text, Types.AdminSession>();
+  let newsArticles = List.empty<NewsTypes.NewsArticle>();
+  let lineupEntries = List.empty<NewsTypes.LineupEntry>();
 
   // ── Seed festivals ───────────────────────────────────────────────────────────
 
@@ -339,4 +343,5 @@ actor {
   // ── Mixin composition ────────────────────────────────────────────────────────
 
   include FestivalApi(festivals, packages, sessions);
+  include NewsLineupApi(newsArticles, lineupEntries);
 };

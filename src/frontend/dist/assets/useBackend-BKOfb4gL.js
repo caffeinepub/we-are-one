@@ -7,7 +7,7 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _client, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _a, _client2, _currentResult2, _currentMutation, _mutateOptions, _MutationObserver_instances, updateResult_fn, notify_fn2, _b;
-import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, u as utf8ToBytes, E as ExternalError, g as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, R as RequestStatusResponseStatus, U as UnknownError, h as RequestStatusDoneNoReplyErrorCode, i as RejectError, k as CertifiedRejectErrorCode, m as UNREACHABLE_ERROR, I as InputError, n as InvalidReadStateRequestErrorCode, o as ReadRequestType, p as Principal, q as IDL, s as MissingCanisterIdErrorCode, H as HttpAgent, t as encode, Q as QueryResponseStatus, v as UncertifiedRejectErrorCode, w as isV3ResponseBody, x as isV2ResponseBody, y as UncertifiedRejectUpdateErrorCode, z as UnexpectedErrorCode, A as decode, B as Subscribable, D as pendingThenable, F as resolveEnabled, G as shallowEqualObjects, J as resolveStaleTime, K as noop, N as environmentManager, O as isValidTimeout, V as timeUntilStale, W as timeoutManager, Y as focusManager, Z as fetchState, _ as replaceData, $ as notifyManager, a0 as hashKey, a1 as getDefaultState, r as reactExports, a2 as shouldThrowError, a3 as useQueryClient, a4 as useInternetIdentity, a5 as createActorWithConfig, a6 as Variant, a7 as Record, a8 as Opt, a9 as Vec, aa as Service, ab as Func, ac as Nat, ad as Text, ae as Null, af as Bool } from "./index-I4kNh_-2.js";
+import { P as ProtocolError, T as TimeoutWaitingForResponseErrorCode, g as utf8ToBytes, E as ExternalError, h as MissingRootKeyErrorCode, C as Certificate, l as lookupResultToBuffer, R as RequestStatusResponseStatus, U as UnknownError, i as RequestStatusDoneNoReplyErrorCode, k as RejectError, m as CertifiedRejectErrorCode, n as UNREACHABLE_ERROR, I as InputError, o as InvalidReadStateRequestErrorCode, p as ReadRequestType, q as Principal, s as IDL, t as MissingCanisterIdErrorCode, H as HttpAgent, v as encode, Q as QueryResponseStatus, w as UncertifiedRejectErrorCode, x as isV3ResponseBody, y as isV2ResponseBody, z as UncertifiedRejectUpdateErrorCode, A as UnexpectedErrorCode, B as decode, D as Subscribable, F as pendingThenable, G as resolveEnabled, J as shallowEqualObjects, K as resolveStaleTime, N as noop, O as environmentManager, V as isValidTimeout, W as timeUntilStale, Y as timeoutManager, Z as focusManager, _ as fetchState, $ as replaceData, a0 as notifyManager, a1 as hashKey, a2 as getDefaultState, r as reactExports, a3 as shouldThrowError, a4 as useQueryClient, a5 as useInternetIdentity, a6 as createActorWithConfig, a7 as Variant, a8 as Record, a9 as Opt, aa as Vec, ab as Service, ac as Func, ad as Nat, ae as Text, af as Null, ag as Int, ah as Bool } from "./index-C4tn0597.js";
 const FIVE_MINUTES_IN_MSEC = 5 * 60 * 1e3;
 function defaultStrategy() {
   return chain(conditionalDelay(once(), 1e3), backoff(1e3, 1.2), timeout(FIVE_MINUTES_IN_MSEC));
@@ -1272,6 +1272,21 @@ const FestivalInput = Record({
   "eventType": EventType$1
 });
 const FestivalId = Nat;
+const LineupInput = Record({
+  "stage": Text,
+  "festivalId": FestivalId,
+  "artistName": Text,
+  "timeSlot": Text
+});
+const LineupId = Nat;
+const Timestamp = Int;
+const NewsInput = Record({
+  "title": Text,
+  "content": Text,
+  "publishDate": Timestamp,
+  "imageUrl": Text
+});
+const NewsId = Nat;
 const PackageType$1 = Variant({
   "VIP": Null,
   "Weekend1": Null,
@@ -1317,6 +1332,21 @@ const Festival = Record({
   "specialNotes": Opt(Text),
   "eventType": EventType$1
 });
+const LineupEntry = Record({
+  "id": LineupId,
+  "stage": Text,
+  "festivalId": FestivalId,
+  "artistName": Text,
+  "timeSlot": Text
+});
+const NewsArticle = Record({
+  "id": NewsId,
+  "title": Text,
+  "content": Text,
+  "publishDate": Timestamp,
+  "createdAt": Timestamp,
+  "imageUrl": Text
+});
 const Package = Record({
   "id": PackageId,
   "packageType": PackageType$1,
@@ -1328,18 +1358,27 @@ const Package = Record({
 });
 Service({
   "addFestival": Func([FestivalInput], [FestivalId], []),
+  "addLineupEntry": Func([LineupInput], [LineupId], []),
+  "addNews": Func([NewsInput], [NewsId], []),
   "addPackage": Func([PackageInput], [PackageId], []),
   "adminLogin": Func([Text], [Opt(Text)], []),
   "deleteFestival": Func([FestivalId], [Bool], []),
+  "deleteLineupEntry": Func([LineupId], [Bool], []),
+  "deleteNews": Func([NewsId], [Bool], []),
   "deletePackage": Func([PackageId], [Bool], []),
   "getAnalytics": Func([], [Vec(Analytics)], ["query"]),
   "getFestival": Func([FestivalId], [Opt(Festival)], ["query"]),
   "getFestivals": Func([], [Vec(Festival)], ["query"]),
+  "getLineup": Func([FestivalId], [Vec(LineupEntry)], ["query"]),
+  "getNews": Func([], [Vec(NewsArticle)], ["query"]),
+  "getNewsArticle": Func([NewsId], [Opt(NewsArticle)], ["query"]),
   "getPackages": Func([], [Vec(Package)], ["query"]),
   "setFestivalImage": Func([FestivalId, Text], [Bool], []),
   "setFestivalTicketUrl": Func([FestivalId, Text], [Bool], []),
   "toggleFestivalStatus": Func([FestivalId], [Bool], []),
   "updateFestival": Func([FestivalId, FestivalInput], [Bool], []),
+  "updateLineupEntry": Func([LineupId, LineupInput], [Bool], []),
+  "updateNews": Func([NewsId, NewsInput], [Bool], []),
   "updatePackage": Func([PackageId, PackageInput], [Bool], [])
 });
 const idlFactory = ({ IDL: IDL2 }) => {
@@ -1375,6 +1414,21 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "eventType": EventType2
   });
   const FestivalId2 = IDL2.Nat;
+  const LineupInput2 = IDL2.Record({
+    "stage": IDL2.Text,
+    "festivalId": FestivalId2,
+    "artistName": IDL2.Text,
+    "timeSlot": IDL2.Text
+  });
+  const LineupId2 = IDL2.Nat;
+  const Timestamp2 = IDL2.Int;
+  const NewsInput2 = IDL2.Record({
+    "title": IDL2.Text,
+    "content": IDL2.Text,
+    "publishDate": Timestamp2,
+    "imageUrl": IDL2.Text
+  });
+  const NewsId2 = IDL2.Nat;
   const PackageType2 = IDL2.Variant({
     "VIP": IDL2.Null,
     "Weekend1": IDL2.Null,
@@ -1420,6 +1474,21 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "specialNotes": IDL2.Opt(IDL2.Text),
     "eventType": EventType2
   });
+  const LineupEntry2 = IDL2.Record({
+    "id": LineupId2,
+    "stage": IDL2.Text,
+    "festivalId": FestivalId2,
+    "artistName": IDL2.Text,
+    "timeSlot": IDL2.Text
+  });
+  const NewsArticle2 = IDL2.Record({
+    "id": NewsId2,
+    "title": IDL2.Text,
+    "content": IDL2.Text,
+    "publishDate": Timestamp2,
+    "createdAt": Timestamp2,
+    "imageUrl": IDL2.Text
+  });
   const Package2 = IDL2.Record({
     "id": PackageId2,
     "packageType": PackageType2,
@@ -1431,18 +1500,27 @@ const idlFactory = ({ IDL: IDL2 }) => {
   });
   return IDL2.Service({
     "addFestival": IDL2.Func([FestivalInput2], [FestivalId2], []),
+    "addLineupEntry": IDL2.Func([LineupInput2], [LineupId2], []),
+    "addNews": IDL2.Func([NewsInput2], [NewsId2], []),
     "addPackage": IDL2.Func([PackageInput2], [PackageId2], []),
     "adminLogin": IDL2.Func([IDL2.Text], [IDL2.Opt(IDL2.Text)], []),
     "deleteFestival": IDL2.Func([FestivalId2], [IDL2.Bool], []),
+    "deleteLineupEntry": IDL2.Func([LineupId2], [IDL2.Bool], []),
+    "deleteNews": IDL2.Func([NewsId2], [IDL2.Bool], []),
     "deletePackage": IDL2.Func([PackageId2], [IDL2.Bool], []),
     "getAnalytics": IDL2.Func([], [IDL2.Vec(Analytics2)], ["query"]),
     "getFestival": IDL2.Func([FestivalId2], [IDL2.Opt(Festival2)], ["query"]),
     "getFestivals": IDL2.Func([], [IDL2.Vec(Festival2)], ["query"]),
+    "getLineup": IDL2.Func([FestivalId2], [IDL2.Vec(LineupEntry2)], ["query"]),
+    "getNews": IDL2.Func([], [IDL2.Vec(NewsArticle2)], ["query"]),
+    "getNewsArticle": IDL2.Func([NewsId2], [IDL2.Opt(NewsArticle2)], ["query"]),
     "getPackages": IDL2.Func([], [IDL2.Vec(Package2)], ["query"]),
     "setFestivalImage": IDL2.Func([FestivalId2, IDL2.Text], [IDL2.Bool], []),
     "setFestivalTicketUrl": IDL2.Func([FestivalId2, IDL2.Text], [IDL2.Bool], []),
     "toggleFestivalStatus": IDL2.Func([FestivalId2], [IDL2.Bool], []),
     "updateFestival": IDL2.Func([FestivalId2, FestivalInput2], [IDL2.Bool], []),
+    "updateLineupEntry": IDL2.Func([LineupId2, LineupInput2], [IDL2.Bool], []),
+    "updateNews": IDL2.Func([NewsId2, NewsInput2], [IDL2.Bool], []),
     "updatePackage": IDL2.Func([PackageId2, PackageInput2], [IDL2.Bool], [])
   });
 };
@@ -1505,6 +1583,34 @@ class Backend {
       return result;
     }
   }
+  async addLineupEntry(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.addLineupEntry(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.addLineupEntry(arg0);
+      return result;
+    }
+  }
+  async addNews(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.addNews(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.addNews(arg0);
+      return result;
+    }
+  }
   async addPackage(arg0) {
     if (this.processError) {
       try {
@@ -1544,6 +1650,34 @@ class Backend {
       }
     } else {
       const result = await this.actor.deleteFestival(arg0);
+      return result;
+    }
+  }
+  async deleteLineupEntry(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deleteLineupEntry(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deleteLineupEntry(arg0);
+      return result;
+    }
+  }
+  async deleteNews(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deleteNews(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deleteNews(arg0);
       return result;
     }
   }
@@ -1603,18 +1737,60 @@ class Backend {
       return from_candid_vec_n23(this._uploadFile, this._downloadFile, result);
     }
   }
+  async getLineup(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getLineup(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getLineup(arg0);
+      return result;
+    }
+  }
+  async getNews() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getNews();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getNews();
+      return result;
+    }
+  }
+  async getNewsArticle(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getNewsArticle(arg0);
+        return from_candid_opt_n24(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getNewsArticle(arg0);
+      return from_candid_opt_n24(this._uploadFile, this._downloadFile, result);
+    }
+  }
   async getPackages() {
     if (this.processError) {
       try {
         const result = await this.actor.getPackages();
-        return from_candid_vec_n24(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getPackages();
-      return from_candid_vec_n24(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
     }
   }
   async setFestivalImage(arg0, arg1) {
@@ -1673,6 +1849,34 @@ class Backend {
       return result;
     }
   }
+  async updateLineupEntry(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.updateLineupEntry(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.updateLineupEntry(arg0, arg1);
+      return result;
+    }
+  }
+  async updateNews(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.updateNews(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.updateNews(arg0, arg1);
+      return result;
+    }
+  }
   async updatePackage(arg0, arg1) {
     if (this.processError) {
       try {
@@ -1697,11 +1901,11 @@ function from_candid_FestivalStatus_n17(_uploadFile, _downloadFile, value) {
 function from_candid_Festival_n15(_uploadFile, _downloadFile, value) {
   return from_candid_record_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_PackageType_n27(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n28(_uploadFile, _downloadFile, value);
+function from_candid_PackageType_n28(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n29(_uploadFile, _downloadFile, value);
 }
-function from_candid_Package_n25(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n26(_uploadFile, _downloadFile, value);
+function from_candid_Package_n26(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n27(_uploadFile, _downloadFile, value);
 }
 function from_candid_Season_n19(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n20(_uploadFile, _downloadFile, value);
@@ -1712,7 +1916,10 @@ function from_candid_opt_n13(_uploadFile, _downloadFile, value) {
 function from_candid_opt_n14(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : from_candid_Festival_n15(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n29(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n24(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n30(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
 function from_candid_record_n16(_uploadFile, _downloadFile, value) {
@@ -1738,14 +1945,14 @@ function from_candid_record_n16(_uploadFile, _downloadFile, value) {
     eventType: from_candid_EventType_n21(_uploadFile, _downloadFile, value.eventType)
   };
 }
-function from_candid_record_n26(_uploadFile, _downloadFile, value) {
+function from_candid_record_n27(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    packageType: from_candid_PackageType_n27(_uploadFile, _downloadFile, value.packageType),
+    packageType: from_candid_PackageType_n28(_uploadFile, _downloadFile, value.packageType),
     name: value.name,
     description: value.description,
     includes: value.includes,
-    festivalId: record_opt_to_undefined(from_candid_opt_n29(_uploadFile, _downloadFile, value.festivalId)),
+    festivalId: record_opt_to_undefined(from_candid_opt_n30(_uploadFile, _downloadFile, value.festivalId)),
     priceGBP: value.priceGBP
   };
 }
@@ -1758,14 +1965,14 @@ function from_candid_variant_n20(_uploadFile, _downloadFile, value) {
 function from_candid_variant_n22(_uploadFile, _downloadFile, value) {
   return "EDM" in value ? "EDM" : "Family" in value ? "Family" : "Rave" in value ? "Rave" : "ClubHotel" in value ? "ClubHotel" : value;
 }
-function from_candid_variant_n28(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n29(_uploadFile, _downloadFile, value) {
   return "VIP" in value ? "VIP" : "Weekend1" in value ? "Weekend1" : "Weekend2" in value ? "Weekend2" : "FullWeekend" in value ? "FullWeekend" : "Accommodation" in value ? "Accommodation" : "Transfer" in value ? "Transfer" : "FlightPackage" in value ? "FlightPackage" : value;
 }
 function from_candid_vec_n23(_uploadFile, _downloadFile, value) {
   return value.map((x) => from_candid_Festival_n15(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n24(_uploadFile, _downloadFile, value) {
-  return value.map((x) => from_candid_Package_n25(_uploadFile, _downloadFile, x));
+function from_candid_vec_n25(_uploadFile, _downloadFile, value) {
+  return value.map((x) => from_candid_Package_n26(_uploadFile, _downloadFile, x));
 }
 function to_candid_EventType_n7(_uploadFile, _downloadFile, value) {
   return to_candid_variant_n8(_uploadFile, _downloadFile, value);
@@ -2300,7 +2507,114 @@ function useDeletePackage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["packages"] })
   });
 }
+function useNews() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["news"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getNews();
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1e3 * 60 * 2
+  });
+}
+function useAddNews() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation({
+    mutationFn: async (input) => {
+      if (actor) return actor.addNews(input);
+      return BigInt(Math.floor(Math.random() * 1e3));
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["news"] })
+  });
+}
+function useUpdateNews() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateNews(id, input);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["news"] })
+  });
+}
+function useDeleteNews() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation({
+    mutationFn: async (id) => {
+      if (actor) return actor.deleteNews(id);
+      return true;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["news"] })
+  });
+}
+function useLineup(festivalId) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["lineup", festivalId.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getLineup(festivalId);
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1e3 * 60 * 2
+  });
+}
+function useAddLineupEntry() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation({
+    mutationFn: async (input) => {
+      if (actor) return actor.addLineupEntry(input);
+      return BigInt(Math.floor(Math.random() * 1e3));
+    },
+    onSuccess: (_, vars) => qc.invalidateQueries({
+      queryKey: ["lineup", vars.festivalId.toString()]
+    })
+  });
+}
+function useUpdateLineupEntry() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateLineupEntry(id, input);
+      return true;
+    },
+    onSuccess: (_, vars) => qc.invalidateQueries({
+      queryKey: ["lineup", vars.input.festivalId.toString()]
+    })
+  });
+}
+function useDeleteLineupEntry() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation({
+    mutationFn: async ({ id }) => {
+      if (actor) return actor.deleteLineupEntry(id);
+      return true;
+    },
+    onSuccess: (_, vars) => qc.invalidateQueries({
+      queryKey: ["lineup", vars.festivalId.toString()]
+    })
+  });
+}
 export {
+  useUpdatePackage as A,
+  useDeletePackage as B,
+  useAdminLogin as C,
   EventType as E,
   FestivalStatus as F,
   STATIC_FESTIVALS as S,
@@ -2320,9 +2634,14 @@ export {
   useDeleteFestival as n,
   useToggleFestivalStatus as o,
   useSetFestivalImage as p,
-  useAddPackage as q,
-  useUpdatePackage as r,
-  useDeletePackage as s,
-  useAdminLogin as t,
-  useTicketUrls as u
+  useLineup as q,
+  useAddLineupEntry as r,
+  useUpdateLineupEntry as s,
+  useDeleteLineupEntry as t,
+  useTicketUrls as u,
+  useNews as v,
+  useAddNews as w,
+  useUpdateNews as x,
+  useDeleteNews as y,
+  useAddPackage as z
 };

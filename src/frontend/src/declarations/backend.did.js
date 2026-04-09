@@ -40,6 +40,21 @@ export const FestivalInput = IDL.Record({
   'eventType' : EventType,
 });
 export const FestivalId = IDL.Nat;
+export const LineupInput = IDL.Record({
+  'stage' : IDL.Text,
+  'festivalId' : FestivalId,
+  'artistName' : IDL.Text,
+  'timeSlot' : IDL.Text,
+});
+export const LineupId = IDL.Nat;
+export const Timestamp = IDL.Int;
+export const NewsInput = IDL.Record({
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+  'publishDate' : Timestamp,
+  'imageUrl' : IDL.Text,
+});
+export const NewsId = IDL.Nat;
 export const PackageType = IDL.Variant({
   'VIP' : IDL.Null,
   'Weekend1' : IDL.Null,
@@ -85,6 +100,21 @@ export const Festival = IDL.Record({
   'specialNotes' : IDL.Opt(IDL.Text),
   'eventType' : EventType,
 });
+export const LineupEntry = IDL.Record({
+  'id' : LineupId,
+  'stage' : IDL.Text,
+  'festivalId' : FestivalId,
+  'artistName' : IDL.Text,
+  'timeSlot' : IDL.Text,
+});
+export const NewsArticle = IDL.Record({
+  'id' : NewsId,
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+  'publishDate' : Timestamp,
+  'createdAt' : Timestamp,
+  'imageUrl' : IDL.Text,
+});
 export const Package = IDL.Record({
   'id' : PackageId,
   'packageType' : PackageType,
@@ -97,18 +127,27 @@ export const Package = IDL.Record({
 
 export const idlService = IDL.Service({
   'addFestival' : IDL.Func([FestivalInput], [FestivalId], []),
+  'addLineupEntry' : IDL.Func([LineupInput], [LineupId], []),
+  'addNews' : IDL.Func([NewsInput], [NewsId], []),
   'addPackage' : IDL.Func([PackageInput], [PackageId], []),
   'adminLogin' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Text)], []),
   'deleteFestival' : IDL.Func([FestivalId], [IDL.Bool], []),
+  'deleteLineupEntry' : IDL.Func([LineupId], [IDL.Bool], []),
+  'deleteNews' : IDL.Func([NewsId], [IDL.Bool], []),
   'deletePackage' : IDL.Func([PackageId], [IDL.Bool], []),
   'getAnalytics' : IDL.Func([], [IDL.Vec(Analytics)], ['query']),
   'getFestival' : IDL.Func([FestivalId], [IDL.Opt(Festival)], ['query']),
   'getFestivals' : IDL.Func([], [IDL.Vec(Festival)], ['query']),
+  'getLineup' : IDL.Func([FestivalId], [IDL.Vec(LineupEntry)], ['query']),
+  'getNews' : IDL.Func([], [IDL.Vec(NewsArticle)], ['query']),
+  'getNewsArticle' : IDL.Func([NewsId], [IDL.Opt(NewsArticle)], ['query']),
   'getPackages' : IDL.Func([], [IDL.Vec(Package)], ['query']),
   'setFestivalImage' : IDL.Func([FestivalId, IDL.Text], [IDL.Bool], []),
   'setFestivalTicketUrl' : IDL.Func([FestivalId, IDL.Text], [IDL.Bool], []),
   'toggleFestivalStatus' : IDL.Func([FestivalId], [IDL.Bool], []),
   'updateFestival' : IDL.Func([FestivalId, FestivalInput], [IDL.Bool], []),
+  'updateLineupEntry' : IDL.Func([LineupId, LineupInput], [IDL.Bool], []),
+  'updateNews' : IDL.Func([NewsId, NewsInput], [IDL.Bool], []),
   'updatePackage' : IDL.Func([PackageId, PackageInput], [IDL.Bool], []),
 });
 
@@ -147,6 +186,21 @@ export const idlFactory = ({ IDL }) => {
     'eventType' : EventType,
   });
   const FestivalId = IDL.Nat;
+  const LineupInput = IDL.Record({
+    'stage' : IDL.Text,
+    'festivalId' : FestivalId,
+    'artistName' : IDL.Text,
+    'timeSlot' : IDL.Text,
+  });
+  const LineupId = IDL.Nat;
+  const Timestamp = IDL.Int;
+  const NewsInput = IDL.Record({
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+    'publishDate' : Timestamp,
+    'imageUrl' : IDL.Text,
+  });
+  const NewsId = IDL.Nat;
   const PackageType = IDL.Variant({
     'VIP' : IDL.Null,
     'Weekend1' : IDL.Null,
@@ -192,6 +246,21 @@ export const idlFactory = ({ IDL }) => {
     'specialNotes' : IDL.Opt(IDL.Text),
     'eventType' : EventType,
   });
+  const LineupEntry = IDL.Record({
+    'id' : LineupId,
+    'stage' : IDL.Text,
+    'festivalId' : FestivalId,
+    'artistName' : IDL.Text,
+    'timeSlot' : IDL.Text,
+  });
+  const NewsArticle = IDL.Record({
+    'id' : NewsId,
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+    'publishDate' : Timestamp,
+    'createdAt' : Timestamp,
+    'imageUrl' : IDL.Text,
+  });
   const Package = IDL.Record({
     'id' : PackageId,
     'packageType' : PackageType,
@@ -204,18 +273,27 @@ export const idlFactory = ({ IDL }) => {
   
   return IDL.Service({
     'addFestival' : IDL.Func([FestivalInput], [FestivalId], []),
+    'addLineupEntry' : IDL.Func([LineupInput], [LineupId], []),
+    'addNews' : IDL.Func([NewsInput], [NewsId], []),
     'addPackage' : IDL.Func([PackageInput], [PackageId], []),
     'adminLogin' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Text)], []),
     'deleteFestival' : IDL.Func([FestivalId], [IDL.Bool], []),
+    'deleteLineupEntry' : IDL.Func([LineupId], [IDL.Bool], []),
+    'deleteNews' : IDL.Func([NewsId], [IDL.Bool], []),
     'deletePackage' : IDL.Func([PackageId], [IDL.Bool], []),
     'getAnalytics' : IDL.Func([], [IDL.Vec(Analytics)], ['query']),
     'getFestival' : IDL.Func([FestivalId], [IDL.Opt(Festival)], ['query']),
     'getFestivals' : IDL.Func([], [IDL.Vec(Festival)], ['query']),
+    'getLineup' : IDL.Func([FestivalId], [IDL.Vec(LineupEntry)], ['query']),
+    'getNews' : IDL.Func([], [IDL.Vec(NewsArticle)], ['query']),
+    'getNewsArticle' : IDL.Func([NewsId], [IDL.Opt(NewsArticle)], ['query']),
     'getPackages' : IDL.Func([], [IDL.Vec(Package)], ['query']),
     'setFestivalImage' : IDL.Func([FestivalId, IDL.Text], [IDL.Bool], []),
     'setFestivalTicketUrl' : IDL.Func([FestivalId, IDL.Text], [IDL.Bool], []),
     'toggleFestivalStatus' : IDL.Func([FestivalId], [IDL.Bool], []),
     'updateFestival' : IDL.Func([FestivalId, FestivalInput], [IDL.Bool], []),
+    'updateLineupEntry' : IDL.Func([LineupId, LineupInput], [IDL.Bool], []),
+    'updateNews' : IDL.Func([NewsId, NewsInput], [IDL.Bool], []),
     'updatePackage' : IDL.Func([PackageId, PackageInput], [IDL.Bool], []),
   });
 };

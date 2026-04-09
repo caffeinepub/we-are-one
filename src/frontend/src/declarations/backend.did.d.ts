@@ -64,6 +64,35 @@ export interface FestivalInput {
 }
 export type FestivalStatus = { 'Active' : null } |
   { 'ComingSoon' : null };
+export interface LineupEntry {
+  'id' : LineupId,
+  'stage' : string,
+  'festivalId' : FestivalId,
+  'artistName' : string,
+  'timeSlot' : string,
+}
+export type LineupId = bigint;
+export interface LineupInput {
+  'stage' : string,
+  'festivalId' : FestivalId,
+  'artistName' : string,
+  'timeSlot' : string,
+}
+export interface NewsArticle {
+  'id' : NewsId,
+  'title' : string,
+  'content' : string,
+  'publishDate' : Timestamp,
+  'createdAt' : Timestamp,
+  'imageUrl' : string,
+}
+export type NewsId = bigint;
+export interface NewsInput {
+  'title' : string,
+  'content' : string,
+  'publishDate' : Timestamp,
+  'imageUrl' : string,
+}
 export interface Package {
   'id' : PackageId,
   'packageType' : PackageType,
@@ -91,20 +120,30 @@ export type PackageType = { 'VIP' : null } |
   { 'FlightPackage' : null };
 export type Season = { 'Winter' : null } |
   { 'Summer' : null };
+export type Timestamp = bigint;
 export interface _SERVICE {
   'addFestival' : ActorMethod<[FestivalInput], FestivalId>,
+  'addLineupEntry' : ActorMethod<[LineupInput], LineupId>,
+  'addNews' : ActorMethod<[NewsInput], NewsId>,
   'addPackage' : ActorMethod<[PackageInput], PackageId>,
   'adminLogin' : ActorMethod<[string], [] | [string]>,
   'deleteFestival' : ActorMethod<[FestivalId], boolean>,
+  'deleteLineupEntry' : ActorMethod<[LineupId], boolean>,
+  'deleteNews' : ActorMethod<[NewsId], boolean>,
   'deletePackage' : ActorMethod<[PackageId], boolean>,
   'getAnalytics' : ActorMethod<[], Array<Analytics>>,
   'getFestival' : ActorMethod<[FestivalId], [] | [Festival]>,
   'getFestivals' : ActorMethod<[], Array<Festival>>,
+  'getLineup' : ActorMethod<[FestivalId], Array<LineupEntry>>,
+  'getNews' : ActorMethod<[], Array<NewsArticle>>,
+  'getNewsArticle' : ActorMethod<[NewsId], [] | [NewsArticle]>,
   'getPackages' : ActorMethod<[], Array<Package>>,
   'setFestivalImage' : ActorMethod<[FestivalId, string], boolean>,
   'setFestivalTicketUrl' : ActorMethod<[FestivalId, string], boolean>,
   'toggleFestivalStatus' : ActorMethod<[FestivalId], boolean>,
   'updateFestival' : ActorMethod<[FestivalId, FestivalInput], boolean>,
+  'updateLineupEntry' : ActorMethod<[LineupId, LineupInput], boolean>,
+  'updateNews' : ActorMethod<[NewsId, NewsInput], boolean>,
   'updatePackage' : ActorMethod<[PackageId, PackageInput], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;

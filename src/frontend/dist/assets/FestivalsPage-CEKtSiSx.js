@@ -1,13 +1,14 @@
-import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, X } from "./index-I4kNh_-2.js";
-import { C as ComingSoonModal, a as ChevronDown, T as Ticket } from "./ComingSoonModal-Bl9V_p0A.js";
-import { d as useFestivals, u as useTicketUrls, S as STATIC_FESTIVALS, b as isSummer, E as EventType, F as FestivalStatus, c as isEDM, i as isComingSoon, a as getEventTypeLabel, g as getSeasonLabel } from "./useBackend-BzNY-UOi.js";
-import { m as motion } from "./proxy-C-d2k-jw.js";
-import { M as Music, C as Calendar } from "./music-CqKBq9p9.js";
-import { A as AnimatePresence } from "./index-BaHuRtq_.js";
-import { M as MapPin } from "./map-pin-BQctCHlQ.js";
-import { U as Users } from "./users-BVsjVNrj.js";
-import { B as Building2 } from "./building-2-D-QEM4OU.js";
-import "./sparkles-D3ZPADym.js";
+import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, X, L as Link } from "./index-C4tn0597.js";
+import { C as ComingSoonModal, a as ChevronDown, T as Ticket } from "./ComingSoonModal-DtOfdBy-.js";
+import { d as useFestivals, u as useTicketUrls, S as STATIC_FESTIVALS, b as isSummer, E as EventType, F as FestivalStatus, c as isEDM, i as isComingSoon, a as getEventTypeLabel, g as getSeasonLabel } from "./useBackend-BKOfb4gL.js";
+import { m as motion } from "./proxy-DM5uq0iF.js";
+import { M as Music } from "./music-wBzkYQ1B.js";
+import { A as AnimatePresence } from "./index-BREWAw8b.js";
+import { M as MapPin } from "./map-pin-KFMurC0I.js";
+import { C as Calendar } from "./calendar-DiqtNgUk.js";
+import { U as Users } from "./users-CZK4QFxk.js";
+import { B as Building2 } from "./building-2-D4Kr7kKf.js";
+import "./sparkles-hGWmBylA.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -383,25 +384,45 @@ function DetailPanel({ festival, onClose, onBuyTickets }) {
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => onBuyTickets(festival),
-                className: "w-full flex items-center justify-center gap-2 rounded-xl py-3.5 px-6 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
-                style: {
-                  background: accentAlpha(0.15),
-                  border: `2px solid ${accentColor}`,
-                  color: accentColor,
-                  boxShadow: `0 0 20px ${accentAlpha(0.2)}`
-                },
-                "data-ocid": "detail-buy-tickets-btn",
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { size: 16 }),
-                  "Buy Tickets"
-                ]
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-2 sm:flex-row", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => onBuyTickets(festival),
+                  className: "flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 px-6 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
+                  style: {
+                    background: accentAlpha(0.15),
+                    border: `2px solid ${accentColor}`,
+                    color: accentColor,
+                    boxShadow: `0 0 20px ${accentAlpha(0.2)}`
+                  },
+                  "data-ocid": "detail-buy-tickets-btn",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { size: 16 }),
+                    "Buy Tickets"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Link,
+                {
+                  to: "/festivals/$id/lineup",
+                  params: { id: festival.id.toString() },
+                  className: "flex items-center justify-center gap-2 rounded-xl py-3.5 px-4 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 text-sm",
+                  style: {
+                    background: "oklch(0.55 0.23 310 / 0.1)",
+                    border: "1px solid oklch(0.55 0.23 310 / 0.5)",
+                    color: "oklch(0.55 0.23 310)"
+                  },
+                  "data-ocid": "view-lineup-btn",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Music, { size: 14 }),
+                    "Lineup"
+                  ]
+                }
+              )
+            ] })
           ] })
         ] })
       ]
@@ -654,6 +675,25 @@ function GridCard({
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { size: 14 }),
                       "Tickets"
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Link,
+                  {
+                    to: "/festivals/$id/lineup",
+                    params: { id: festival.id.toString() },
+                    onClick: (e) => e.stopPropagation(),
+                    className: "flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
+                    style: {
+                      background: "oklch(0.55 0.23 310 / 0.1)",
+                      border: "1px solid oklch(0.55 0.23 310 / 0.3)",
+                      color: "oklch(0.55 0.23 310)"
+                    },
+                    "data-ocid": "lineup-link-btn",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Music, { size: 12 }),
+                      "Lineup"
                     ]
                   }
                 )

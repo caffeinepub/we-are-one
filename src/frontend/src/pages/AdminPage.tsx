@@ -4,23 +4,29 @@ import {
   EyeOff,
   List,
   LogIn,
+  Music,
+  Newspaper,
   Package,
   Shield,
 } from "lucide-react";
 import { useState } from "react";
 import AnalyticsTab from "../components/admin/AnalyticsTab";
 import FestivalsTab from "../components/admin/FestivalsTab";
+import LineupTab from "../components/admin/LineupTab";
+import NewsTab from "../components/admin/NewsTab";
 import PackagesTab from "../components/admin/PackagesTab";
 import { useAdminLogin } from "../hooks/useBackend";
 
 const LOGO_URL =
   "https://image2url.com/r2/default/images/1775683614327-346f8e28-9a02-4a59-8ff6-14dd1641405e.png";
 
-type Tab = "festivals" | "packages" | "analytics";
+type Tab = "festivals" | "packages" | "analytics" | "news" | "lineup";
 
 const TABS: { id: Tab; label: string; icon: typeof List }[] = [
   { id: "festivals", label: "Festivals", icon: List },
   { id: "packages", label: "Packages", icon: Package },
+  { id: "news", label: "News", icon: Newspaper },
+  { id: "lineup", label: "Lineup", icon: Music },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
 ];
 
@@ -204,7 +210,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       <div className="container mx-auto px-4 py-8">
         {/* Tab bar */}
         <div
-          className="mb-8 flex overflow-hidden rounded-2xl w-fit"
+          className="mb-8 flex overflow-x-auto rounded-2xl w-fit max-w-full"
           style={{ border: "1px solid oklch(0.25 0.02 260 / 0.4)" }}
         >
           {TABS.map(({ id, label, icon: Icon }) => (
@@ -233,6 +239,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         {/* Tab content */}
         {activeTab === "festivals" && <FestivalsTab />}
         {activeTab === "packages" && <PackagesTab />}
+        {activeTab === "news" && <NewsTab />}
+        {activeTab === "lineup" && <LineupTab />}
         {activeTab === "analytics" && <AnalyticsTab />}
       </div>
     </section>

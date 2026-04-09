@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/HomePage-CoRmfuAn.js","assets/ComingSoonModal-Bl9V_p0A.js","assets/sparkles-D3ZPADym.js","assets/useBackend-BzNY-UOi.js","assets/map-pin-BQctCHlQ.js","assets/music-CqKBq9p9.js","assets/users-BVsjVNrj.js","assets/star-DeyCAG_I.js","assets/globe-SWdtns-M.js","assets/FestivalsPage-CARr1raV.js","assets/proxy-C-d2k-jw.js","assets/index-BaHuRtq_.js","assets/building-2-D-QEM4OU.js","assets/PackagesPage-Dm1JW6Y9.js","assets/JobsPage-CqfANoqX.js","assets/ContactPage-kmNi-dsd.js","assets/AdminPage-CAmf28og.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/HomePage-CLhWTyqL.js","assets/ComingSoonModal-DtOfdBy-.js","assets/sparkles-hGWmBylA.js","assets/useBackend-BKOfb4gL.js","assets/map-pin-KFMurC0I.js","assets/calendar-DiqtNgUk.js","assets/users-CZK4QFxk.js","assets/music-wBzkYQ1B.js","assets/star-DaqsTVu3.js","assets/globe-7Z0XMwTC.js","assets/FestivalsPage-CEKtSiSx.js","assets/proxy-DM5uq0iF.js","assets/index-BREWAw8b.js","assets/building-2-D4Kr7kKf.js","assets/PackagesPage-bXBYhZpi.js","assets/JobsPage-CXfP-D7z.js","assets/ContactPage-2-bH8ChG.js","assets/newspaper-DfffAazW.js","assets/AdminPage-S_u3ak59.js","assets/NewsPage-CSmwWBLf.js","assets/clock-BPfTQIIN.js","assets/LineupPage-zXqjbbuZ.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -32057,6 +32057,7 @@ const NAV_LINKS = [
   { to: "/festivals", label: "Festivals" },
   { to: "/packages", label: "Packages" },
   { to: "/jobs", label: "Jobs" },
+  { to: "/news", label: "News" },
   { to: "/contact", label: "Contact" }
 ];
 function Navbar() {
@@ -32230,12 +32231,14 @@ function Layout({ children }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {})
   ] });
 }
-const HomePage = reactExports.lazy(() => __vitePreload(() => import("./HomePage-CoRmfuAn.js"), true ? __vite__mapDeps([0,1,2,3,4,5,6,7,8]) : void 0));
-const FestivalsPage = reactExports.lazy(() => __vitePreload(() => import("./FestivalsPage-CARr1raV.js"), true ? __vite__mapDeps([9,1,2,3,10,5,11,4,6,12]) : void 0));
-const PackagesPage = reactExports.lazy(() => __vitePreload(() => import("./PackagesPage-Dm1JW6Y9.js"), true ? __vite__mapDeps([13,1,2,3,10,11]) : void 0));
-const JobsPage = reactExports.lazy(() => __vitePreload(() => import("./JobsPage-CqfANoqX.js"), true ? __vite__mapDeps([14,10,2,6,8,7]) : void 0));
-const ContactPage = reactExports.lazy(() => __vitePreload(() => import("./ContactPage-kmNi-dsd.js"), true ? __vite__mapDeps([15,8,12,4]) : void 0));
-const AdminPage = reactExports.lazy(() => __vitePreload(() => import("./AdminPage-CAmf28og.js"), true ? __vite__mapDeps([16,3,6]) : void 0));
+const HomePage = reactExports.lazy(() => __vitePreload(() => import("./HomePage-CLhWTyqL.js"), true ? __vite__mapDeps([0,1,2,3,4,5,6,7,8,9]) : void 0));
+const FestivalsPage = reactExports.lazy(() => __vitePreload(() => import("./FestivalsPage-CEKtSiSx.js"), true ? __vite__mapDeps([10,1,2,3,11,7,12,4,5,6,13]) : void 0));
+const PackagesPage = reactExports.lazy(() => __vitePreload(() => import("./PackagesPage-bXBYhZpi.js"), true ? __vite__mapDeps([14,1,2,3,11,12]) : void 0));
+const JobsPage = reactExports.lazy(() => __vitePreload(() => import("./JobsPage-CXfP-D7z.js"), true ? __vite__mapDeps([15,11,2,6,9,8]) : void 0));
+const ContactPage = reactExports.lazy(() => __vitePreload(() => import("./ContactPage-2-bH8ChG.js"), true ? __vite__mapDeps([16,9,13,4,17]) : void 0));
+const AdminPage = reactExports.lazy(() => __vitePreload(() => import("./AdminPage-S_u3ak59.js"), true ? __vite__mapDeps([18,3,6,7,17]) : void 0));
+const NewsPage = reactExports.lazy(() => __vitePreload(() => import("./NewsPage-CSmwWBLf.js"), true ? __vite__mapDeps([19,3,11,17,5,20]) : void 0));
+const LineupPage = reactExports.lazy(() => __vitePreload(() => import("./LineupPage-zXqjbbuZ.js"), true ? __vite__mapDeps([21,3,11,7,20]) : void 0));
 function PageLoader() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
@@ -32292,13 +32295,25 @@ const adminRoute = createRoute({
   path: "/admin",
   component: AdminPage
 });
+const newsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/news",
+  component: NewsPage
+});
+const lineupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/festivals/$id/lineup",
+  component: LineupPage
+});
 const routeTree = rootRoute.addChildren([
   indexRoute,
   festivalsRoute,
   packagesRoute,
   jobsRoute,
   contactRoute,
-  adminRoute
+  adminRoute,
+  newsRoute,
+  lineupRoute
 ]);
 const router = createRouter({ routeTree });
 function App() {
@@ -32312,74 +32327,76 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InternetIdentityProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
 export {
-  notifyManager as $,
-  decode$2 as A,
-  Subscribable as B,
+  replaceData as $,
+  UnexpectedErrorCode as A,
+  decode$2 as B,
   Certificate as C,
-  pendingThenable as D,
+  Subscribable as D,
   ExternalError as E,
-  resolveEnabled as F,
-  shallowEqualObjects as G,
+  pendingThenable as F,
+  resolveEnabled as G,
   HttpAgent as H,
   InputError as I,
-  resolveStaleTime as J,
-  noop$6 as K,
+  shallowEqualObjects as J,
+  resolveStaleTime as K,
   Link as L,
   Mail as M,
-  environmentManager as N,
-  isValidTimeout as O,
+  noop$6 as N,
+  environmentManager as O,
   ProtocolError as P,
   QueryResponseStatus as Q,
   RequestStatusResponseStatus as R,
   SiInstagram as S,
   TimeoutWaitingForResponseErrorCode as T,
   UnknownError as U,
-  timeUntilStale as V,
-  timeoutManager as W,
+  isValidTimeout as V,
+  timeUntilStale as W,
   X,
-  focusManager as Y,
-  fetchState as Z,
-  replaceData as _,
+  timeoutManager as Y,
+  focusManager as Z,
+  fetchState as _,
   SiX as a,
-  hashKey as a0,
-  getDefaultState as a1,
-  shouldThrowError as a2,
-  useQueryClient as a3,
-  useInternetIdentity as a4,
-  createActorWithConfig as a5,
-  Variant as a6,
-  Record as a7,
-  Opt as a8,
-  Vec as a9,
-  Service as aa,
-  Func as ab,
-  Nat as ac,
-  Text as ad,
-  Null as ae,
-  Bool as af,
+  notifyManager as a0,
+  hashKey as a1,
+  getDefaultState as a2,
+  shouldThrowError as a3,
+  useQueryClient as a4,
+  useInternetIdentity as a5,
+  createActorWithConfig as a6,
+  Variant as a7,
+  Record as a8,
+  Opt as a9,
+  Vec as aa,
+  Service as ab,
+  Func as ac,
+  Nat as ad,
+  Text as ae,
+  Null as af,
+  Int as ag,
+  Bool as ah,
   SiFacebook as b,
   createLucideIcon as c,
   SiTiktok as d,
   SiYoutube as e,
   Shield as f,
-  MissingRootKeyErrorCode as g,
-  RequestStatusDoneNoReplyErrorCode as h,
-  RejectError as i,
+  utf8ToBytes as g,
+  MissingRootKeyErrorCode as h,
+  RequestStatusDoneNoReplyErrorCode as i,
   jsxRuntimeExports as j,
-  CertifiedRejectErrorCode as k,
+  RejectError as k,
   lookupResultToBuffer as l,
-  UNREACHABLE_ERROR as m,
-  InvalidReadStateRequestErrorCode as n,
-  ReadRequestType as o,
-  Principal$1 as p,
-  IDL as q,
+  CertifiedRejectErrorCode as m,
+  UNREACHABLE_ERROR as n,
+  InvalidReadStateRequestErrorCode as o,
+  ReadRequestType as p,
+  Principal$1 as q,
   reactExports as r,
-  MissingCanisterIdErrorCode as s,
-  encode$2 as t,
-  utf8ToBytes as u,
-  UncertifiedRejectErrorCode as v,
-  isV3ResponseBody as w,
-  isV2ResponseBody as x,
-  UncertifiedRejectUpdateErrorCode as y,
-  UnexpectedErrorCode as z
+  IDL as s,
+  MissingCanisterIdErrorCode as t,
+  useParams as u,
+  encode$2 as v,
+  UncertifiedRejectErrorCode as w,
+  isV3ResponseBody as x,
+  isV2ResponseBody as y,
+  UncertifiedRejectUpdateErrorCode as z
 };

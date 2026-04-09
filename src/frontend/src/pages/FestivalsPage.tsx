@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   Building2,
   Calendar,
@@ -327,21 +328,37 @@ function DetailPanel({ festival, onClose, onBuyTickets }: DetailPanelProps) {
           </div>
 
           {/* Buy tickets CTA */}
-          <button
-            type="button"
-            onClick={() => onBuyTickets(festival)}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 px-6 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
-            style={{
-              background: accentAlpha(0.15),
-              border: `2px solid ${accentColor}`,
-              color: accentColor,
-              boxShadow: `0 0 20px ${accentAlpha(0.2)}`,
-            }}
-            data-ocid="detail-buy-tickets-btn"
-          >
-            <Ticket size={16} />
-            Buy Tickets
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => onBuyTickets(festival)}
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 px-6 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
+              style={{
+                background: accentAlpha(0.15),
+                border: `2px solid ${accentColor}`,
+                color: accentColor,
+                boxShadow: `0 0 20px ${accentAlpha(0.2)}`,
+              }}
+              data-ocid="detail-buy-tickets-btn"
+            >
+              <Ticket size={16} />
+              Buy Tickets
+            </button>
+            <Link
+              to="/festivals/$id/lineup"
+              params={{ id: festival.id.toString() }}
+              className="flex items-center justify-center gap-2 rounded-xl py-3.5 px-4 font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 text-sm"
+              style={{
+                background: "oklch(0.55 0.23 310 / 0.1)",
+                border: "1px solid oklch(0.55 0.23 310 / 0.5)",
+                color: "oklch(0.55 0.23 310)",
+              }}
+              data-ocid="view-lineup-btn"
+            >
+              <Music size={14} />
+              Lineup
+            </Link>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -578,6 +595,21 @@ function GridCard({
             <Ticket size={14} />
             Tickets
           </button>
+          <Link
+            to="/festivals/$id/lineup"
+            params={{ id: festival.id.toString() }}
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
+            style={{
+              background: "oklch(0.55 0.23 310 / 0.1)",
+              border: "1px solid oklch(0.55 0.23 310 / 0.3)",
+              color: "oklch(0.55 0.23 310)",
+            }}
+            data-ocid="lineup-link-btn"
+          >
+            <Music size={12} />
+            Lineup
+          </Link>
         </div>
       </div>
     </div>

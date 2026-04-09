@@ -89,32 +89,8 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface Analytics {
-    festivalId: FestivalId;
-    estimatedRevenue: string;
-    estimatedAttendance: bigint;
-    ticketsSold: bigint;
-}
-export interface FestivalInput {
-    status: FestivalStatus;
-    country: string;
-    ticketPriceMax: bigint;
-    ticketPriceMin: bigint;
-    weekends: string;
-    name: string;
-    ticketUrl?: string;
-    description?: string;
-    season: Season;
-    ageRestriction: string;
-    company: string;
-    imageUrl?: string;
-    estimatedRevenueMax: string;
-    estimatedRevenueMin: string;
-    location: string;
-    lineup?: string;
-    specialNotes?: string;
-    eventType: EventType;
-}
+export type Timestamp = bigint;
+export type NewsId = bigint;
 export interface PackageInput {
     packageType: PackageType;
     name: string;
@@ -123,8 +99,7 @@ export interface PackageInput {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
-export type PackageId = bigint;
-export type FestivalId = bigint;
+export type LineupId = bigint;
 export interface Festival {
     id: FestivalId;
     status: FestivalStatus;
@@ -155,6 +130,61 @@ export interface Package {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export interface LineupEntry {
+    id: LineupId;
+    stage: string;
+    festivalId: FestivalId;
+    artistName: string;
+    timeSlot: string;
+}
+export interface Analytics {
+    festivalId: FestivalId;
+    estimatedRevenue: string;
+    estimatedAttendance: bigint;
+    ticketsSold: bigint;
+}
+export interface FestivalInput {
+    status: FestivalStatus;
+    country: string;
+    ticketPriceMax: bigint;
+    ticketPriceMin: bigint;
+    weekends: string;
+    name: string;
+    ticketUrl?: string;
+    description?: string;
+    season: Season;
+    ageRestriction: string;
+    company: string;
+    imageUrl?: string;
+    estimatedRevenueMax: string;
+    estimatedRevenueMin: string;
+    location: string;
+    lineup?: string;
+    specialNotes?: string;
+    eventType: EventType;
+}
+export type PackageId = bigint;
+export interface NewsArticle {
+    id: NewsId;
+    title: string;
+    content: string;
+    publishDate: Timestamp;
+    createdAt: Timestamp;
+    imageUrl: string;
+}
+export type FestivalId = bigint;
+export interface NewsInput {
+    title: string;
+    content: string;
+    publishDate: Timestamp;
+    imageUrl: string;
+}
+export interface LineupInput {
+    stage: string;
+    festivalId: FestivalId;
+    artistName: string;
+    timeSlot: string;
+}
 export enum EventType {
     EDM = "EDM",
     Family = "Family",
@@ -180,21 +210,30 @@ export enum Season {
 }
 export interface backendInterface {
     addFestival(input: FestivalInput): Promise<FestivalId>;
+    addLineupEntry(input: LineupInput): Promise<LineupId>;
+    addNews(input: NewsInput): Promise<NewsId>;
     addPackage(input: PackageInput): Promise<PackageId>;
     adminLogin(password: string): Promise<string | null>;
     deleteFestival(id: FestivalId): Promise<boolean>;
+    deleteLineupEntry(id: LineupId): Promise<boolean>;
+    deleteNews(id: NewsId): Promise<boolean>;
     deletePackage(id: PackageId): Promise<boolean>;
     getAnalytics(): Promise<Array<Analytics>>;
     getFestival(id: FestivalId): Promise<Festival | null>;
     getFestivals(): Promise<Array<Festival>>;
+    getLineup(festivalId: FestivalId): Promise<Array<LineupEntry>>;
+    getNews(): Promise<Array<NewsArticle>>;
+    getNewsArticle(id: NewsId): Promise<NewsArticle | null>;
     getPackages(): Promise<Array<Package>>;
     setFestivalImage(id: FestivalId, imageUrl: string): Promise<boolean>;
     setFestivalTicketUrl(id: FestivalId, url: string): Promise<boolean>;
     toggleFestivalStatus(id: FestivalId): Promise<boolean>;
     updateFestival(id: FestivalId, input: FestivalInput): Promise<boolean>;
+    updateLineupEntry(id: LineupId, input: LineupInput): Promise<boolean>;
+    updateNews(id: NewsId, input: NewsInput): Promise<boolean>;
     updatePackage(id: PackageId, input: PackageInput): Promise<boolean>;
 }
-import type { EventType as _EventType, Festival as _Festival, FestivalId as _FestivalId, FestivalInput as _FestivalInput, FestivalStatus as _FestivalStatus, Package as _Package, PackageId as _PackageId, PackageInput as _PackageInput, PackageType as _PackageType, Season as _Season } from "./declarations/backend.did.d.ts";
+import type { EventType as _EventType, Festival as _Festival, FestivalId as _FestivalId, FestivalInput as _FestivalInput, FestivalStatus as _FestivalStatus, NewsArticle as _NewsArticle, Package as _Package, PackageId as _PackageId, PackageInput as _PackageInput, PackageType as _PackageType, Season as _Season } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async addFestival(arg0: FestivalInput): Promise<FestivalId> {
@@ -208,6 +247,34 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.addFestival(to_candid_FestivalInput_n1(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async addLineupEntry(arg0: LineupInput): Promise<LineupId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addLineupEntry(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addLineupEntry(arg0);
+            return result;
+        }
+    }
+    async addNews(arg0: NewsInput): Promise<NewsId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addNews(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addNews(arg0);
             return result;
         }
     }
@@ -250,6 +317,34 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.deleteFestival(arg0);
+            return result;
+        }
+    }
+    async deleteLineupEntry(arg0: LineupId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteLineupEntry(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteLineupEntry(arg0);
+            return result;
+        }
+    }
+    async deleteNews(arg0: NewsId): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteNews(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteNews(arg0);
             return result;
         }
     }
@@ -309,18 +404,60 @@ export class Backend implements backendInterface {
             return from_candid_vec_n23(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getLineup(arg0: FestivalId): Promise<Array<LineupEntry>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getLineup(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getLineup(arg0);
+            return result;
+        }
+    }
+    async getNews(): Promise<Array<NewsArticle>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getNews();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getNews();
+            return result;
+        }
+    }
+    async getNewsArticle(arg0: NewsId): Promise<NewsArticle | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getNewsArticle(arg0);
+                return from_candid_opt_n24(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getNewsArticle(arg0);
+            return from_candid_opt_n24(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getPackages(): Promise<Array<Package>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getPackages();
-                return from_candid_vec_n24(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getPackages();
-            return from_candid_vec_n24(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
         }
     }
     async setFestivalImage(arg0: FestivalId, arg1: string): Promise<boolean> {
@@ -379,6 +516,34 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async updateLineupEntry(arg0: LineupId, arg1: LineupInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateLineupEntry(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateLineupEntry(arg0, arg1);
+            return result;
+        }
+    }
+    async updateNews(arg0: NewsId, arg1: NewsInput): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateNews(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateNews(arg0, arg1);
+            return result;
+        }
+    }
     async updatePackage(arg0: PackageId, arg1: PackageInput): Promise<boolean> {
         if (this.processError) {
             try {
@@ -403,11 +568,11 @@ function from_candid_FestivalStatus_n17(_uploadFile: (file: ExternalBlob) => Pro
 function from_candid_Festival_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Festival): Festival {
     return from_candid_record_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_PackageType_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PackageType): PackageType {
-    return from_candid_variant_n28(_uploadFile, _downloadFile, value);
+function from_candid_PackageType_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PackageType): PackageType {
+    return from_candid_variant_n29(_uploadFile, _downloadFile, value);
 }
-function from_candid_Package_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Package): Package {
-    return from_candid_record_n26(_uploadFile, _downloadFile, value);
+function from_candid_Package_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Package): Package {
+    return from_candid_record_n27(_uploadFile, _downloadFile, value);
 }
 function from_candid_Season_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Season): Season {
     return from_candid_variant_n20(_uploadFile, _downloadFile, value);
@@ -418,7 +583,10 @@ function from_candid_opt_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function from_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Festival]): Festival | null {
     return value.length === 0 ? null : from_candid_Festival_n15(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_FestivalId]): FestivalId | null {
+function from_candid_opt_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_NewsArticle]): NewsArticle | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_FestivalId]): FestivalId | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
@@ -484,7 +652,7 @@ function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uin
         eventType: from_candid_EventType_n21(_uploadFile, _downloadFile, value.eventType)
     };
 }
-function from_candid_record_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _PackageId;
     packageType: _PackageType;
     name: string;
@@ -503,11 +671,11 @@ function from_candid_record_n26(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         id: value.id,
-        packageType: from_candid_PackageType_n27(_uploadFile, _downloadFile, value.packageType),
+        packageType: from_candid_PackageType_n28(_uploadFile, _downloadFile, value.packageType),
         name: value.name,
         description: value.description,
         includes: value.includes,
-        festivalId: record_opt_to_undefined(from_candid_opt_n29(_uploadFile, _downloadFile, value.festivalId)),
+        festivalId: record_opt_to_undefined(from_candid_opt_n30(_uploadFile, _downloadFile, value.festivalId)),
         priceGBP: value.priceGBP
     };
 }
@@ -536,7 +704,7 @@ function from_candid_variant_n22(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): EventType {
     return "EDM" in value ? EventType.EDM : "Family" in value ? EventType.Family : "Rave" in value ? EventType.Rave : "ClubHotel" in value ? EventType.ClubHotel : value;
 }
-function from_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     VIP: null;
 } | {
     Weekend1: null;
@@ -556,8 +724,8 @@ function from_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Ui
 function from_candid_vec_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Festival>): Array<Festival> {
     return value.map((x)=>from_candid_Festival_n15(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Package>): Array<Package> {
-    return value.map((x)=>from_candid_Package_n25(_uploadFile, _downloadFile, x));
+function from_candid_vec_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Package>): Array<Package> {
+    return value.map((x)=>from_candid_Package_n26(_uploadFile, _downloadFile, x));
 }
 function to_candid_EventType_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: EventType): _EventType {
     return to_candid_variant_n8(_uploadFile, _downloadFile, value);

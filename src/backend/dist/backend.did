@@ -1,3 +1,4 @@
+type Timestamp = int;
 type Season = 
  variant {
    Summer;
@@ -32,6 +33,39 @@ type Package =
    name: text;
    packageType: PackageType;
    priceGBP: nat;
+ };
+type NewsInput = 
+ record {
+   content: text;
+   imageUrl: text;
+   publishDate: Timestamp;
+   title: text;
+ };
+type NewsId = nat;
+type NewsArticle = 
+ record {
+   content: text;
+   createdAt: Timestamp;
+   id: NewsId;
+   imageUrl: text;
+   publishDate: Timestamp;
+   title: text;
+ };
+type LineupInput = 
+ record {
+   artistName: text;
+   festivalId: FestivalId;
+   stage: text;
+   timeSlot: text;
+ };
+type LineupId = nat;
+type LineupEntry = 
+ record {
+   artistName: text;
+   festivalId: FestivalId;
+   id: LineupId;
+   stage: text;
+   timeSlot: text;
  };
 type FestivalStatus = 
  variant {
@@ -98,17 +132,26 @@ type Analytics =
  };
 service : {
   addFestival: (input: FestivalInput) -> (FestivalId);
+  addLineupEntry: (input: LineupInput) -> (LineupId);
+  addNews: (input: NewsInput) -> (NewsId);
   addPackage: (input: PackageInput) -> (PackageId);
   adminLogin: (password: text) -> (opt text);
   deleteFestival: (id: FestivalId) -> (bool);
+  deleteLineupEntry: (id: LineupId) -> (bool);
+  deleteNews: (id: NewsId) -> (bool);
   deletePackage: (id: PackageId) -> (bool);
   getAnalytics: () -> (vec Analytics) query;
   getFestival: (id: FestivalId) -> (opt Festival) query;
   getFestivals: () -> (vec Festival) query;
+  getLineup: (festivalId: FestivalId) -> (vec LineupEntry) query;
+  getNews: () -> (vec NewsArticle) query;
+  getNewsArticle: (id: NewsId) -> (opt NewsArticle) query;
   getPackages: () -> (vec Package) query;
   setFestivalImage: (id: FestivalId, imageUrl: text) -> (bool);
   setFestivalTicketUrl: (id: FestivalId, url: text) -> (bool);
   toggleFestivalStatus: (id: FestivalId) -> (bool);
   updateFestival: (id: FestivalId, input: FestivalInput) -> (bool);
+  updateLineupEntry: (id: LineupId, input: LineupInput) -> (bool);
+  updateNews: (id: NewsId, input: NewsInput) -> (bool);
   updatePackage: (id: PackageId, input: PackageInput) -> (bool);
 }

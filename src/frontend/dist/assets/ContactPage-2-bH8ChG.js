@@ -1,14 +1,15 @@
-import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, M as Mail, S as SiInstagram, a as SiX, b as SiFacebook, d as SiTiktok, e as SiYoutube } from "./index-I4kNh_-2.js";
-import { G as Globe } from "./globe-SWdtns-M.js";
-import { B as Building2 } from "./building-2-D-QEM4OU.js";
-import { M as MapPin } from "./map-pin-BQctCHlQ.js";
+import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, M as Mail, S as SiInstagram, a as SiX, b as SiFacebook, d as SiTiktok, e as SiYoutube } from "./index-C4tn0597.js";
+import { G as Globe } from "./globe-7Z0XMwTC.js";
+import { B as Building2 } from "./building-2-D4Kr7kKf.js";
+import { M as MapPin } from "./map-pin-KFMurC0I.js";
+import { N as Newspaper } from "./newspaper-DfffAazW.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$2 = [
+const __iconNode$1 = [
   ["path", { d: "m11 17 2 2a1 1 0 1 0 3-3", key: "efffak" }],
   [
     "path",
@@ -21,26 +22,7 @@ const __iconNode$2 = [
   ["path", { d: "M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3", key: "1uvwmv" }],
   ["path", { d: "M3 4h8", key: "1ep09j" }]
 ];
-const Handshake = createLucideIcon("handshake", __iconNode$2);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1 = [
-  ["path", { d: "M15 18h-5", key: "95g1m2" }],
-  ["path", { d: "M18 14h-8", key: "sponae" }],
-  [
-    "path",
-    {
-      d: "M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2",
-      key: "39pd36"
-    }
-  ],
-  ["rect", { width: "8", height: "4", x: "10", y: "6", rx: "1", key: "aywv1n" }]
-];
-const Newspaper = createLucideIcon("newspaper", __iconNode$1);
+const Handshake = createLucideIcon("handshake", __iconNode$1);
 /**
  * @license lucide-react v0.511.0 - ISC
  *

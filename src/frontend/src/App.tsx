@@ -14,6 +14,8 @@ const PackagesPage = lazy(() => import("./pages/PackagesPage"));
 const JobsPage = lazy(() => import("./pages/JobsPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
+const NewsPage = lazy(() => import("./pages/NewsPage"));
+const LineupPage = lazy(() => import("./pages/LineupPage"));
 
 function PageLoader() {
   return (
@@ -85,6 +87,18 @@ const adminRoute = createRoute({
   component: AdminPage,
 });
 
+const newsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/news",
+  component: NewsPage,
+});
+
+const lineupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/festivals/$id/lineup",
+  component: LineupPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   festivalsRoute,
@@ -92,6 +106,8 @@ const routeTree = rootRoute.addChildren([
   jobsRoute,
   contactRoute,
   adminRoute,
+  newsRoute,
+  lineupRoute,
 ]);
 
 const router = createRouter({ routeTree });

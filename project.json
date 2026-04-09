@@ -1,27 +1,25 @@
 {
-  "overview": "WE ARE ONE is a vibrant festival website showcasing global EDM and family festivals across the UK, Europe, Americas, and Asia. The platform features a stunning Tomorrowland-style public site with all festival info, ticket packages, jobs, and a contact page — plus a powerful admin dashboard for managing festivals, uploads, and analytics.",
+  "overview": "WE ARE ONE festival website with 12 global EDM and family festivals. Features a public site with festival listings, packages, news, lineup pages, jobs, and contact — plus a full admin dashboard to manage all content.",
   "features": [
-    "Home page with animated hero, logo, slogan and featured festivals",
-    "Festivals page listing all 11 Summer & Winter events with filters",
-    "Packages page with ticket tiers, VIP, flights, transfers, and accommodation",
-    "Jobs page with roles, age eligibility, and application info",
-    "Contact page with inquiry form, map, and social links",
-    "Admin dashboard with full CRUD for festivals and packages",
-    "Festival image and lineup uploads via file storage",
-    "Toggle festival status between Coming Soon and Active",
-    "Analytics per festival: revenue estimates, attendance, and sales",
-    "Coming Soon popup on all ticket purchase buttons",
-    "Fully responsive design with LED fonts and animated festival visuals"
+    "Public news page with articles and images",
+    "Festival lineup pages per event",
+    "Admin news management (add/edit/delete)",
+    "Admin lineup editing per festival",
+    "All data persisted in backend database",
+    "12 global EDM and family festivals",
+    "Ticket link management",
+    "Admin dashboard with festival/package/analytics management",
+    "Vibrant Tomorrowland-inspired animated design"
   ],
   "category": "entertainment",
   "tags": [
     "festival",
+    "music",
     "events",
     "edm",
-    "music",
-    "tickets",
-    "admin",
-    "dashboard"
+    "lineup",
+    "news",
+    "admin"
   ],
-  "last_updated": "2026-04-08T22:00:50.158Z"
+  "last_updated": "2026-04-09T07:35:11.374Z"
 }

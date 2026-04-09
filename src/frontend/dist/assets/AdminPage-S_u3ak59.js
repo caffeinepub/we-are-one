@@ -1,6 +1,8 @@
-import { c as createLucideIcon, j as jsxRuntimeExports, r as reactExports, X, f as Shield } from "./index-I4kNh_-2.js";
-import { d as useFestivals, h as useAnalytics, i as isComingSoon, j as useSetFestivalTicketUrl, F as FestivalStatus, a as getEventTypeLabel, g as getSeasonLabel, E as EventType, k as Season, u as useTicketUrls, l as useAddFestival, m as useUpdateFestival, n as useDeleteFestival, o as useToggleFestivalStatus, p as useSetFestivalImage, f as getPackageTypeLabel, e as usePackages, q as useAddPackage, r as useUpdatePackage, s as useDeletePackage, t as useAdminLogin } from "./useBackend-BzNY-UOi.js";
-import { U as Users } from "./users-BVsjVNrj.js";
+import { c as createLucideIcon, j as jsxRuntimeExports, r as reactExports, X, f as Shield } from "./index-C4tn0597.js";
+import { d as useFestivals, h as useAnalytics, i as isComingSoon, j as useSetFestivalTicketUrl, F as FestivalStatus, a as getEventTypeLabel, g as getSeasonLabel, E as EventType, k as Season, u as useTicketUrls, l as useAddFestival, m as useUpdateFestival, n as useDeleteFestival, o as useToggleFestivalStatus, p as useSetFestivalImage, q as useLineup, r as useAddLineupEntry, s as useUpdateLineupEntry, t as useDeleteLineupEntry, v as useNews, w as useAddNews, x as useUpdateNews, y as useDeleteNews, f as getPackageTypeLabel, e as usePackages, z as useAddPackage, A as useUpdatePackage, B as useDeletePackage, C as useAdminLogin } from "./useBackend-BKOfb4gL.js";
+import { U as Users } from "./users-CZK4QFxk.js";
+import { M as Music } from "./music-wBzkYQ1B.js";
+import { N as Newspaper } from "./newspaper-DfffAazW.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -199,7 +201,7 @@ const __iconNode = [
   ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
 ];
 const TrendingUp = createLucideIcon("trending-up", __iconNode);
-const S$5 = {
+const S$7 = {
   card: {
     background: "oklch(0.1 0.02 260)",
     border: "1px solid oklch(0.25 0.02 260 / 0.4)"
@@ -255,7 +257,7 @@ function AnalyticsTab() {
       {
         className: "rounded-2xl p-5",
         style: {
-          ...S$5.card,
+          ...S$7.card,
           boxShadow: `0 0 20px ${color.replace(")", " / 0.06)")}`
         },
         "data-ocid": "admin-analytics-summary-card",
@@ -428,7 +430,7 @@ function AnalyticsTab() {
         "div",
         {
           className: "rounded-2xl py-16 text-center",
-          style: S$5.card,
+          style: S$7.card,
           "data-ocid": "admin-analytics-empty",
           children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "p",
@@ -446,7 +448,7 @@ function AnalyticsTab() {
 const SEASON_OPTIONS = ["Summer", "Winter"];
 const EVENT_TYPES = ["EDM", "Family", "ClubHotel", "Rave"];
 const STATUS_OPTIONS = ["ComingSoon", "Active"];
-const S$4 = {
+const S$6 = {
   overlay: {
     background: "oklch(0 0 0 / 0.75)",
     backdropFilter: "blur(8px)"
@@ -526,7 +528,7 @@ function FestivalForm({
         {
           htmlFor: id,
           className: "mb-1 block text-xs font-display uppercase tracking-wider",
-          style: S$4.label,
+          style: S$6.label,
           children: label
         }
       ),
@@ -537,12 +539,12 @@ function FestivalForm({
     "div",
     {
       className: "fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4",
-      style: S$4.overlay,
+      style: S$6.overlay,
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
           className: "relative my-8 w-full max-w-2xl rounded-2xl p-6",
-          style: S$4.modal,
+          style: S$6.modal,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-6 flex items-center justify-between", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -575,7 +577,7 @@ function FestivalForm({
                     id: "f-name",
                     required: true,
                     className: inputClass,
-                    style: S$4.input,
+                    style: S$6.input,
                     value: form.name,
                     onChange: (e) => setForm({ ...form, name: e.target.value }),
                     "data-ocid": "festival-form-name"
@@ -592,7 +594,7 @@ function FestivalForm({
                       id: "f-location",
                       required: true,
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       value: form.location,
                       onChange: (e) => setForm({ ...form, location: e.target.value })
                     }
@@ -607,7 +609,7 @@ function FestivalForm({
                       id: "f-country",
                       required: true,
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       value: form.country,
                       onChange: (e) => setForm({ ...form, country: e.target.value })
                     }
@@ -624,7 +626,7 @@ function FestivalForm({
                       id: "f-company",
                       required: true,
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       value: form.company,
                       onChange: (e) => setForm({ ...form, company: e.target.value })
                     }
@@ -639,7 +641,7 @@ function FestivalForm({
                       id: "f-age",
                       required: true,
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       placeholder: "e.g. 14+ or All Ages",
                       value: form.ageRestriction,
                       onChange: (e) => setForm({ ...form, ageRestriction: e.target.value })
@@ -656,7 +658,7 @@ function FestivalForm({
                     {
                       id: "f-season",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       value: form.season,
                       onChange: (e) => setForm({ ...form, season: e.target.value }),
                       children: SEASON_OPTIONS.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: s, children: s }, s))
@@ -671,7 +673,7 @@ function FestivalForm({
                     {
                       id: "f-eventtype",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       value: form.eventType,
                       onChange: (e) => setForm({
                         ...form,
@@ -691,7 +693,7 @@ function FestivalForm({
                     {
                       id: "f-status",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       value: form.status,
                       onChange: (e) => setForm({ ...form, status: e.target.value }),
                       children: STATUS_OPTIONS.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: s, children: s === "ComingSoon" ? "Coming Soon" : "Active" }, s))
@@ -708,7 +710,7 @@ function FestivalForm({
                     id: "f-weekends",
                     required: true,
                     className: inputClass,
-                    style: S$4.input,
+                    style: S$6.input,
                     placeholder: 'e.g. "July 12–13 & July 19–20, 2025"',
                     value: form.weekends,
                     onChange: (e) => setForm({ ...form, weekends: e.target.value })
@@ -727,7 +729,7 @@ function FestivalForm({
                       required: true,
                       min: "0",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       placeholder: "e.g. 8900 = £89",
                       value: form.ticketPriceMin,
                       onChange: (e) => setForm({ ...form, ticketPriceMin: e.target.value })
@@ -745,7 +747,7 @@ function FestivalForm({
                       required: true,
                       min: "0",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       placeholder: "e.g. 35000 = £350",
                       value: form.ticketPriceMax,
                       onChange: (e) => setForm({ ...form, ticketPriceMax: e.target.value })
@@ -762,7 +764,7 @@ function FestivalForm({
                     {
                       id: "f-rev-min",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       placeholder: "e.g. £500K",
                       value: form.estimatedRevenueMin,
                       onChange: (e) => setForm({ ...form, estimatedRevenueMin: e.target.value })
@@ -777,7 +779,7 @@ function FestivalForm({
                     {
                       id: "f-rev-max",
                       className: inputClass,
-                      style: S$4.input,
+                      style: S$6.input,
                       placeholder: "e.g. £1.2M",
                       value: form.estimatedRevenueMax,
                       onChange: (e) => setForm({ ...form, estimatedRevenueMax: e.target.value })
@@ -794,7 +796,7 @@ function FestivalForm({
                     id: "f-image",
                     type: "url",
                     className: inputClass,
-                    style: S$4.input,
+                    style: S$6.input,
                     placeholder: "https://...",
                     value: form.imageUrl,
                     onChange: (e) => setForm({ ...form, imageUrl: e.target.value })
@@ -810,7 +812,7 @@ function FestivalForm({
                     id: "f-ticket-url",
                     type: "url",
                     className: inputClass,
-                    style: S$4.input,
+                    style: S$6.input,
                     placeholder: "https://tickets.example.com (optional — only used when Active)",
                     value: form.ticketUrl,
                     onChange: (e) => setForm({ ...form, ticketUrl: e.target.value }),
@@ -826,7 +828,7 @@ function FestivalForm({
                   {
                     id: "f-notes",
                     className: inputClass,
-                    style: S$4.input,
+                    style: S$6.input,
                     placeholder: "Optional",
                     value: form.specialNotes,
                     onChange: (e) => setForm({ ...form, specialNotes: e.target.value })
@@ -842,7 +844,7 @@ function FestivalForm({
                     id: "f-desc",
                     rows: 3,
                     className: `${inputClass} resize-none`,
-                    style: S$4.input,
+                    style: S$6.input,
                     value: form.description,
                     onChange: (e) => setForm({ ...form, description: e.target.value })
                   }
@@ -857,7 +859,7 @@ function FestivalForm({
                     id: "f-lineup",
                     rows: 2,
                     className: `${inputClass} resize-none`,
-                    style: S$4.input,
+                    style: S$6.input,
                     placeholder: "Comma-separated artists",
                     value: form.lineup,
                     onChange: (e) => setForm({ ...form, lineup: e.target.value })
@@ -900,7 +902,7 @@ function FestivalForm({
     }
   );
 }
-const S$3 = {
+const S$5 = {
   overlay: {
     background: "oklch(0 0 0 / 0.75)",
     backdropFilter: "blur(8px)"
@@ -932,8 +934,8 @@ function ImageModal({
     "div",
     {
       className: "fixed inset-0 z-50 flex items-center justify-center p-4",
-      style: S$3.overlay,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-full max-w-md rounded-2xl p-6", style: S$3.modal, children: [
+      style: S$5.overlay,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-full max-w-md rounded-2xl p-6", style: S$5.modal, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex items-center justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "h2",
@@ -992,7 +994,7 @@ function ImageModal({
                 id: "img-url",
                 type: "url",
                 className: "w-full rounded-xl px-3 py-2.5 text-sm outline-none transition-smooth",
-                style: S$3.input,
+                style: S$5.input,
                 placeholder: "https://...",
                 value: url,
                 onChange: (e) => {
@@ -1037,7 +1039,7 @@ function ImageModal({
     }
   );
 }
-const S$2 = {
+const S$4 = {
   card: {
     background: "oklch(0.1 0.02 260)",
     border: "1px solid oklch(0.25 0.02 260 / 0.4)"
@@ -1084,7 +1086,7 @@ function FestivalsTab() {
         "p",
         {
           className: "text-sm font-display uppercase tracking-wider",
-          style: S$2.th,
+          style: S$4.th,
           children: [
             festivals.length,
             " Festival",
@@ -1111,7 +1113,7 @@ function FestivalsTab() {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-x-auto rounded-2xl", style: S$2.card, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-x-auto rounded-2xl", style: S$4.card, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { style: { borderBottom: "1px solid oklch(0.2 0.01 260)" }, children: [
           "Name",
@@ -1125,7 +1127,7 @@ function FestivalsTab() {
           "th",
           {
             className: "px-4 py-3 text-left text-xs font-display uppercase tracking-wider",
-            style: S$2.th,
+            style: S$4.th,
             children: h
           },
           h
@@ -1133,10 +1135,10 @@ function FestivalsTab() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: festivals.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "tr",
           {
-            style: S$2.rowBorder,
+            style: S$4.rowBorder,
             "data-ocid": "admin-festival-row",
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-medium", style: S$2.td, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-medium", style: S$4.td, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
                 f.imageUrl && /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "img",
                   {
@@ -1157,22 +1159,22 @@ function FestivalsTab() {
                   }
                 ) })
               ] }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", style: S$2.tdMuted, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", style: S$4.tdMuted, children: [
                 f.location,
                 ", ",
                 f.country
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", style: S$2.tdMuted, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", style: S$4.tdMuted, children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: getSeasonLabel(f.season) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-xs opacity-60", children: getEventTypeLabel(f.eventType) })
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 font-mono text-xs", style: S$2.amber, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 font-mono text-xs", style: S$4.amber, children: [
                 "£",
                 f.ticketPriceMin.toString(),
                 "–£",
                 f.ticketPriceMax.toString()
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs", style: S$2.tdMuted, children: f.ageRestriction }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs", style: S$4.tdMuted, children: f.ageRestriction }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "span",
                 {
@@ -1275,7 +1277,7 @@ function FestivalsTab() {
         "p",
         {
           className: "font-display text-sm uppercase tracking-wider",
-          style: S$2.th,
+          style: S$4.th,
           children: "No festivals yet. Add your first festival above."
         }
       ) })
@@ -1296,6 +1298,729 @@ function FestivalsTab() {
         onSave: handleSetImage,
         onClose: () => setModal({ type: "none" }),
         isPending: setImage.isPending
+      }
+    )
+  ] });
+}
+const S$3 = {
+  card: {
+    background: "oklch(0.1 0.02 260)",
+    border: "1px solid oklch(0.25 0.02 260 / 0.4)"
+  },
+  th: { color: "oklch(0.5 0 0)" },
+  td: { color: "oklch(0.85 0 0)" },
+  tdMuted: { color: "oklch(0.6 0 0)" },
+  rowBorder: {
+    borderBottom: "1px solid oklch(0.15 0.01 260)"
+  }
+};
+function LineupForm({
+  festivalId,
+  entry,
+  onSave,
+  onClose,
+  isPending
+}) {
+  const [artistName, setArtistName] = reactExports.useState((entry == null ? void 0 : entry.artistName) ?? "");
+  const [stage, setStage] = reactExports.useState((entry == null ? void 0 : entry.stage) ?? "");
+  const [timeSlot, setTimeSlot] = reactExports.useState((entry == null ? void 0 : entry.timeSlot) ?? "");
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSave({
+      festivalId,
+      artistName: artistName.trim(),
+      stage: stage.trim(),
+      timeSlot: timeSlot.trim()
+    });
+  }
+  const inputStyle = {
+    background: "oklch(0.07 0.02 260)",
+    border: "1px solid oklch(0.25 0.02 260 / 0.5)",
+    color: "oklch(0.9 0 0)",
+    borderRadius: "0.75rem",
+    padding: "0.625rem 1rem",
+    width: "100%",
+    fontSize: "0.875rem",
+    outline: "none"
+  };
+  const labelStyle = {
+    display: "block",
+    marginBottom: "0.375rem",
+    fontSize: "0.75rem",
+    fontFamily: "var(--font-display)",
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    color: "oklch(0.5 0 0)"
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "fixed inset-0 z-50 flex items-center justify-center p-4",
+      style: { background: "oklch(0 0 0 / 0.7)", backdropFilter: "blur(6px)" },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "w-full max-w-md rounded-2xl p-6",
+          style: {
+            background: "oklch(0.1 0.02 260)",
+            border: "2px solid oklch(0.65 0.2 180 / 0.3)",
+            boxShadow: "0 0 60px oklch(0.65 0.2 180 / 0.1)"
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "h2",
+                {
+                  className: "font-display font-bold uppercase tracking-wider",
+                  style: { color: "oklch(0.65 0.2 180)" },
+                  children: entry ? "Edit Artist" : "Add Artist"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onClose,
+                  className: "rounded-lg p-1.5 transition-smooth hover:scale-110",
+                  style: { color: "oklch(0.5 0 0)" },
+                  "aria-label": "Close",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 18 })
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "flex flex-col gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lineup-artist", style: labelStyle, children: "Artist Name *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "lineup-artist",
+                    type: "text",
+                    required: true,
+                    value: artistName,
+                    onChange: (e) => setArtistName(e.target.value),
+                    placeholder: "e.g. Martin Garrix",
+                    style: inputStyle,
+                    "data-ocid": "lineup-form-artist"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lineup-stage", style: labelStyle, children: "Stage *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "lineup-stage",
+                    type: "text",
+                    required: true,
+                    value: stage,
+                    onChange: (e) => setStage(e.target.value),
+                    placeholder: "e.g. Main Stage, Mainstage, Freedom Stage",
+                    style: inputStyle,
+                    "data-ocid": "lineup-form-stage"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lineup-timeslot", style: labelStyle, children: "Time Slot *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "lineup-timeslot",
+                    type: "text",
+                    required: true,
+                    value: timeSlot,
+                    onChange: (e) => setTimeSlot(e.target.value),
+                    placeholder: "e.g. 22:00 – 23:30",
+                    style: inputStyle,
+                    "data-ocid": "lineup-form-timeslot"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 pt-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: onClose,
+                    className: "flex-1 rounded-xl py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth hover:opacity-80",
+                    style: {
+                      background: "oklch(0.15 0.02 260)",
+                      border: "1px solid oklch(0.25 0.02 260 / 0.5)",
+                      color: "oklch(0.6 0 0)"
+                    },
+                    children: "Cancel"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "submit",
+                    disabled: isPending,
+                    className: "flex-1 rounded-xl py-3 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 disabled:opacity-50",
+                    style: {
+                      background: "linear-gradient(135deg, oklch(0.65 0.2 180 / 0.9), oklch(0.55 0.23 310 / 0.9))",
+                      color: "oklch(0.08 0 0)",
+                      boxShadow: "0 0 20px oklch(0.65 0.2 180 / 0.25)"
+                    },
+                    "data-ocid": "lineup-form-save-btn",
+                    children: isPending ? "Saving…" : "Save Artist"
+                  }
+                )
+              ] })
+            ] })
+          ]
+        }
+      )
+    }
+  );
+}
+function LineupTab() {
+  var _a;
+  const { data: festivals = [] } = useFestivals();
+  const [selectedFestivalId, setSelectedFestivalId] = reactExports.useState(
+    festivals.length > 0 ? festivals[0].id : null
+  );
+  const activeFestivalId = selectedFestivalId ?? ((_a = festivals[0]) == null ? void 0 : _a.id) ?? 0n;
+  const { data: lineup = [] } = useLineup(activeFestivalId);
+  const addEntry = useAddLineupEntry();
+  const updateEntry = useUpdateLineupEntry();
+  const deleteEntry = useDeleteLineupEntry();
+  const [modal, setModal] = reactExports.useState({ type: "none" });
+  const [deleteConfirm, setDeleteConfirm] = reactExports.useState(null);
+  const sorted = [...lineup].sort(
+    (a, b) => a.stage.localeCompare(b.stage) || a.timeSlot.localeCompare(b.timeSlot)
+  );
+  function handleSave(input) {
+    if (modal.type === "add") {
+      addEntry.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+    } else if (modal.type === "edit") {
+      updateEntry.mutate(
+        { id: modal.entry.id, input },
+        { onSuccess: () => setModal({ type: "none" }) }
+      );
+    }
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "label",
+        {
+          htmlFor: "lineup-festival-select",
+          className: "text-xs font-display uppercase tracking-wider shrink-0",
+          style: S$3.th,
+          children: "Festival:"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "select",
+        {
+          id: "lineup-festival-select",
+          value: activeFestivalId.toString(),
+          onChange: (e) => setSelectedFestivalId(BigInt(e.target.value)),
+          className: "flex-1 rounded-xl px-4 py-2.5 text-sm font-display outline-none transition-smooth",
+          style: {
+            background: "oklch(0.1 0.02 260)",
+            border: "1px solid oklch(0.25 0.02 260 / 0.5)",
+            color: "oklch(0.85 0 0)"
+          },
+          "data-ocid": "lineup-festival-select",
+          children: festivals.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f.id.toString(), children: f.name }, f.id.toString()))
+        }
+      ),
+      festivals.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => setModal({ type: "add" }),
+          className: "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 shrink-0",
+          style: {
+            background: "linear-gradient(135deg, oklch(0.65 0.2 180 / 0.9), oklch(0.55 0.23 310 / 0.9))",
+            color: "oklch(0.08 0 0)",
+            boxShadow: "0 0 20px oklch(0.65 0.2 180 / 0.25)"
+          },
+          "data-ocid": "admin-add-lineup-btn",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14 }),
+            "Add Artist"
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-x-auto rounded-2xl", style: S$3.card, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { style: { borderBottom: "1px solid oklch(0.2 0.01 260)" }, children: ["Artist", "Stage", "Time Slot", "Actions"].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "th",
+          {
+            className: "px-4 py-3 text-left text-xs font-display uppercase tracking-wider",
+            style: S$3.th,
+            children: h
+          },
+          h
+        )) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: sorted.map((entry) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "tr",
+          {
+            style: S$3.rowBorder,
+            "data-ocid": "lineup-row",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-medium", style: S$3.td, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Music, { size: 14, style: { color: "oklch(0.65 0.2 180)" } }),
+                entry.artistName
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs", style: S$3.tdMuted, children: entry.stage }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "td",
+                {
+                  className: "px-4 py-3 font-mono text-xs",
+                  style: { color: "oklch(0.65 0.18 70)" },
+                  children: entry.timeSlot
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    title: "Edit",
+                    onClick: () => setModal({ type: "edit", entry }),
+                    className: "rounded-lg p-1.5 transition-smooth hover:scale-110",
+                    style: { color: "oklch(0.65 0.18 70)" },
+                    "data-ocid": "admin-edit-lineup-btn",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 16 })
+                  }
+                ),
+                deleteConfirm === entry.id ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => {
+                        deleteEntry.mutate({
+                          id: entry.id,
+                          festivalId: activeFestivalId
+                        });
+                        setDeleteConfirm(null);
+                      },
+                      className: "rounded-lg px-2 py-1 text-xs font-bold transition-smooth",
+                      style: {
+                        background: "oklch(0.55 0.22 25 / 0.2)",
+                        color: "oklch(0.55 0.22 25)"
+                      },
+                      children: "Confirm"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => setDeleteConfirm(null),
+                      className: "rounded-lg p-1",
+                      style: { color: "oklch(0.5 0 0)" },
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 14 })
+                    }
+                  )
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    title: "Delete",
+                    onClick: () => setDeleteConfirm(entry.id),
+                    className: "rounded-lg p-1.5 transition-smooth hover:scale-110",
+                    style: { color: "oklch(0.55 0.22 25)" },
+                    "data-ocid": "admin-delete-lineup-btn",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 16 })
+                  }
+                )
+              ] }) })
+            ]
+          },
+          entry.id.toString()
+        )) })
+      ] }),
+      sorted.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "py-16 text-center", "data-ocid": "lineup-empty", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          className: "font-display text-sm uppercase tracking-wider",
+          style: S$3.th,
+          children: "No artists yet. Add the first artist to this festival's lineup."
+        }
+      ) })
+    ] }),
+    (modal.type === "add" || modal.type === "edit") && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      LineupForm,
+      {
+        festivalId: activeFestivalId,
+        entry: modal.type === "edit" ? modal.entry : void 0,
+        onSave: handleSave,
+        onClose: () => setModal({ type: "none" }),
+        isPending: addEntry.isPending || updateEntry.isPending
+      }
+    )
+  ] });
+}
+const S$2 = {
+  card: {
+    background: "oklch(0.1 0.02 260)",
+    border: "1px solid oklch(0.25 0.02 260 / 0.4)"
+  },
+  th: { color: "oklch(0.5 0 0)" },
+  td: { color: "oklch(0.85 0 0)" },
+  tdMuted: { color: "oklch(0.6 0 0)" },
+  rowBorder: {
+    borderBottom: "1px solid oklch(0.15 0.01 260)"
+  }
+};
+function toDateInput(ts) {
+  const ms = Number(ts) < 1e12 ? Number(ts) * 1e3 : Number(ts) / 1e6;
+  return new Date(ms).toISOString().slice(0, 10);
+}
+function fromDateInput(dateStr) {
+  return BigInt(new Date(dateStr).getTime()) * 1000000n;
+}
+function NewsForm({ article, onSave, onClose, isPending }) {
+  const [title, setTitle] = reactExports.useState((article == null ? void 0 : article.title) ?? "");
+  const [content, setContent] = reactExports.useState((article == null ? void 0 : article.content) ?? "");
+  const [imageUrl, setImageUrl] = reactExports.useState((article == null ? void 0 : article.imageUrl) ?? "");
+  const [publishDate, setPublishDate] = reactExports.useState(
+    article ? toDateInput(article.publishDate) : (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)
+  );
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSave({
+      title: title.trim(),
+      content: content.trim(),
+      imageUrl: imageUrl.trim(),
+      publishDate: fromDateInput(publishDate)
+    });
+  }
+  const inputStyle = {
+    background: "oklch(0.07 0.02 260)",
+    border: "1px solid oklch(0.25 0.02 260 / 0.5)",
+    color: "oklch(0.9 0 0)",
+    borderRadius: "0.75rem",
+    padding: "0.625rem 1rem",
+    width: "100%",
+    fontSize: "0.875rem",
+    outline: "none"
+  };
+  const labelStyle = {
+    display: "block",
+    marginBottom: "0.375rem",
+    fontSize: "0.75rem",
+    fontFamily: "var(--font-display)",
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    color: "oklch(0.5 0 0)"
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "fixed inset-0 z-50 flex items-center justify-center p-4",
+      style: { background: "oklch(0 0 0 / 0.7)", backdropFilter: "blur(6px)" },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "w-full max-w-lg rounded-2xl p-6",
+          style: {
+            background: "oklch(0.1 0.02 260)",
+            border: "2px solid oklch(0.65 0.2 180 / 0.3)",
+            boxShadow: "0 0 60px oklch(0.65 0.2 180 / 0.1)",
+            maxHeight: "90vh",
+            overflowY: "auto"
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-5 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "h2",
+                {
+                  className: "font-display font-bold uppercase tracking-wider",
+                  style: { color: "oklch(0.65 0.2 180)" },
+                  children: article ? "Edit Article" : "Add News Article"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onClose,
+                  className: "rounded-lg p-1.5 transition-smooth hover:scale-110",
+                  style: { color: "oklch(0.5 0 0)" },
+                  "aria-label": "Close",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 18 })
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "flex flex-col gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "news-title", style: labelStyle, children: "Title *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "news-title",
+                    type: "text",
+                    required: true,
+                    value: title,
+                    onChange: (e) => setTitle(e.target.value),
+                    placeholder: "Article headline",
+                    style: inputStyle,
+                    "data-ocid": "news-form-title"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "news-content", style: labelStyle, children: "Content *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "textarea",
+                  {
+                    id: "news-content",
+                    required: true,
+                    rows: 6,
+                    value: content,
+                    onChange: (e) => setContent(e.target.value),
+                    placeholder: "Write the full article content here…",
+                    style: { ...inputStyle, resize: "vertical" },
+                    "data-ocid": "news-form-content"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "news-image-url", style: labelStyle, children: "Image URL" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "news-image-url",
+                    type: "url",
+                    value: imageUrl,
+                    onChange: (e) => setImageUrl(e.target.value),
+                    placeholder: "https://example.com/image.jpg",
+                    style: inputStyle,
+                    "data-ocid": "news-form-image-url"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "news-date", style: labelStyle, children: "Publish Date *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "input",
+                  {
+                    id: "news-date",
+                    type: "date",
+                    required: true,
+                    value: publishDate,
+                    onChange: (e) => setPublishDate(e.target.value),
+                    style: { ...inputStyle, colorScheme: "dark" },
+                    "data-ocid": "news-form-date"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 pt-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: onClose,
+                    className: "flex-1 rounded-xl py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth hover:opacity-80",
+                    style: {
+                      background: "oklch(0.15 0.02 260)",
+                      border: "1px solid oklch(0.25 0.02 260 / 0.5)",
+                      color: "oklch(0.6 0 0)"
+                    },
+                    children: "Cancel"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "submit",
+                    disabled: isPending,
+                    className: "flex-1 rounded-xl py-3 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 disabled:opacity-50",
+                    style: {
+                      background: "linear-gradient(135deg, oklch(0.65 0.2 180 / 0.9), oklch(0.55 0.23 310 / 0.9))",
+                      color: "oklch(0.08 0 0)",
+                      boxShadow: "0 0 20px oklch(0.65 0.2 180 / 0.25)"
+                    },
+                    "data-ocid": "news-form-save-btn",
+                    children: isPending ? "Saving…" : "Save Article"
+                  }
+                )
+              ] })
+            ] })
+          ]
+        }
+      )
+    }
+  );
+}
+function NewsTab() {
+  const { data: articles = [] } = useNews();
+  const addNews = useAddNews();
+  const updateNews = useUpdateNews();
+  const deleteNews = useDeleteNews();
+  const [modal, setModal] = reactExports.useState({ type: "none" });
+  const [deleteConfirm, setDeleteConfirm] = reactExports.useState(null);
+  const sorted = [...articles].sort(
+    (a, b) => Number(b.publishDate) - Number(a.publishDate)
+  );
+  function handleSave(input) {
+    if (modal.type === "add") {
+      addNews.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+    } else if (modal.type === "edit") {
+      updateNews.mutate(
+        { id: modal.article.id, input },
+        { onSuccess: () => setModal({ type: "none" }) }
+      );
+    }
+  }
+  function formatDate(ts) {
+    const ms = Number(ts) < 1e12 ? Number(ts) * 1e3 : Number(ts) / 1e6;
+    return new Date(ms).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "p",
+        {
+          className: "text-sm font-display uppercase tracking-wider",
+          style: S$2.th,
+          children: [
+            sorted.length,
+            " Article",
+            sorted.length !== 1 ? "s" : ""
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => setModal({ type: "add" }),
+          className: "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95",
+          style: {
+            background: "linear-gradient(135deg, oklch(0.65 0.2 180 / 0.9), oklch(0.55 0.23 310 / 0.9))",
+            color: "oklch(0.08 0 0)",
+            boxShadow: "0 0 20px oklch(0.65 0.2 180 / 0.25)"
+          },
+          "data-ocid": "admin-add-news-btn",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14 }),
+            "Add Article"
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-x-auto rounded-2xl", style: S$2.card, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { style: { borderBottom: "1px solid oklch(0.2 0.01 260)" }, children: ["Title", "Date", "Image", "Actions"].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "th",
+          {
+            className: "px-4 py-3 text-left text-xs font-display uppercase tracking-wider",
+            style: S$2.th,
+            children: h
+          },
+          h
+        )) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: sorted.map((article) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "tr",
+          {
+            style: S$2.rowBorder,
+            "data-ocid": "news-row",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "td",
+                {
+                  className: "px-4 py-3 font-medium max-w-[240px]",
+                  style: S$2.td,
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate block", children: article.title })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs", style: S$2.tdMuted, children: formatDate(article.publishDate) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: article.imageUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "img",
+                {
+                  src: article.imageUrl,
+                  alt: "",
+                  className: "h-8 w-12 rounded-lg object-cover"
+                }
+              ) : /* @__PURE__ */ jsxRuntimeExports.jsx(Newspaper, { size: 16, style: { color: "oklch(0.35 0 0)" } }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    title: "Edit",
+                    onClick: () => setModal({ type: "edit", article }),
+                    className: "rounded-lg p-1.5 transition-smooth hover:scale-110",
+                    style: { color: "oklch(0.65 0.18 70)" },
+                    "data-ocid": "admin-edit-news-btn",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 16 })
+                  }
+                ),
+                deleteConfirm === article.id ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => {
+                        deleteNews.mutate(article.id);
+                        setDeleteConfirm(null);
+                      },
+                      className: "rounded-lg px-2 py-1 text-xs font-bold transition-smooth",
+                      style: {
+                        background: "oklch(0.55 0.22 25 / 0.2)",
+                        color: "oklch(0.55 0.22 25)"
+                      },
+                      children: "Confirm"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => setDeleteConfirm(null),
+                      className: "rounded-lg p-1",
+                      style: { color: "oklch(0.5 0 0)" },
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 14 })
+                    }
+                  )
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    title: "Delete",
+                    onClick: () => setDeleteConfirm(article.id),
+                    className: "rounded-lg p-1.5 transition-smooth hover:scale-110",
+                    style: { color: "oklch(0.55 0.22 25)" },
+                    "data-ocid": "admin-delete-news-btn",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 16 })
+                  }
+                )
+              ] }) })
+            ]
+          },
+          article.id.toString()
+        )) })
+      ] }),
+      sorted.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "py-16 text-center", "data-ocid": "news-empty", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          className: "font-display text-sm uppercase tracking-wider",
+          style: S$2.th,
+          children: "No articles yet. Add your first news article."
+        }
+      ) })
+    ] }),
+    (modal.type === "add" || modal.type === "edit") && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      NewsForm,
+      {
+        article: modal.type === "edit" ? modal.article : void 0,
+        onSave: handleSave,
+        onClose: () => setModal({ type: "none" }),
+        isPending: addNews.isPending || updateNews.isPending
       }
     )
   ] });
@@ -1743,6 +2468,8 @@ const LOGO_URL = "https://image2url.com/r2/default/images/1775683614327-346f8e28
 const TABS = [
   { id: "festivals", label: "Festivals", icon: List },
   { id: "packages", label: "Packages", icon: Package },
+  { id: "news", label: "News", icon: Newspaper },
+  { id: "lineup", label: "Lineup", icon: Music },
   { id: "analytics", label: "Analytics", icon: ChartColumn }
 ];
 function LoginScreen({ onLogin }) {
@@ -1939,7 +2666,7 @@ function Dashboard({ onLogout }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
         {
-          className: "mb-8 flex overflow-hidden rounded-2xl w-fit",
+          className: "mb-8 flex overflow-x-auto rounded-2xl w-fit max-w-full",
           style: { border: "1px solid oklch(0.25 0.02 260 / 0.4)" },
           children: TABS.map(({ id, label, icon: Icon }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
@@ -1964,6 +2691,8 @@ function Dashboard({ onLogout }) {
       ),
       activeTab === "festivals" && /* @__PURE__ */ jsxRuntimeExports.jsx(FestivalsTab, {}),
       activeTab === "packages" && /* @__PURE__ */ jsxRuntimeExports.jsx(PackagesTab, {}),
+      activeTab === "news" && /* @__PURE__ */ jsxRuntimeExports.jsx(NewsTab, {}),
+      activeTab === "lineup" && /* @__PURE__ */ jsxRuntimeExports.jsx(LineupTab, {}),
       activeTab === "analytics" && /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsTab, {})
     ] })
   ] });
