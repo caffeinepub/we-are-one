@@ -1082,16 +1082,6 @@ export default function FestivalsPage() {
               }}
             >
               Global
-              <br />
-              <span
-                style={{
-                  color: "oklch(0.75 0.23 310)",
-                  textShadow:
-                    "0 0 10px oklch(0.55 0.23 310 / 0.8), 0 0 20px oklch(0.55 0.23 310 / 0.4)",
-                }}
-              >
-                Festivals
-              </span>
             </h1>
             <p
               className="mt-6 max-w-xl mx-auto text-base md:text-lg leading-relaxed"

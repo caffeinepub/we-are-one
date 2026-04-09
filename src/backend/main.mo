@@ -8,13 +8,13 @@ import NewsLineupApi "mixins/news-lineup-api";
 import DonationsSponsorsApi "mixins/donations-sponsors-api";
 import EventsApi "mixins/events-api";
 import FestivalLib "lib/festival";
-import Migration "migration";
+
 
 import List "mo:core/List";
 import Map "mo:core/Map";
 
 
-(with migration = Migration.run)
+
 actor {
   let festivals = List.empty<Types.Festival>();
   let packages = List.empty<Types.Package>();

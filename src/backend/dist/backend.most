@@ -1,4 +1,4 @@
-// Version: 3.0.0
+// Version: 1.0.0
 type AdminSession__254726568 =
   {expiresAt : Timestamp__301639476; token : Text};
 type Data__791452850<K, V> =
@@ -56,13 +56,6 @@ type LineupEntry__807292321 =
     weekend : ?Text
   };
 type LineupId__691289596 = Nat;
-type List__415060402<T> = List__790383201<T>;
-type List__790383201<T> =
-  {
-    var blockIndex : Nat__490723111;
-    var blocks : [var [var ?T]];
-    var elementIndex : Nat__490723111
-  };
 type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type NewsArticle__407119424 =
@@ -103,14 +96,6 @@ type NightclubSet__953722509 =
   };
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
-type OldLineupEntry__26019845 =
-  {
-    artistName : Text;
-    festivalId : FestivalId__1051950078;
-    id : LineupId__691289596;
-    stage : Text;
-    timeSlot : Text
-  };
 type PackageId__581373409 = Nat;
 type PackageType__306656939 =
   {
@@ -183,37 +168,7 @@ type Sponsor__865634980 =
     websiteUrl : Text
   };
 type Timestamp__301639476 = Int;
-actor ({
-  in categories : List__415060402<EventCategory__543662769>;
-  in donationGoals : List__415060402<DonationGoal__9242658>;
-  in festivals : List__415060402<Festival__978544918>;
-  in lineupEntries : List__415060402<OldLineupEntry__26019845>;
-  in newsArticles : List__415060402<NewsArticle__407119424>;
-  stable var nextCategoryId : Nat;
-  stable var nextDonationGoalId : Nat;
-  stable var nextFestivalId : Nat;
-  stable var nextLineupId : Nat;
-  stable var nextNewsId : Nat;
-  stable var nextNightclubEventId : Nat;
-  stable var nextNightclubSetId : Nat;
-  stable var nextPackageId : Nat;
-  stable var nextRaveEventId : Nat;
-  stable var nextRaveSetId : Nat;
-  stable var nextSiteEventId : Nat;
-  stable var nextSponsorId : Nat;
-  in nightclubEvents : List__415060402<NightclubEvent__711891276>;
-  in nightclubSets : List__415060402<NightclubSet__953722509>;
-  in packages : List__415060402<Package__77264284>;
-  in raveEvents : List__415060402<RaveEvent__304621381>;
-  in raveSets : List__415060402<RaveSet__774648751>;
-  stable sessions :
-    {
-      var root : Node__46230540<Text, AdminSession__254726568>;
-      var size : Nat__490723111
-    };
-  in siteEvents : List__415060402<SiteEvent__221521398>;
-  in sponsors : List__415060402<Sponsor__865634980>
-}, {
+actor {
   stable categories :
     {
       var blockIndex : Nat__490723111;
@@ -303,4 +258,4 @@ actor ({
       var blocks : [var [var ?Sponsor__865634980]];
       var elementIndex : Nat__490723111
     }
-}) ;
+};
