@@ -15,10 +15,9 @@ import { useFestivals } from "../hooks/useBackend";
 
 // ─── Stats strip data ──────────────────────────────────────────────────────
 const STATS = [
-  { value: "12", label: "Festivals Worldwide", color: "oklch(0.65 0.2 180)" },
+  { value: "24", label: "Festivals Worldwide", color: "oklch(0.65 0.2 180)" },
   { value: "6", label: "Countries", color: "oklch(0.55 0.23 310)" },
   { value: "3", label: "Continents", color: "oklch(0.65 0.18 70)" },
-  { value: "100,000+", label: "Fans", color: "oklch(0.65 0.2 180)" },
 ];
 
 // ─── Experience highlights ─────────────────────────────────────────────────
@@ -274,7 +273,7 @@ export default function HomePage() {
           }}
         />
         <div className="relative z-10 container mx-auto">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+          <div className="grid grid-cols-3 gap-6 sm:grid-cols-3">
             {STATS.map(({ value, label, color }) => (
               <div
                 key={label}

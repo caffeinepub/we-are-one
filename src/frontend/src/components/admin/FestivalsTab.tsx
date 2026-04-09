@@ -18,6 +18,7 @@ import {
   useToggleFestivalStatus,
   useUpdateFestival,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 import type { Festival, FestivalInput } from "../../types/festival";
 import {
   getEventTypeLabel,
@@ -55,6 +56,7 @@ export default function FestivalsTab() {
   const deleteFestival = useDeleteFestival();
   const toggleStatus = useToggleFestivalStatus();
   const setImage = useSetFestivalImage();
+  const { showError } = useAdminError();
 
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
@@ -63,11 +65,15 @@ export default function FestivalsTab() {
     if (modal.type === "add") {
       addFestival.mutate(input, {
         onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
       });
     } else if (modal.type === "edit") {
       updateFestival.mutate(
         { id: modal.festival.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -75,7 +81,10 @@ export default function FestivalsTab() {
   function handleSetImage(id: bigint, imageUrl: string) {
     setImage.mutate(
       { id, imageUrl },
-      { onSuccess: () => setModal({ type: "none" }) },
+      {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      },
     );
   }
 
@@ -203,7 +212,11 @@ export default function FestivalsTab() {
                           ? "Set Active"
                           : "Set Coming Soon"
                       }
-                      onClick={() => toggleStatus.mutate(f.id)}
+                      onClick={() =>
+                        toggleStatus.mutate(f.id, {
+                          onError: (e) => showError(e.message),
+                        })
+                      }
                       className="rounded-lg p-1.5 transition-smooth hover:scale-110"
                       style={{
                         color: isComingSoon(f.status)
@@ -246,7 +259,9 @@ export default function FestivalsTab() {
                         <button
                           type="button"
                           onClick={() => {
-                            deleteFestival.mutate(f.id);
+                            deleteFestival.mutate(f.id, {
+                              onError: (e) => showError(e.message),
+                            });
                             setDeleteConfirm(null);
                           }}
                           className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"

@@ -8,6 +8,7 @@ import {
   useFestivals,
   useUpdateDonationGoal,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 
@@ -328,6 +329,7 @@ export default function DonationsTab() {
   const addGoal = useAddDonationGoal();
   const updateGoal = useUpdateDonationGoal();
   const deleteGoal = useDeleteDonationGoal();
+  const { showError } = useAdminError();
 
   const [modal, setModal] = useState<ModalState>({ type: "none" });
 
@@ -335,11 +337,17 @@ export default function DonationsTab() {
 
   function handleSave(input: DonationGoalInput) {
     if (modal.type === "add") {
-      addGoal.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+      addGoal.mutate(input, {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (modal.type === "edit") {
       updateGoal.mutate(
         { id: modal.goal.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -478,7 +486,11 @@ export default function DonationsTab() {
                     <button
                       type="button"
                       title="Delete"
-                      onClick={() => deleteGoal.mutate(goal.id)}
+                      onClick={() =>
+                        deleteGoal.mutate(goal.id, {
+                          onError: (e) => showError(e.message),
+                        })
+                      }
                       className="rounded-lg p-1.5 transition-smooth hover:scale-110"
                       style={{ color: "oklch(0.55 0.22 25)" }}
                       data-ocid="admin-delete-goal-btn"

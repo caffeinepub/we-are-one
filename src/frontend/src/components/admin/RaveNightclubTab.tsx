@@ -29,6 +29,7 @@ import {
   useUpdateRaveEvent,
   useUpdateRaveSet,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 import type {
   NightclubEvent,
   NightclubEventInput,
@@ -361,6 +362,7 @@ function SetsPanel({
   const addNcSet = useAddNightclubSet();
   const updateNcSet = useUpdateNightclubSet();
   const deleteNcSet = useDeleteNightclubSet();
+  const { showError } = useAdminError();
 
   type SetModal =
     | { kind: "none" }
@@ -392,11 +394,15 @@ function SetsPanel({
       if (modal.kind === "add") {
         addRaveSet.mutate(input, {
           onSuccess: () => setModal({ kind: "none" }),
+          onError: (e) => showError(e.message),
         });
       } else if (modal.kind === "edit") {
         updateRaveSet.mutate(
           { id: modal.set.id, input },
-          { onSuccess: () => setModal({ kind: "none" }) },
+          {
+            onSuccess: () => setModal({ kind: "none" }),
+            onError: (e) => showError(e.message),
+          },
         );
       }
     } else {
@@ -410,11 +416,17 @@ function SetsPanel({
         youtubeUrl,
       };
       if (modal.kind === "add") {
-        addNcSet.mutate(input, { onSuccess: () => setModal({ kind: "none" }) });
+        addNcSet.mutate(input, {
+          onSuccess: () => setModal({ kind: "none" }),
+          onError: (e) => showError(e.message),
+        });
       } else if (modal.kind === "edit") {
         updateNcSet.mutate(
           { id: modal.set.id, input },
-          { onSuccess: () => setModal({ kind: "none" }) },
+          {
+            onSuccess: () => setModal({ kind: "none" }),
+            onError: (e) => showError(e.message),
+          },
         );
       }
     }
@@ -422,9 +434,19 @@ function SetsPanel({
 
   function handleDelete(id: bigint) {
     if (type === "rave") {
-      deleteRaveSet.mutate({ id, raveEventId: eventId });
+      deleteRaveSet.mutate(
+        { id, raveEventId: eventId },
+        {
+          onError: (e) => showError(e.message),
+        },
+      );
     } else {
-      deleteNcSet.mutate({ id, nightclubEventId: eventId });
+      deleteNcSet.mutate(
+        { id, nightclubEventId: eventId },
+        {
+          onError: (e) => showError(e.message),
+        },
+      );
     }
     setDeleteConfirm(null);
   }
@@ -1256,17 +1278,24 @@ function RaveSection() {
   const addRave = useAddRaveEvent();
   const updateRave = useUpdateRaveEvent();
   const deleteRave = useDeleteRaveEvent();
+  const { showError } = useAdminError();
   const [modal, setModal] = useState<RaveModal>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
   const [manageSets, setManageSets] = useState<ManageSetsState>(null);
 
   function handleSave(input: RaveEventInput) {
     if (modal.type === "add") {
-      addRave.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+      addRave.mutate(input, {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (modal.type === "edit") {
       updateRave.mutate(
         { id: modal.event.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -1396,7 +1425,9 @@ function RaveSection() {
                         <button
                           type="button"
                           onClick={() => {
-                            deleteRave.mutate(ev.id);
+                            deleteRave.mutate(ev.id, {
+                              onError: (e) => showError(e.message),
+                            });
                             setDeleteConfirm(null);
                           }}
                           className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"
@@ -1485,17 +1516,24 @@ function NightclubSection() {
   const addNC = useAddNightclubEvent();
   const updateNC = useUpdateNightclubEvent();
   const deleteNC = useDeleteNightclubEvent();
+  const { showError } = useAdminError();
   const [modal, setModal] = useState<NightclubModal>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
   const [manageSets, setManageSets] = useState<ManageSetsState>(null);
 
   function handleSave(input: NightclubEventInput) {
     if (modal.type === "add") {
-      addNC.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+      addNC.mutate(input, {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (modal.type === "edit") {
       updateNC.mutate(
         { id: modal.event.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -1633,7 +1671,9 @@ function NightclubSection() {
                         <button
                           type="button"
                           onClick={() => {
-                            deleteNC.mutate(ev.id);
+                            deleteNC.mutate(ev.id, {
+                              onError: (e) => showError(e.message),
+                            });
                             setDeleteConfirm(null);
                           }}
                           className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"

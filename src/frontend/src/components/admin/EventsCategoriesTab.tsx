@@ -11,6 +11,7 @@ import {
   useUpdateCategory,
   useUpdateSiteEvent,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 import type {
   CategoryInput,
   EventCategory,
@@ -535,6 +536,8 @@ export default function EventsCategoriesTab() {
   const updateEvent = useUpdateSiteEvent();
   const deleteEvent = useDeleteSiteEvent();
 
+  const { showError } = useAdminError();
+
   const [catModal, setCatModal] = useState<CatModal>({ type: "none" });
   const [eventModal, setEventModal] = useState<EventModal>({ type: "none" });
   const [catDeleteConfirm, setCatDeleteConfirm] = useState<bigint | null>(null);
@@ -544,11 +547,17 @@ export default function EventsCategoriesTab() {
 
   function handleSaveCategory(input: CategoryInput) {
     if (catModal.type === "add") {
-      addCat.mutate(input, { onSuccess: () => setCatModal({ type: "none" }) });
+      addCat.mutate(input, {
+        onSuccess: () => setCatModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (catModal.type === "edit") {
       updateCat.mutate(
         { id: catModal.category.id, input },
-        { onSuccess: () => setCatModal({ type: "none" }) },
+        {
+          onSuccess: () => setCatModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -557,11 +566,15 @@ export default function EventsCategoriesTab() {
     if (eventModal.type === "add") {
       addEvent.mutate(input, {
         onSuccess: () => setEventModal({ type: "none" }),
+        onError: (e) => showError(e.message),
       });
     } else if (eventModal.type === "edit") {
       updateEvent.mutate(
         { id: eventModal.event.id, input },
-        { onSuccess: () => setEventModal({ type: "none" }) },
+        {
+          onSuccess: () => setEventModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -637,7 +650,11 @@ export default function EventsCategoriesTab() {
                         id={cat.id}
                         deleteConfirm={catDeleteConfirm}
                         setDeleteConfirm={setCatDeleteConfirm}
-                        onDelete={(id) => deleteCat.mutate(id)}
+                        onDelete={(id) =>
+                          deleteCat.mutate(id, {
+                            onError: (e) => showError(e.message),
+                          })
+                        }
                       />
                     </div>
                   </td>
@@ -748,7 +765,11 @@ export default function EventsCategoriesTab() {
                         id={ev.id}
                         deleteConfirm={eventDeleteConfirm}
                         setDeleteConfirm={setEventDeleteConfirm}
-                        onDelete={(id) => deleteEvent.mutate(id)}
+                        onDelete={(id) =>
+                          deleteEvent.mutate(id, {
+                            onError: (e) => showError(e.message),
+                          })
+                        }
                       />
                     </div>
                   </td>

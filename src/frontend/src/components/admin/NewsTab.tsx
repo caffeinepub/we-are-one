@@ -6,6 +6,7 @@ import {
   useNews,
   useUpdateNews,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 import type { NewsArticle, NewsInput } from "../../types/festival";
 
 // ── Styles ────────────────────────────────────────────────────────────────────
@@ -226,6 +227,7 @@ export default function NewsTab() {
   const addNews = useAddNews();
   const updateNews = useUpdateNews();
   const deleteNews = useDeleteNews();
+  const { showError } = useAdminError();
 
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
@@ -236,11 +238,17 @@ export default function NewsTab() {
 
   function handleSave(input: NewsInput) {
     if (modal.type === "add") {
-      addNews.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+      addNews.mutate(input, {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (modal.type === "edit") {
       updateNews.mutate(
         { id: modal.article.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -341,7 +349,9 @@ export default function NewsTab() {
                         <button
                           type="button"
                           onClick={() => {
-                            deleteNews.mutate(article.id);
+                            deleteNews.mutate(article.id, {
+                              onError: (e) => showError(e.message),
+                            });
                             setDeleteConfirm(null);
                           }}
                           className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"

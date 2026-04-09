@@ -101,33 +101,6 @@ type NightclubSet__953722509 =
   };
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
-type OldNightclubEvent__969198443 =
-  {
-    categoryId : ?Nat;
-    createdAt : Int;
-    date : Text;
-    description : Text;
-    festivalId : ?Nat;
-    id : Nat;
-    imageUrl : Text;
-    isStandalone : Bool;
-    location : Text;
-    name : Text
-  };
-type OldRaveEvent__442544334 =
-  {
-    categoryId : ?Nat;
-    createdAt : Int;
-    date : Text;
-    description : Text;
-    eventType : Text;
-    festivalId : ?Nat;
-    id : Nat;
-    imageUrl : Text;
-    isStandalone : Bool;
-    location : Text;
-    name : Text
-  };
 type PackageId__581373409 = Nat;
 type PackageType__306656939 =
   {
@@ -243,14 +216,16 @@ actor ({
   stable var nextRaveSetId : Nat;
   stable var nextSiteEventId : Nat;
   stable var nextSponsorId : Nat;
-  in nightclubEvents : List__415060402<OldNightclubEvent__969198443>;
+  in nightclubEvents : List__415060402<NightclubEvent__711891276>;
+  in nightclubSets : List__415060402<NightclubSet__953722509>;
   stable packages :
     {
       var blockIndex : Nat__490723111;
       var blocks : [var [var ?Package__77264284]];
       var elementIndex : Nat__490723111
     };
-  in raveEvents : List__415060402<OldRaveEvent__442544334>;
+  in raveEvents : List__415060402<RaveEvent__304621381>;
+  in raveSets : List__415060402<RaveSet__774648751>;
   stable var seedFestivalId : Nat;
   stable var seedPackageId : Nat;
   stable sessions :

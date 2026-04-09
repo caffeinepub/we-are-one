@@ -7,6 +7,7 @@ import {
   useSponsors,
   useUpdateSponsor,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 import type { Sponsor, SponsorInput } from "../../types/festival";
 
 // ── Styles ────────────────────────────────────────────────────────────────────
@@ -340,6 +341,7 @@ export default function SponsorsTab() {
   const addSponsor = useAddSponsor();
   const updateSponsor = useUpdateSponsor();
   const deleteSponsor = useDeleteSponsor();
+  const { showError } = useAdminError();
 
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
@@ -359,11 +361,17 @@ export default function SponsorsTab() {
 
   function handleSave(input: SponsorInput) {
     if (modal.type === "add") {
-      addSponsor.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+      addSponsor.mutate(input, {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (modal.type === "edit") {
       updateSponsor.mutate(
         { id: modal.sponsor.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -496,7 +504,9 @@ export default function SponsorsTab() {
                         <button
                           type="button"
                           onClick={() => {
-                            deleteSponsor.mutate(sponsor.id);
+                            deleteSponsor.mutate(sponsor.id, {
+                              onError: (e) => showError(e.message),
+                            });
                             setDeleteConfirm(null);
                           }}
                           className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"

@@ -7,6 +7,7 @@ import {
   useLineup,
   useUpdateLineupEntry,
 } from "../../hooks/useBackend";
+import { useAdminError } from "../../pages/AdminPage";
 import type { LineupEntry, LineupInput } from "../../types/festival";
 
 // ── Styles ────────────────────────────────────────────────────────────────────
@@ -208,6 +209,7 @@ export default function LineupTab() {
   const addEntry = useAddLineupEntry();
   const updateEntry = useUpdateLineupEntry();
   const deleteEntry = useDeleteLineupEntry();
+  const { showError } = useAdminError();
 
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
@@ -219,11 +221,17 @@ export default function LineupTab() {
 
   function handleSave(input: LineupInput) {
     if (modal.type === "add") {
-      addEntry.mutate(input, { onSuccess: () => setModal({ type: "none" }) });
+      addEntry.mutate(input, {
+        onSuccess: () => setModal({ type: "none" }),
+        onError: (e) => showError(e.message),
+      });
     } else if (modal.type === "edit") {
       updateEntry.mutate(
         { id: modal.entry.id, input },
-        { onSuccess: () => setModal({ type: "none" }) },
+        {
+          onSuccess: () => setModal({ type: "none" }),
+          onError: (e) => showError(e.message),
+        },
       );
     }
   }
@@ -332,10 +340,13 @@ export default function LineupTab() {
                         <button
                           type="button"
                           onClick={() => {
-                            deleteEntry.mutate({
-                              id: entry.id,
-                              festivalId: activeFestivalId,
-                            });
+                            deleteEntry.mutate(
+                              {
+                                id: entry.id,
+                                festivalId: activeFestivalId,
+                              },
+                              { onError: (e) => showError(e.message) },
+                            );
                             setDeleteConfirm(null);
                           }}
                           className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"

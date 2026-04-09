@@ -1,4 +1,6 @@
+import { useActor } from "@caffeineai/core-infrastructure";
 import {
+  AlertTriangle,
   BarChart3,
   CalendarDays,
   DollarSign,
@@ -6,15 +8,18 @@ import {
   EyeOff,
   FolderOpen,
   List,
+  Loader2,
   LogIn,
   Music,
   Newspaper,
   Package,
   Shield,
   Star,
+  X,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { createActor } from "../backend";
 import AnalyticsTab from "../components/admin/AnalyticsTab";
 import DonationsTab from "../components/admin/DonationsTab";
 import EventsCategoriesTab from "../components/admin/EventsCategoriesTab";
@@ -28,6 +33,102 @@ import { useAdminLogin } from "../hooks/useBackend";
 
 const LOGO_URL =
   "https://image2url.com/r2/default/images/1775683614327-346f8e28-9a02-4a59-8ff6-14dd1641405e.png";
+
+// ── Admin error context (provides showError to tab components) ─────────────────
+
+interface AdminErrorContextValue {
+  showError: (message: string) => void;
+}
+
+const AdminErrorContext = createContext<AdminErrorContextValue>({
+  showError: () => undefined,
+});
+
+export function useAdminError() {
+  return useContext(AdminErrorContext);
+}
+
+// ── Error toast ────────────────────────────────────────────────────────────────
+
+interface AdminErrorToastProps {
+  message: string;
+  onDismiss: () => void;
+}
+
+function AdminErrorToast({ message, onDismiss }: AdminErrorToastProps) {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, 8000);
+    return () => clearTimeout(t);
+  }, [onDismiss]);
+
+  return (
+    <div
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex items-start gap-3 rounded-2xl px-5 py-4 max-w-sm w-full shadow-2xl"
+      style={{
+        background: "oklch(0.1 0.02 260)",
+        border: "1px solid oklch(0.55 0.22 25 / 0.6)",
+        boxShadow: "0 0 40px oklch(0.55 0.22 25 / 0.15)",
+      }}
+      role="alert"
+      data-ocid="admin-error-toast"
+    >
+      <AlertTriangle
+        size={18}
+        className="shrink-0 mt-0.5"
+        style={{ color: "oklch(0.65 0.22 25)" }}
+      />
+      <div className="flex-1 min-w-0">
+        <p
+          className="font-display text-xs font-bold uppercase tracking-wider"
+          style={{ color: "oklch(0.65 0.22 25)" }}
+        >
+          Action Failed
+        </p>
+        <p
+          className="mt-0.5 text-xs font-body break-words"
+          style={{ color: "oklch(0.65 0 0)" }}
+        >
+          {message}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="shrink-0 rounded-lg p-1 transition-smooth hover:opacity-70"
+        style={{ color: "oklch(0.45 0 0)" }}
+        aria-label="Dismiss"
+      >
+        <X size={14} />
+      </button>
+    </div>
+  );
+}
+
+// ── Connection status banner ───────────────────────────────────────────────────
+
+function ConnectionBanner() {
+  const { actor, isFetching } = useActor(createActor);
+  const isReady = !!actor && !isFetching;
+
+  if (isReady) return null;
+
+  return (
+    <div
+      className="flex items-center gap-2 rounded-xl px-4 py-2.5 mb-6 text-sm"
+      style={{
+        background: "oklch(0.65 0.18 70 / 0.06)",
+        border: "1px solid oklch(0.65 0.18 70 / 0.3)",
+        color: "oklch(0.65 0.18 70)",
+      }}
+      data-ocid="admin-connection-banner"
+    >
+      <Loader2 size={14} className="animate-spin shrink-0" />
+      <span className="font-display text-xs uppercase tracking-wider">
+        Connecting to backend… buttons will be enabled when ready.
+      </span>
+    </div>
+  );
+}
 
 type Tab =
   | "festivals"
@@ -182,97 +283,115 @@ function LoginScreen({ onLogin }: { onLogin: (token: string) => void }) {
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [activeTab, setActiveTab] = useState<Tab>("festivals");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  function showError(message: string) {
+    setErrorMsg(message);
+  }
 
   return (
-    <section className="min-h-screen">
-      {/* Top bar */}
-      <header
-        className="sticky top-0 z-30 px-4 py-3"
-        style={{
-          background: "oklch(0.08 0.02 260 / 0.92)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid oklch(0.25 0.02 260 / 0.4)",
-        }}
-      >
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src={LOGO_URL}
-              alt="WE ARE ONE"
-              className="h-8 w-auto object-contain"
-            />
-            <div>
-              <span
-                className="hidden font-display text-sm font-black uppercase tracking-wider sm:inline glow-amber"
-                style={{ color: "oklch(0.65 0.18 70)" }}
-              >
-                Admin Dashboard
-              </span>
-              <Shield
-                size={16}
-                className="inline sm:hidden"
-                style={{ color: "oklch(0.65 0.18 70)" }}
-              />
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="rounded-xl px-4 py-2 text-xs font-display font-medium uppercase tracking-wider transition-smooth hover:opacity-80"
-            style={{
-              border: "1px solid oklch(0.55 0.22 25 / 0.4)",
-              color: "oklch(0.55 0.22 25)",
-            }}
-            data-ocid="admin-logout-btn"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8">
-        {/* Tab bar */}
-        <div
-          className="mb-8 flex overflow-x-auto rounded-2xl w-fit max-w-full"
-          style={{ border: "1px solid oklch(0.25 0.02 260 / 0.4)" }}
+    <AdminErrorContext.Provider value={{ showError }}>
+      <section className="min-h-screen">
+        {/* Top bar */}
+        <header
+          className="sticky top-0 z-30 px-4 py-3"
+          style={{
+            background: "oklch(0.08 0.02 260 / 0.92)",
+            backdropFilter: "blur(12px)",
+            borderBottom: "1px solid oklch(0.25 0.02 260 / 0.4)",
+          }}
         >
-          {TABS.map(({ id, label, icon: Icon }) => (
+          <div className="container mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src={LOGO_URL}
+                alt="WE ARE ONE"
+                className="h-8 w-auto object-contain"
+              />
+              <div>
+                <span
+                  className="hidden font-display text-sm font-black uppercase tracking-wider sm:inline glow-amber"
+                  style={{ color: "oklch(0.65 0.18 70)" }}
+                >
+                  Admin Dashboard
+                </span>
+                <Shield
+                  size={16}
+                  className="inline sm:hidden"
+                  style={{ color: "oklch(0.65 0.18 70)" }}
+                />
+              </div>
+            </div>
             <button
-              key={id}
               type="button"
-              onClick={() => setActiveTab(id)}
-              className="flex items-center gap-2 px-5 py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth whitespace-nowrap"
-              style={
-                activeTab === id
-                  ? {
-                      background: "oklch(0.65 0.2 180 / 0.12)",
-                      color: "oklch(0.65 0.2 180)",
-                      borderBottom: "2px solid oklch(0.65 0.2 180)",
-                    }
-                  : { background: "transparent", color: "oklch(0.5 0 0)" }
-              }
-              data-ocid={`admin-tab-${id}`}
+              onClick={onLogout}
+              className="rounded-xl px-4 py-2 text-xs font-display font-medium uppercase tracking-wider transition-smooth hover:opacity-80"
+              style={{
+                border: "1px solid oklch(0.55 0.22 25 / 0.4)",
+                color: "oklch(0.55 0.22 25)",
+              }}
+              data-ocid="admin-logout-btn"
             >
-              <Icon size={14} />
-              {label}
+              Logout
             </button>
-          ))}
-        </div>
+          </div>
+        </header>
 
-        {/* Tab content */}
-        {activeTab === "festivals" && <FestivalsTab />}
-        {activeTab === "packages" && <PackagesTab />}
-        {activeTab === "news" && <NewsTab />}
-        {activeTab === "lineup" && <LineupTab />}
-        {activeTab === "analytics" && <AnalyticsTab />}
-        {activeTab === "donations" && <DonationsTab />}
-        {activeTab === "sponsors" && <SponsorsTab />}
-        {activeTab === "rave-nightclub" && <RaveNightclubTab />}
-        {activeTab === "events" && <EventsCategoriesTab />}
-        {activeTab === "categories" && <EventsCategoriesTab />}
-      </div>
-    </section>
+        {/* Content */}
+        <div className="container mx-auto px-4 py-8">
+          {/* Connection status */}
+          <ConnectionBanner />
+
+          {/* Tab bar */}
+          <div
+            className="mb-8 flex overflow-x-auto rounded-2xl w-fit max-w-full"
+            style={{ border: "1px solid oklch(0.25 0.02 260 / 0.4)" }}
+          >
+            {TABS.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setActiveTab(id)}
+                className="flex items-center gap-2 px-5 py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth whitespace-nowrap"
+                style={
+                  activeTab === id
+                    ? {
+                        background: "oklch(0.65 0.2 180 / 0.12)",
+                        color: "oklch(0.65 0.2 180)",
+                        borderBottom: "2px solid oklch(0.65 0.2 180)",
+                      }
+                    : { background: "transparent", color: "oklch(0.5 0 0)" }
+                }
+                data-ocid={`admin-tab-${id}`}
+              >
+                <Icon size={14} />
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab content */}
+          {activeTab === "festivals" && <FestivalsTab />}
+          {activeTab === "packages" && <PackagesTab />}
+          {activeTab === "news" && <NewsTab />}
+          {activeTab === "lineup" && <LineupTab />}
+          {activeTab === "analytics" && <AnalyticsTab />}
+          {activeTab === "donations" && <DonationsTab />}
+          {activeTab === "sponsors" && <SponsorsTab />}
+          {activeTab === "rave-nightclub" && <RaveNightclubTab />}
+          {activeTab === "events" && <EventsCategoriesTab />}
+          {activeTab === "categories" && <EventsCategoriesTab />}
+        </div>
+      </section>
+
+      {/* Error toast */}
+      {errorMsg && (
+        <AdminErrorToast
+          message={errorMsg}
+          onDismiss={() => setErrorMsg(null)}
+        />
+      )}
+    </AdminErrorContext.Provider>
   );
 }
 

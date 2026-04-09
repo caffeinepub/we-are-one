@@ -299,6 +299,259 @@ actor {
     ticketUrl = null;
   });
 
+  // Additional Summer / International Festivals (to reach 24 total)
+  seedFestival({
+    name = "WE ARE ONE Australia – Sydney";
+    location = "Sydney";
+    country = "Australia";
+    company = "WE ARE ONE Australia Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 3500;
+    ticketPriceMax = 5500;
+    estimatedRevenueMin = "£10,500,000";
+    estimatedRevenueMax = "£16,500,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE South Africa – Cape Town";
+    location = "Cape Town";
+    country = "South Africa";
+    company = "WE ARE ONE South Africa Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 2500;
+    ticketPriceMax = 4500;
+    estimatedRevenueMin = "£7,500,000";
+    estimatedRevenueMax = "£13,500,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE USA – Miami";
+    location = "Miami, Florida";
+    country = "United States";
+    company = "WE ARE ONE USA Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 4500;
+    ticketPriceMax = 7000;
+    estimatedRevenueMin = "£13,500,000";
+    estimatedRevenueMax = "£21,000,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Mexico – Cancun";
+    location = "Cancun";
+    country = "Mexico";
+    company = "WE ARE ONE Mexico Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 3000;
+    ticketPriceMax = 5000;
+    estimatedRevenueMin = "£9,000,000";
+    estimatedRevenueMax = "£15,000,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Colombia – Bogotá";
+    location = "Bogotá";
+    country = "Colombia";
+    company = "WE ARE ONE Colombia Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 2500;
+    ticketPriceMax = 4000;
+    estimatedRevenueMin = "£7,500,000";
+    estimatedRevenueMax = "£12,000,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Japan – Tokyo";
+    location = "Tokyo";
+    country = "Japan";
+    company = "WE ARE ONE Japan Ltd";
+    season = #Summer;
+    eventType = #Family;
+    weekends = "3 weekends";
+    ticketPriceMin = 3500;
+    ticketPriceMax = 5500;
+    estimatedRevenueMin = "£10,500,000";
+    estimatedRevenueMax = "£16,500,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "All Ages";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE UAE – Dubai";
+    location = "Dubai";
+    country = "United Arab Emirates";
+    company = "WE ARE ONE UAE Ltd";
+    season = #Winter;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 5000;
+    ticketPriceMax = 8000;
+    estimatedRevenueMin = "£15,000,000";
+    estimatedRevenueMax = "£24,000,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE India – Goa";
+    location = "Goa";
+    country = "India";
+    company = "WE ARE ONE India Ltd";
+    season = #Winter;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 2000;
+    ticketPriceMax = 3500;
+    estimatedRevenueMin = "£6,000,000";
+    estimatedRevenueMax = "£10,500,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Argentina – Buenos Aires";
+    location = "Buenos Aires";
+    country = "Argentina";
+    company = "WE ARE ONE Argentina Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 2500;
+    ticketPriceMax = 4500;
+    estimatedRevenueMin = "£7,500,000";
+    estimatedRevenueMax = "£13,500,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Greece – Mykonos";
+    location = "Mykonos";
+    country = "Greece";
+    company = "WE ARE ONE Greece Ltd";
+    season = #Summer;
+    eventType = #ClubHotel;
+    weekends = "Summer season";
+    ticketPriceMin = 5000;
+    ticketPriceMax = 7500;
+    estimatedRevenueMin = "£12,000+ per night";
+    estimatedRevenueMax = "£12,000+ per night";
+    specialNotes = ?"Per-night pricing. Beachfront venue.";
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "18+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Germany – Berlin";
+    location = "Berlin";
+    country = "Germany";
+    company = "WE ARE ONE Germany Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 4000;
+    ticketPriceMax = 6000;
+    estimatedRevenueMin = "£12,000,000";
+    estimatedRevenueMax = "£18,000,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
+  seedFestival({
+    name = "WE ARE ONE Spain – Barcelona";
+    location = "Barcelona";
+    country = "Spain";
+    company = "WE ARE ONE Spain Ltd";
+    season = #Summer;
+    eventType = #EDM;
+    weekends = "3 weekends";
+    ticketPriceMin = 4000;
+    ticketPriceMax = 6500;
+    estimatedRevenueMin = "£12,000,000";
+    estimatedRevenueMax = "£19,500,000";
+    specialNotes = null;
+    status = #ComingSoon;
+    imageUrl = null;
+    description = null;
+    lineup = null;
+    ageRestriction = "14+";
+    ticketUrl = null;
+  });
+
   // ── Seed default packages ────────────────────────────────────────────────────
 
   seedPackage({

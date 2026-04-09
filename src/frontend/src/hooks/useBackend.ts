@@ -36,6 +36,17 @@ import {
   STATIC_PACKAGES,
 } from "../types/festival";
 
+// ── Helper: require actor or throw a user-readable error ─────────────────────
+
+function requireActor<T>(actor: T | null): T {
+  if (!actor) {
+    throw new Error(
+      "Not connected to backend. Please wait a moment and try again.",
+    );
+  }
+  return actor;
+}
+
 // ──────────────────────────────────────────────
 // Query Hooks
 // ──────────────────────────────────────────────
@@ -125,10 +136,8 @@ export function useAddFestival() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, FestivalInput>({
-    mutationFn: async (input: FestivalInput) => {
-      if (actor) return actor.addFestival(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input: FestivalInput) =>
+      requireActor(actor).addFestival(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
@@ -137,10 +146,8 @@ export function useUpdateFestival() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: FestivalInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateFestival(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateFestival(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
@@ -149,10 +156,7 @@ export function useDeleteFestival() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id: bigint) => {
-      if (actor) return actor.deleteFestival(id);
-      return true;
-    },
+    mutationFn: async (id: bigint) => requireActor(actor).deleteFestival(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
@@ -161,10 +165,8 @@ export function useToggleFestivalStatus() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id: bigint) => {
-      if (actor) return actor.toggleFestivalStatus(id);
-      return true;
-    },
+    mutationFn: async (id: bigint) =>
+      requireActor(actor).toggleFestivalStatus(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
@@ -173,10 +175,8 @@ export function useSetFestivalImage() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; imageUrl: string }>({
-    mutationFn: async ({ id, imageUrl }) => {
-      if (actor) return actor.setFestivalImage(id, imageUrl);
-      return true;
-    },
+    mutationFn: async ({ id, imageUrl }) =>
+      requireActor(actor).setFestivalImage(id, imageUrl),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
@@ -187,10 +187,8 @@ export function useSetFestivalTicketUrl() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; ticketUrl: string }>({
-    mutationFn: async ({ id, ticketUrl }) => {
-      if (actor) return actor.setFestivalTicketUrl(id, ticketUrl.trim());
-      return true;
-    },
+    mutationFn: async ({ id, ticketUrl }) =>
+      requireActor(actor).setFestivalTicketUrl(id, ticketUrl.trim()),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["festivals"] }),
   });
 }
@@ -208,10 +206,8 @@ export function useAddPackage() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, PackageInput>({
-    mutationFn: async (input: PackageInput) => {
-      if (actor) return actor.addPackage(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input: PackageInput) =>
+      requireActor(actor).addPackage(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["packages"] }),
   });
 }
@@ -220,10 +216,8 @@ export function useUpdatePackage() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: PackageInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updatePackage(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updatePackage(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["packages"] }),
   });
 }
@@ -232,10 +226,7 @@ export function useDeletePackage() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id: bigint) => {
-      if (actor) return actor.deletePackage(id);
-      return true;
-    },
+    mutationFn: async (id: bigint) => requireActor(actor).deletePackage(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["packages"] }),
   });
 }
@@ -281,10 +272,7 @@ export function useAddNews() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, NewsInput>({
-    mutationFn: async (input: NewsInput) => {
-      if (actor) return actor.addNews(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input: NewsInput) => requireActor(actor).addNews(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["news"] }),
   });
 }
@@ -293,10 +281,8 @@ export function useUpdateNews() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: NewsInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateNews(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateNews(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["news"] }),
   });
 }
@@ -305,10 +291,7 @@ export function useDeleteNews() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id: bigint) => {
-      if (actor) return actor.deleteNews(id);
-      return true;
-    },
+    mutationFn: async (id: bigint) => requireActor(actor).deleteNews(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["news"] }),
   });
 }
@@ -338,10 +321,8 @@ export function useAddLineupEntry() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, LineupInput>({
-    mutationFn: async (input: LineupInput) => {
-      if (actor) return actor.addLineupEntry(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input: LineupInput) =>
+      requireActor(actor).addLineupEntry(input),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["lineup", vars.festivalId.toString()],
@@ -353,10 +334,8 @@ export function useUpdateLineupEntry() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: LineupInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateLineupEntry(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateLineupEntry(id, input),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["lineup", vars.input.festivalId.toString()],
@@ -368,10 +347,7 @@ export function useDeleteLineupEntry() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; festivalId: bigint }>({
-    mutationFn: async ({ id }) => {
-      if (actor) return actor.deleteLineupEntry(id);
-      return true;
-    },
+    mutationFn: async ({ id }) => requireActor(actor).deleteLineupEntry(id),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["lineup", vars.festivalId.toString()],
@@ -420,10 +396,7 @@ export function useAddDonationGoal() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, DonationGoalInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addDonationGoal(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addDonationGoal(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["donationGoals"] }),
   });
 }
@@ -432,10 +405,8 @@ export function useUpdateDonationGoal() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: DonationGoalInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateDonationGoal(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateDonationGoal(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["donationGoals"] }),
   });
 }
@@ -444,10 +415,7 @@ export function useDeleteDonationGoal() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id) => {
-      if (actor) return actor.deleteDonationGoal(id);
-      return true;
-    },
+    mutationFn: async (id) => requireActor(actor).deleteDonationGoal(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["donationGoals"] }),
   });
 }
@@ -494,10 +462,7 @@ export function useAddSponsor() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, SponsorInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addSponsor(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addSponsor(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sponsors"] }),
   });
 }
@@ -506,10 +471,8 @@ export function useUpdateSponsor() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: SponsorInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateSponsor(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateSponsor(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sponsors"] }),
   });
 }
@@ -518,10 +481,7 @@ export function useDeleteSponsor() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id) => {
-      if (actor) return actor.deleteSponsor(id);
-      return true;
-    },
+    mutationFn: async (id) => requireActor(actor).deleteSponsor(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["sponsors"] }),
   });
 }
@@ -551,10 +511,7 @@ export function useAddCategory() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, CategoryInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addCategory(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addCategory(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
   });
 }
@@ -563,10 +520,8 @@ export function useUpdateCategory() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: CategoryInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateCategory(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateCategory(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
   });
 }
@@ -575,10 +530,7 @@ export function useDeleteCategory() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id) => {
-      if (actor) return actor.deleteCategory(id);
-      return true;
-    },
+    mutationFn: async (id) => requireActor(actor).deleteCategory(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
   });
 }
@@ -624,10 +576,7 @@ export function useAddRaveEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, RaveEventInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addRaveEvent(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addRaveEvent(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["raveEvents"] }),
   });
 }
@@ -636,10 +585,8 @@ export function useUpdateRaveEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: RaveEventInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateRaveEvent(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateRaveEvent(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["raveEvents"] }),
   });
 }
@@ -648,10 +595,7 @@ export function useDeleteRaveEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id) => {
-      if (actor) return actor.deleteRaveEvent(id);
-      return true;
-    },
+    mutationFn: async (id) => requireActor(actor).deleteRaveEvent(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["raveEvents"] }),
   });
 }
@@ -679,10 +623,7 @@ export function useAddRaveSet() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, RaveSetInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addRaveSet(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addRaveSet(input),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["raveSets", vars.raveEventId.toString()],
@@ -694,10 +635,8 @@ export function useUpdateRaveSet() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: RaveSetId; input: RaveSetInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateRaveSet(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateRaveSet(id, input),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["raveSets", vars.input.raveEventId.toString()],
@@ -709,10 +648,7 @@ export function useDeleteRaveSet() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: RaveSetId; raveEventId: bigint }>({
-    mutationFn: async ({ id }) => {
-      if (actor) return actor.deleteRaveSet(id);
-      return true;
-    },
+    mutationFn: async ({ id }) => requireActor(actor).deleteRaveSet(id),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["raveSets", vars.raveEventId.toString()],
@@ -761,10 +697,7 @@ export function useAddNightclubEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, NightclubEventInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addNightclubEvent(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addNightclubEvent(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
   });
 }
@@ -777,10 +710,8 @@ export function useUpdateNightclubEvent() {
     Error,
     { id: bigint; input: NightclubEventInput }
   >({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateNightclubEvent(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateNightclubEvent(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
   });
 }
@@ -789,10 +720,7 @@ export function useDeleteNightclubEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id) => {
-      if (actor) return actor.deleteNightclubEvent(id);
-      return true;
-    },
+    mutationFn: async (id) => requireActor(actor).deleteNightclubEvent(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
   });
 }
@@ -820,10 +748,7 @@ export function useAddNightclubSet() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, NightclubSetInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addNightclubSet(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addNightclubSet(input),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["nightclubSets", vars.nightclubEventId.toString()],
@@ -839,10 +764,8 @@ export function useUpdateNightclubSet() {
     Error,
     { id: NightclubSetId; input: NightclubSetInput }
   >({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateNightclubSet(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateNightclubSet(id, input),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["nightclubSets", vars.input.nightclubEventId.toString()],
@@ -858,10 +781,7 @@ export function useDeleteNightclubSet() {
     Error,
     { id: NightclubSetId; nightclubEventId: bigint }
   >({
-    mutationFn: async ({ id }) => {
-      if (actor) return actor.deleteNightclubSet(id);
-      return true;
-    },
+    mutationFn: async ({ id }) => requireActor(actor).deleteNightclubSet(id),
     onSuccess: (_, vars) =>
       qc.invalidateQueries({
         queryKey: ["nightclubSets", vars.nightclubEventId.toString()],
@@ -910,10 +830,7 @@ export function useAddSiteEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<bigint, Error, SiteEventInput>({
-    mutationFn: async (input) => {
-      if (actor) return actor.addSiteEvent(input);
-      return BigInt(Math.floor(Math.random() * 1000));
-    },
+    mutationFn: async (input) => requireActor(actor).addSiteEvent(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["siteEvents"] }),
   });
 }
@@ -922,10 +839,8 @@ export function useUpdateSiteEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, { id: bigint; input: SiteEventInput }>({
-    mutationFn: async ({ id, input }) => {
-      if (actor) return actor.updateSiteEvent(id, input);
-      return true;
-    },
+    mutationFn: async ({ id, input }) =>
+      requireActor(actor).updateSiteEvent(id, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["siteEvents"] }),
   });
 }
@@ -934,10 +849,7 @@ export function useDeleteSiteEvent() {
   const qc = useQueryClient();
   const { actor } = useActor(createActor);
   return useMutation<boolean, Error, bigint>({
-    mutationFn: async (id) => {
-      if (actor) return actor.deleteSiteEvent(id);
-      return true;
-    },
+    mutationFn: async (id) => requireActor(actor).deleteSiteEvent(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["siteEvents"] }),
   });
 }
