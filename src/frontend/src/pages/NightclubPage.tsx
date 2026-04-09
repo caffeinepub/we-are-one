@@ -1,11 +1,23 @@
-import { Calendar, Headphones, MapPin, Moon, Music2, Tag } from "lucide-react";
+import {
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  Headphones,
+  MapPin,
+  Moon,
+  Music2,
+  Tag,
+  Ticket,
+  Youtube,
+} from "lucide-react";
 import { useState } from "react";
 import {
   useCategories,
   useFestivals,
   useNightclubEvents,
+  useNightclubSets,
 } from "../hooks/useBackend";
-import type { NightclubEvent } from "../types/festival";
+import type { NightclubEvent, NightclubSet } from "../types/festival";
 
 // ── Ambient orbs ─────────────────────────────────────────────────────────────
 
@@ -42,7 +54,6 @@ function AmbientOrbs() {
           animationDelay: "2s",
         }}
       />
-      {/* Club light sweeps */}
       {[
         { deg: 20, color: "oklch(0.55 0.23 310)", delay: "0s" },
         { deg: -20, color: "oklch(0.65 0.2 180)", delay: "1s" },
@@ -69,6 +80,122 @@ function AmbientOrbs() {
   );
 }
 
+// ── Lineup section (fetched per event) ───────────────────────────────────────
+
+function NightclubLineup({ eventId }: { eventId: bigint }) {
+  const { data: sets = [], isLoading } = useNightclubSets(eventId);
+
+  if (isLoading) {
+    return (
+      <div className="px-5 pb-5">
+        <div className="animate-pulse space-y-2">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-8 rounded-lg"
+              style={{ background: "oklch(0.18 0.03 300)" }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (sets.length === 0) {
+    return (
+      <div className="px-5 pb-5">
+        <p
+          className="text-xs font-display uppercase tracking-wider text-center py-4"
+          style={{ color: "oklch(0.4 0 0)" }}
+        >
+          Lineup to be announced
+        </p>
+      </div>
+    );
+  }
+
+  // Group by nightLabel, sort within group by startTime
+  const groups = sets.reduce<Record<string, NightclubSet[]>>((acc, set) => {
+    const key = set.nightLabel || "Main Floor";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(set);
+    return acc;
+  }, {});
+  for (const g of Object.values(groups)) {
+    g.sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }
+
+  return (
+    <div className="px-5 pb-5 flex flex-col gap-4">
+      {Object.entries(groups).map(([label, groupSets]) => (
+        <div key={label}>
+          <div
+            className="mb-2 text-xs font-display font-bold uppercase tracking-widest"
+            style={{ color: "oklch(0.55 0.23 310)" }}
+          >
+            {label}
+          </div>
+          <div className="flex flex-col gap-1">
+            {groupSets.map((set) => (
+              <div
+                key={set.id.toString()}
+                className="flex items-center gap-3 rounded-xl px-3 py-2"
+                style={{ background: "oklch(0.14 0.035 300 / 0.6)" }}
+              >
+                <div className="flex-1 min-w-0">
+                  <span
+                    className="font-display font-bold text-sm truncate block"
+                    style={{ color: "oklch(0.88 0 0)" }}
+                  >
+                    {set.artistName}
+                  </span>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span
+                      className="text-xs font-body"
+                      style={{ color: "oklch(0.55 0.23 310 / 0.8)" }}
+                    >
+                      {set.startTime}–{set.endTime}
+                    </span>
+                    {set.stage && (
+                      <>
+                        <span style={{ color: "oklch(0.35 0 0)" }}>·</span>
+                        <span
+                          className="text-xs font-body truncate"
+                          style={{ color: "oklch(0.5 0 0)" }}
+                        >
+                          {set.stage}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                {set.youtubeUrl && (
+                  <a
+                    href={set.youtubeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 shrink-0"
+                    style={{
+                      background: "oklch(0.55 0.22 25 / 0.15)",
+                      color: "oklch(0.72 0.2 25)",
+                      border: "1px solid oklch(0.55 0.22 25 / 0.3)",
+                    }}
+                    aria-label={`Watch ${set.artistName} on YouTube`}
+                    data-ocid={`nc-set-youtube-${set.id.toString()}`}
+                  >
+                    <Youtube size={12} />
+                    Watch
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Event Card ───────────────────────────────────────────────────────────────
 
 interface NightclubEventCardProps {
@@ -82,6 +209,8 @@ function NightclubEventCard({
   festivalName,
   categoryName,
 }: NightclubEventCardProps) {
+  const [lineupOpen, setLineupOpen] = useState(false);
+
   return (
     <article
       className="group flex flex-col overflow-hidden rounded-2xl transition-smooth"
@@ -162,7 +291,7 @@ function NightclubEventCard({
           </p>
         )}
 
-        <div className="mt-auto flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           {event.date && (
             <div
               className="flex items-center gap-2 text-xs"
@@ -202,7 +331,65 @@ function NightclubEventCard({
             </div>
           )}
         </div>
+
+        {/* Buy Tickets + Lineup toggle */}
+        <div className="mt-auto flex flex-col gap-2 pt-1">
+          {event.ticketUrl ? (
+            <a
+              href={event.ticketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
+              style={{
+                background:
+                  "linear-gradient(135deg, oklch(0.55 0.23 310 / 0.9), oklch(0.45 0.22 330 / 0.9))",
+                color: "oklch(0.97 0 0)",
+                boxShadow: "0 0 20px oklch(0.55 0.23 310 / 0.3)",
+                textDecoration: "none",
+              }}
+              data-ocid={`nc-buy-tickets-${event.id.toString()}`}
+            >
+              <Ticket size={14} />
+              Buy Tickets
+            </a>
+          ) : (
+            <div
+              className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-display font-bold uppercase tracking-wider"
+              style={{
+                background: "oklch(0.14 0.03 300)",
+                color: "oklch(0.4 0 0)",
+                border: "1px solid oklch(0.22 0.03 300)",
+              }}
+            >
+              <Ticket size={14} />
+              Coming Soon
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setLineupOpen((o) => !o)}
+            className="flex items-center justify-center gap-2 rounded-xl py-2 text-xs font-display font-bold uppercase tracking-wider transition-smooth hover:opacity-80"
+            style={{
+              background: "oklch(0.14 0.03 300)",
+              color: lineupOpen ? "oklch(0.55 0.23 310)" : "oklch(0.5 0 0)",
+              border: `1px solid ${lineupOpen ? "oklch(0.55 0.23 310 / 0.4)" : "oklch(0.22 0.03 300)"}`,
+            }}
+            data-ocid={`nc-lineup-toggle-${event.id.toString()}`}
+          >
+            <Music2 size={12} />
+            {lineupOpen ? "Hide Lineup" : "View Lineup"}
+            {lineupOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          </button>
+        </div>
       </div>
+
+      {/* Lineup drawer */}
+      {lineupOpen && (
+        <div style={{ borderTop: "1px solid oklch(0.22 0.03 300 / 0.5)" }}>
+          <NightclubLineup eventId={event.id} />
+        </div>
+      )}
     </article>
   );
 }

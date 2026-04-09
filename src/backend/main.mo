@@ -8,11 +8,13 @@ import NewsLineupApi "mixins/news-lineup-api";
 import DonationsSponsorsApi "mixins/donations-sponsors-api";
 import EventsApi "mixins/events-api";
 import FestivalLib "lib/festival";
+import Migration "migration";
 
 import List "mo:core/List";
 import Map "mo:core/Map";
 
 
+(with migration = Migration.run)
 actor {
   let festivals = List.empty<Types.Festival>();
   let packages = List.empty<Types.Package>();
@@ -25,6 +27,8 @@ actor {
   let raveEvents = List.empty<EventTypes.RaveEvent>();
   let nightclubEvents = List.empty<EventTypes.NightclubEvent>();
   let siteEvents = List.empty<EventTypes.SiteEvent>();
+  let raveSets = List.empty<EventTypes.RaveSet>();
+  let nightclubSets = List.empty<EventTypes.NightclubSet>();
 
   // ── Seed festivals ───────────────────────────────────────────────────────────
 
@@ -356,5 +360,5 @@ actor {
   include FestivalApi(festivals, packages, sessions);
   include NewsLineupApi(newsArticles, lineupEntries);
   include DonationsSponsorsApi(donationGoals, sponsors);
-  include EventsApi(categories, raveEvents, nightclubEvents, siteEvents);
+  include EventsApi(categories, raveEvents, nightclubEvents, siteEvents, raveSets, nightclubSets);
 };

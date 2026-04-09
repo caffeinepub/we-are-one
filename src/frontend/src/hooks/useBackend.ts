@@ -15,10 +15,16 @@ import type {
   NewsInput,
   NightclubEvent,
   NightclubEventInput,
+  NightclubSet,
+  NightclubSetId,
+  NightclubSetInput,
   Package,
   PackageInput,
   RaveEvent,
   RaveEventInput,
+  RaveSet,
+  RaveSetId,
+  RaveSetInput,
   SiteEvent,
   SiteEventInput,
   Sponsor,
@@ -650,6 +656,70 @@ export function useDeleteRaveEvent() {
   });
 }
 
+// ── Rave Set Hooks ────────────────────────────────────────────────────────────
+
+export function useRaveSets(raveEventId: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<RaveSet[]>({
+    queryKey: ["raveSets", raveEventId.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getRaveSetsByEvent(raveEventId);
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useAddRaveSet() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, RaveSetInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addRaveSet(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: (_, vars) =>
+      qc.invalidateQueries({
+        queryKey: ["raveSets", vars.raveEventId.toString()],
+      }),
+  });
+}
+
+export function useUpdateRaveSet() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: RaveSetId; input: RaveSetInput }>({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateRaveSet(id, input);
+      return true;
+    },
+    onSuccess: (_, vars) =>
+      qc.invalidateQueries({
+        queryKey: ["raveSets", vars.input.raveEventId.toString()],
+      }),
+  });
+}
+
+export function useDeleteRaveSet() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<boolean, Error, { id: RaveSetId; raveEventId: bigint }>({
+    mutationFn: async ({ id }) => {
+      if (actor) return actor.deleteRaveSet(id);
+      return true;
+    },
+    onSuccess: (_, vars) =>
+      qc.invalidateQueries({
+        queryKey: ["raveSets", vars.raveEventId.toString()],
+      }),
+  });
+}
+
 // ──────────────────────────────────────────────
 // Nightclub Event Hooks
 // ──────────────────────────────────────────────
@@ -724,6 +794,78 @@ export function useDeleteNightclubEvent() {
       return true;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["nightclubEvents"] }),
+  });
+}
+
+// ── Nightclub Set Hooks ───────────────────────────────────────────────────────
+
+export function useNightclubSets(nightclubEventId: bigint) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<NightclubSet[]>({
+    queryKey: ["nightclubSets", nightclubEventId.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        return await actor.getNightclubSetsByEvent(nightclubEventId);
+      } catch {
+        return [];
+      }
+    },
+    enabled: !isFetching,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useAddNightclubSet() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<bigint, Error, NightclubSetInput>({
+    mutationFn: async (input) => {
+      if (actor) return actor.addNightclubSet(input);
+      return BigInt(Math.floor(Math.random() * 1000));
+    },
+    onSuccess: (_, vars) =>
+      qc.invalidateQueries({
+        queryKey: ["nightclubSets", vars.nightclubEventId.toString()],
+      }),
+  });
+}
+
+export function useUpdateNightclubSet() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<
+    boolean,
+    Error,
+    { id: NightclubSetId; input: NightclubSetInput }
+  >({
+    mutationFn: async ({ id, input }) => {
+      if (actor) return actor.updateNightclubSet(id, input);
+      return true;
+    },
+    onSuccess: (_, vars) =>
+      qc.invalidateQueries({
+        queryKey: ["nightclubSets", vars.input.nightclubEventId.toString()],
+      }),
+  });
+}
+
+export function useDeleteNightclubSet() {
+  const qc = useQueryClient();
+  const { actor } = useActor(createActor);
+  return useMutation<
+    boolean,
+    Error,
+    { id: NightclubSetId; nightclubEventId: bigint }
+  >({
+    mutationFn: async ({ id }) => {
+      if (actor) return actor.deleteNightclubSet(id);
+      return true;
+    },
+    onSuccess: (_, vars) =>
+      qc.invalidateQueries({
+        queryKey: ["nightclubSets", vars.nightclubEventId.toString()],
+      }),
   });
 }
 

@@ -1,22 +1,43 @@
-import { Edit2, Moon, Plus, Trash2, X, Zap } from "lucide-react";
+import {
+  Edit2,
+  ListMusic,
+  Moon,
+  Plus,
+  Trash2,
+  X,
+  Youtube,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
 import {
   useAddNightclubEvent,
+  useAddNightclubSet,
   useAddRaveEvent,
+  useAddRaveSet,
   useCategories,
   useDeleteNightclubEvent,
+  useDeleteNightclubSet,
   useDeleteRaveEvent,
+  useDeleteRaveSet,
   useFestivals,
   useNightclubEvents,
+  useNightclubSets,
   useRaveEvents,
+  useRaveSets,
   useUpdateNightclubEvent,
+  useUpdateNightclubSet,
   useUpdateRaveEvent,
+  useUpdateRaveSet,
 } from "../../hooks/useBackend";
 import type {
   NightclubEvent,
   NightclubEventInput,
+  NightclubSet,
+  NightclubSetInput,
   RaveEvent,
   RaveEventInput,
+  RaveSet,
+  RaveSetInput,
 } from "../../types/festival";
 
 // ── Shared styles ─────────────────────────────────────────────────────────────
@@ -96,6 +117,526 @@ function SegmentButton({
   );
 }
 
+// ── Set form modal (shared for Rave & Nightclub) ──────────────────────────────
+
+interface SetFormValues {
+  nightLabel: string;
+  artistName: string;
+  startTime: string;
+  endTime: string;
+  stage: string;
+  youtubeUrl: string;
+}
+
+interface SetFormModalProps {
+  title: string;
+  accentColor: string;
+  set?: {
+    nightLabel: string;
+    artistName: string;
+    startTime: string;
+    endTime: string;
+    stage: string;
+    youtubeUrl?: string;
+  };
+  onSave: (v: SetFormValues) => void;
+  onClose: () => void;
+  isPending: boolean;
+}
+
+function SetFormModal({
+  title,
+  accentColor,
+  set,
+  onSave,
+  onClose,
+  isPending,
+}: SetFormModalProps) {
+  const [v, setV] = useState<SetFormValues>({
+    nightLabel: set?.nightLabel ?? "",
+    artistName: set?.artistName ?? "",
+    startTime: set?.startTime ?? "",
+    endTime: set?.endTime ?? "",
+    stage: set?.stage ?? "",
+    youtubeUrl: set?.youtubeUrl ?? "",
+  });
+
+  function field(key: keyof SetFormValues, value: string) {
+    setV((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    onSave(v);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      style={{ background: "oklch(0 0 0 / 0.8)", backdropFilter: "blur(6px)" }}
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl p-6"
+        style={{
+          background: "oklch(0.1 0.02 260)",
+          border: `2px solid ${accentColor}50`,
+          boxShadow: `0 0 60px ${accentColor}15`,
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        <div className="mb-5 flex items-center justify-between">
+          <h2
+            className="font-display font-bold uppercase tracking-wider"
+            style={{ color: accentColor }}
+          >
+            {title}
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1.5 transition-smooth hover:scale-110"
+            style={{ color: "oklch(0.5 0 0)" }}
+            aria-label="Close"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="set-night-label" style={S.label}>
+                Night / Day Label *
+              </label>
+              <input
+                id="set-night-label"
+                type="text"
+                required
+                value={v.nightLabel}
+                onChange={(e) => field("nightLabel", e.target.value)}
+                placeholder="e.g. Friday Night"
+                style={S.input}
+                data-ocid="set-form-night-label"
+              />
+            </div>
+            <div>
+              <label htmlFor="set-artist" style={S.label}>
+                Artist Name *
+              </label>
+              <input
+                id="set-artist"
+                type="text"
+                required
+                value={v.artistName}
+                onChange={(e) => field("artistName", e.target.value)}
+                placeholder="DJ / artist name"
+                style={S.input}
+                data-ocid="set-form-artist"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label htmlFor="set-start" style={S.label}>
+                Start Time *
+              </label>
+              <input
+                id="set-start"
+                type="text"
+                required
+                value={v.startTime}
+                onChange={(e) => field("startTime", e.target.value)}
+                placeholder="22:00"
+                style={S.input}
+                data-ocid="set-form-start"
+              />
+            </div>
+            <div>
+              <label htmlFor="set-end" style={S.label}>
+                End Time *
+              </label>
+              <input
+                id="set-end"
+                type="text"
+                required
+                value={v.endTime}
+                onChange={(e) => field("endTime", e.target.value)}
+                placeholder="00:00"
+                style={S.input}
+                data-ocid="set-form-end"
+              />
+            </div>
+            <div>
+              <label htmlFor="set-stage" style={S.label}>
+                Stage
+              </label>
+              <input
+                id="set-stage"
+                type="text"
+                value={v.stage}
+                onChange={(e) => field("stage", e.target.value)}
+                placeholder="Main Stage"
+                style={S.input}
+                data-ocid="set-form-stage"
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="set-youtube" style={S.label}>
+              YouTube URL (optional)
+            </label>
+            <input
+              id="set-youtube"
+              type="url"
+              value={v.youtubeUrl}
+              onChange={(e) => field("youtubeUrl", e.target.value)}
+              placeholder="https://youtube.com/watch?v=..."
+              style={S.input}
+              data-ocid="set-form-youtube"
+            />
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 rounded-xl py-3 text-sm font-display font-medium uppercase tracking-wider transition-smooth hover:opacity-80"
+              style={{
+                background: "oklch(0.15 0.02 260)",
+                border: "1px solid oklch(0.25 0.02 260 / 0.5)",
+                color: "oklch(0.6 0 0)",
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="flex-1 rounded-xl py-3 text-sm font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95 disabled:opacity-50"
+              style={{
+                background: `linear-gradient(135deg, ${accentColor}e0, ${accentColor}a0)`,
+                color: "oklch(0.08 0 0)",
+                boxShadow: `0 0 20px ${accentColor}30`,
+              }}
+              data-ocid="set-form-save"
+            >
+              {isPending ? "Saving…" : "Save Set"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ── Sets sub-panel ────────────────────────────────────────────────────────────
+
+type SetsPanelType = "rave" | "nightclub";
+
+interface SetsPanelProps {
+  type: SetsPanelType;
+  eventId: bigint;
+  eventName: string;
+  accentColor: string;
+  onClose: () => void;
+}
+
+function SetsPanel({
+  type,
+  eventId,
+  eventName,
+  accentColor,
+  onClose,
+}: SetsPanelProps) {
+  const { data: raveSets = [] } = useRaveSets(type === "rave" ? eventId : 0n);
+  const { data: ncSets = [] } = useNightclubSets(
+    type === "nightclub" ? eventId : 0n,
+  );
+  const sets: (RaveSet | NightclubSet)[] = type === "rave" ? raveSets : ncSets;
+
+  const addRaveSet = useAddRaveSet();
+  const updateRaveSet = useUpdateRaveSet();
+  const deleteRaveSet = useDeleteRaveSet();
+  const addNcSet = useAddNightclubSet();
+  const updateNcSet = useUpdateNightclubSet();
+  const deleteNcSet = useDeleteNightclubSet();
+
+  type SetModal =
+    | { kind: "none" }
+    | { kind: "add" }
+    | { kind: "edit"; set: RaveSet | NightclubSet };
+
+  const [modal, setModal] = useState<SetModal>({ kind: "none" });
+  const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
+
+  const isPending =
+    addRaveSet.isPending ||
+    updateRaveSet.isPending ||
+    addNcSet.isPending ||
+    updateNcSet.isPending;
+
+  function handleSave(v: SetFormValues) {
+    const youtubeUrl = v.youtubeUrl.trim() || undefined;
+
+    if (type === "rave") {
+      const input: RaveSetInput = {
+        raveEventId: eventId,
+        nightLabel: v.nightLabel.trim(),
+        artistName: v.artistName.trim(),
+        startTime: v.startTime.trim(),
+        endTime: v.endTime.trim(),
+        stage: v.stage.trim(),
+        youtubeUrl,
+      };
+      if (modal.kind === "add") {
+        addRaveSet.mutate(input, {
+          onSuccess: () => setModal({ kind: "none" }),
+        });
+      } else if (modal.kind === "edit") {
+        updateRaveSet.mutate(
+          { id: modal.set.id, input },
+          { onSuccess: () => setModal({ kind: "none" }) },
+        );
+      }
+    } else {
+      const input: NightclubSetInput = {
+        nightclubEventId: eventId,
+        nightLabel: v.nightLabel.trim(),
+        artistName: v.artistName.trim(),
+        startTime: v.startTime.trim(),
+        endTime: v.endTime.trim(),
+        stage: v.stage.trim(),
+        youtubeUrl,
+      };
+      if (modal.kind === "add") {
+        addNcSet.mutate(input, { onSuccess: () => setModal({ kind: "none" }) });
+      } else if (modal.kind === "edit") {
+        updateNcSet.mutate(
+          { id: modal.set.id, input },
+          { onSuccess: () => setModal({ kind: "none" }) },
+        );
+      }
+    }
+  }
+
+  function handleDelete(id: bigint) {
+    if (type === "rave") {
+      deleteRaveSet.mutate({ id, raveEventId: eventId });
+    } else {
+      deleteNcSet.mutate({ id, nightclubEventId: eventId });
+    }
+    setDeleteConfirm(null);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "oklch(0 0 0 / 0.75)", backdropFilter: "blur(6px)" }}
+    >
+      <div
+        className="w-full max-w-2xl rounded-2xl flex flex-col"
+        style={{
+          background: "oklch(0.09 0.02 260)",
+          border: `2px solid ${accentColor}40`,
+          boxShadow: `0 0 80px ${accentColor}12`,
+          maxHeight: "85vh",
+        }}
+      >
+        {/* Header */}
+        <div
+          className="flex items-center justify-between p-5"
+          style={{ borderBottom: "1px solid oklch(0.18 0.02 260)" }}
+        >
+          <div>
+            <h2
+              className="font-display font-bold uppercase tracking-wider"
+              style={{ color: accentColor }}
+            >
+              Manage Sets
+            </h2>
+            <p
+              className="mt-0.5 text-xs font-body"
+              style={{ color: "oklch(0.5 0 0)" }}
+            >
+              {eventName}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setModal({ kind: "add" })}
+              className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-display font-bold uppercase tracking-wider transition-smooth hover:scale-105 active:scale-95"
+              style={{
+                background: `${accentColor}20`,
+                color: accentColor,
+                border: `1px solid ${accentColor}50`,
+              }}
+              data-ocid="add-set-btn"
+            >
+              <Plus size={12} />
+              Add Set
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg p-1.5 transition-smooth hover:scale-110"
+              style={{ color: "oklch(0.5 0 0)" }}
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="flex-1 overflow-y-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ borderBottom: "1px solid oklch(0.15 0.01 260)" }}>
+                {[
+                  "Night/Day",
+                  "Artist",
+                  "Time",
+                  "Stage",
+                  "YouTube",
+                  "Actions",
+                ].map((h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-left text-xs font-display uppercase tracking-wider whitespace-nowrap"
+                    style={S.th}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sets.map((set) => (
+                <tr
+                  key={set.id.toString()}
+                  style={S.rowBorder}
+                  data-ocid="set-admin-row"
+                >
+                  <td className="px-4 py-3 text-xs max-w-[100px]" style={S.td}>
+                    <span className="truncate block">{set.nightLabel}</span>
+                  </td>
+                  <td
+                    className="px-4 py-3 font-medium max-w-[140px]"
+                    style={S.td}
+                  >
+                    <span className="truncate block">{set.artistName}</span>
+                  </td>
+                  <td
+                    className="px-4 py-3 text-xs whitespace-nowrap"
+                    style={S.tdMuted}
+                  >
+                    {set.startTime}–{set.endTime}
+                  </td>
+                  <td
+                    className="px-4 py-3 text-xs max-w-[100px]"
+                    style={S.tdMuted}
+                  >
+                    <span className="truncate block">{set.stage || "—"}</span>
+                  </td>
+                  <td className="px-4 py-3 text-xs">
+                    {set.youtubeUrl ? (
+                      <a
+                        href={set.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 transition-smooth hover:opacity-80"
+                        style={{ color: "oklch(0.72 0.2 25)" }}
+                        aria-label="YouTube link"
+                      >
+                        <Youtube size={13} />
+                        Link
+                      </a>
+                    ) : (
+                      <span style={{ color: "oklch(0.35 0 0)" }}>—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        title="Edit"
+                        onClick={() => setModal({ kind: "edit", set })}
+                        className="rounded-lg p-1.5 transition-smooth hover:scale-110"
+                        style={{ color: "oklch(0.65 0.18 70)" }}
+                        data-ocid="admin-edit-set-btn"
+                      >
+                        <Edit2 size={14} />
+                      </button>
+                      {deleteConfirm === set.id ? (
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(set.id)}
+                            className="rounded-lg px-2 py-1 text-xs font-bold transition-smooth"
+                            style={{
+                              background: "oklch(0.55 0.22 25 / 0.2)",
+                              color: "oklch(0.55 0.22 25)",
+                            }}
+                            data-ocid="admin-confirm-delete-set"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDeleteConfirm(null)}
+                            className="rounded-lg p-1"
+                            style={{ color: "oklch(0.5 0 0)" }}
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          title="Delete permanently"
+                          onClick={() => setDeleteConfirm(set.id)}
+                          className="rounded-lg p-1.5 transition-smooth hover:scale-110"
+                          style={{ color: "oklch(0.55 0.22 25)" }}
+                          data-ocid="admin-delete-set-btn"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {sets.length === 0 && (
+            <div className="py-12 text-center" data-ocid="sets-admin-empty">
+              <p
+                className="font-display text-sm uppercase tracking-wider"
+                style={S.th}
+              >
+                No sets yet. Add your first one.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {(modal.kind === "add" || modal.kind === "edit") && (
+        <SetFormModal
+          title={modal.kind === "add" ? "Add Set" : "Edit Set"}
+          accentColor={accentColor}
+          set={modal.kind === "edit" ? modal.set : undefined}
+          onSave={handleSave}
+          onClose={() => setModal({ kind: "none" })}
+          isPending={isPending}
+        />
+      )}
+    </div>
+  );
+}
+
 // ── Shared form modal ─────────────────────────────────────────────────────────
 
 interface RaveFormValues {
@@ -108,6 +649,7 @@ interface RaveFormValues {
   isStandalone: boolean;
   festivalId: string;
   categoryId: string;
+  ticketUrl: string;
 }
 
 interface NightclubFormValues {
@@ -119,6 +661,7 @@ interface NightclubFormValues {
   isStandalone: boolean;
   festivalId: string;
   categoryId: string;
+  ticketUrl: string;
 }
 
 interface RaveEventFormProps {
@@ -148,6 +691,7 @@ function RaveEventForm({
     isStandalone: event?.isStandalone ?? true,
     festivalId: event?.festivalId?.toString() ?? "",
     categoryId: event?.categoryId?.toString() ?? "",
+    ticketUrl: event?.ticketUrl ?? "",
   });
 
   function field(key: keyof RaveFormValues, value: string | boolean) {
@@ -166,6 +710,7 @@ function RaveEventForm({
       isStandalone: v.isStandalone,
       festivalId: v.festivalId ? BigInt(v.festivalId) : undefined,
       categoryId: v.categoryId ? BigInt(v.categoryId) : undefined,
+      ticketUrl: v.ticketUrl.trim() || undefined,
     };
     onSave(input);
   }
@@ -278,6 +823,20 @@ function RaveEventForm({
             />
           </div>
           <div>
+            <label htmlFor="rave-ticket" style={S.label}>
+              Ticket URL (optional)
+            </label>
+            <input
+              id="rave-ticket"
+              type="url"
+              value={v.ticketUrl}
+              onChange={(e) => field("ticketUrl", e.target.value)}
+              placeholder="https://tickets.example.com/rave"
+              style={S.input}
+              data-ocid="rave-form-ticket"
+            />
+          </div>
+          <div>
             <label htmlFor="rave-type" style={S.label}>
               Event Type
             </label>
@@ -363,7 +922,7 @@ function RaveEventForm({
               className="font-display text-xs uppercase tracking-wider"
               style={{ color: "oklch(0.55 0 0)" }}
             >
-              Standalone event (not tied to a specific festival)
+              Standalone event
             </span>
           </div>
 
@@ -427,6 +986,7 @@ function NightclubEventForm({
     isStandalone: event?.isStandalone ?? true,
     festivalId: event?.festivalId?.toString() ?? "",
     categoryId: event?.categoryId?.toString() ?? "",
+    ticketUrl: event?.ticketUrl ?? "",
   });
 
   function field(key: keyof NightclubFormValues, value: string | boolean) {
@@ -444,6 +1004,7 @@ function NightclubEventForm({
       isStandalone: v.isStandalone,
       festivalId: v.festivalId ? BigInt(v.festivalId) : undefined,
       categoryId: v.categoryId ? BigInt(v.categoryId) : undefined,
+      ticketUrl: v.ticketUrl.trim() || undefined,
     };
     onSave(input);
   }
@@ -555,6 +1116,20 @@ function NightclubEventForm({
               data-ocid="nc-form-image"
             />
           </div>
+          <div>
+            <label htmlFor="nc-ticket" style={S.label}>
+              Ticket URL (optional)
+            </label>
+            <input
+              id="nc-ticket"
+              type="url"
+              value={v.ticketUrl}
+              onChange={(e) => field("ticketUrl", e.target.value)}
+              placeholder="https://tickets.example.com/nightclub"
+              style={S.input}
+              data-ocid="nc-form-ticket"
+            />
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label htmlFor="nc-festival" style={S.label}>
@@ -627,7 +1202,7 @@ function NightclubEventForm({
               className="font-display text-xs uppercase tracking-wider"
               style={{ color: "oklch(0.55 0 0)" }}
             >
-              Standalone event (not tied to a specific festival)
+              Standalone event
             </span>
           </div>
 
@@ -672,6 +1247,8 @@ type RaveModal =
   | { type: "add" }
   | { type: "edit"; event: RaveEvent };
 
+type ManageSetsState = { eventId: bigint; eventName: string } | null;
+
 function RaveSection() {
   const { data: events = [] } = useRaveEvents();
   const { data: festivals = [] } = useFestivals();
@@ -681,6 +1258,7 @@ function RaveSection() {
   const deleteRave = useDeleteRaveEvent();
   const [modal, setModal] = useState<RaveModal>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
+  const [manageSets, setManageSets] = useState<ManageSetsState>(null);
 
   function handleSave(input: RaveEventInput) {
     if (modal.type === "add") {
@@ -700,7 +1278,6 @@ function RaveSection() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <p
           className="text-sm font-display uppercase tracking-wider"
@@ -725,7 +1302,6 @@ function RaveSection() {
         </button>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto rounded-2xl" style={S.card}>
         <table className="w-full text-sm">
           <thead>
@@ -793,6 +1369,18 @@ function RaveSection() {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      title="Manage Sets"
+                      onClick={() =>
+                        setManageSets({ eventId: ev.id, eventName: ev.name })
+                      }
+                      className="rounded-lg p-1.5 transition-smooth hover:scale-110"
+                      style={{ color: "oklch(0.65 0.2 180)" }}
+                      data-ocid="admin-manage-sets-rave-btn"
+                    >
+                      <ListMusic size={16} />
+                    </button>
                     <button
                       type="button"
                       title="Edit"
@@ -869,6 +1457,16 @@ function RaveSection() {
           isPending={addRave.isPending || updateRave.isPending}
         />
       )}
+
+      {manageSets && (
+        <SetsPanel
+          type="rave"
+          eventId={manageSets.eventId}
+          eventName={manageSets.eventName}
+          accentColor="oklch(0.65 0.2 180)"
+          onClose={() => setManageSets(null)}
+        />
+      )}
     </div>
   );
 }
@@ -889,6 +1487,7 @@ function NightclubSection() {
   const deleteNC = useDeleteNightclubEvent();
   const [modal, setModal] = useState<NightclubModal>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
+  const [manageSets, setManageSets] = useState<ManageSetsState>(null);
 
   function handleSave(input: NightclubEventInput) {
     if (modal.type === "add") {
@@ -908,7 +1507,6 @@ function NightclubSection() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <p
           className="text-sm font-display uppercase tracking-wider"
@@ -933,7 +1531,6 @@ function NightclubSection() {
         </button>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto rounded-2xl" style={S.card}>
         <table className="w-full text-sm">
           <thead>
@@ -1011,6 +1608,18 @@ function NightclubSection() {
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
+                      title="Manage Sets"
+                      onClick={() =>
+                        setManageSets({ eventId: ev.id, eventName: ev.name })
+                      }
+                      className="rounded-lg p-1.5 transition-smooth hover:scale-110"
+                      style={{ color: "oklch(0.55 0.23 310)" }}
+                      data-ocid="admin-manage-sets-nc-btn"
+                    >
+                      <ListMusic size={16} />
+                    </button>
+                    <button
+                      type="button"
                       title="Edit"
                       onClick={() => setModal({ type: "edit", event: ev })}
                       className="rounded-lg p-1.5 transition-smooth hover:scale-110"
@@ -1085,6 +1694,16 @@ function NightclubSection() {
           isPending={addNC.isPending || updateNC.isPending}
         />
       )}
+
+      {manageSets && (
+        <SetsPanel
+          type="nightclub"
+          eventId={manageSets.eventId}
+          eventName={manageSets.eventName}
+          accentColor="oklch(0.55 0.23 310)"
+          onClose={() => setManageSets(null)}
+        />
+      )}
     </div>
   );
 }
@@ -1098,7 +1717,6 @@ export default function RaveNightclubTab() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Segment control */}
       <div className="flex items-center gap-3" data-ocid="rave-nightclub-tabs">
         <SegmentButton
           active={section === "rave"}
@@ -1116,10 +1734,8 @@ export default function RaveNightclubTab() {
         />
       </div>
 
-      {/* Divider */}
       <div style={{ height: "1px", background: "oklch(0.18 0.02 260)" }} />
 
-      {/* Active section */}
       {section === "rave" ? <RaveSection /> : <NightclubSection />}
     </div>
   );

@@ -2,7 +2,6 @@ import Types "../types/events";
 import Common "../types/common";
 import List "mo:core/List";
 import Time "mo:core/Time";
-
 module {
   // ── Categories ───────────────────────────────────────────────────────────────
 
@@ -96,6 +95,7 @@ module {
       categoryId = input.categoryId;
       eventType = input.eventType;
       isStandalone = input.isStandalone;
+      ticketUrl = input.ticketUrl;
       createdAt = Time.now();
     };
     raveEvents.add(event);
@@ -123,6 +123,7 @@ module {
           categoryId = input.categoryId;
           eventType = input.eventType;
           isStandalone = input.isStandalone;
+          ticketUrl = input.ticketUrl;
         });
         true
       };
@@ -170,6 +171,7 @@ module {
       festivalId = input.festivalId;
       categoryId = input.categoryId;
       isStandalone = input.isStandalone;
+      ticketUrl = input.ticketUrl;
       createdAt = Time.now();
     };
     nightclubEvents.add(event);
@@ -196,6 +198,7 @@ module {
           festivalId = input.festivalId;
           categoryId = input.categoryId;
           isStandalone = input.isStandalone;
+          ticketUrl = input.ticketUrl;
         });
         true
       };
@@ -282,5 +285,161 @@ module {
     siteEvents.clear();
     siteEvents.append(filtered);
     siteEvents.size() < sizeBefore
+  };
+
+  // ── Rave Sets ─────────────────────────────────────────────────────────────────
+
+  public func getRaveSets(
+    raveSets : List.List<Types.RaveSet>
+  ) : [Types.RaveSet] {
+    raveSets.toArray()
+  };
+
+  public func getRaveSetsByEvent(
+    raveSets : List.List<Types.RaveSet>,
+    raveEventId : Nat,
+  ) : [Types.RaveSet] {
+    raveSets.filter(func(s) { s.raveEventId == raveEventId }).toArray()
+  };
+
+  public func getRaveSet(
+    raveSets : List.List<Types.RaveSet>,
+    id : Common.RaveSetId,
+  ) : ?Types.RaveSet {
+    raveSets.find(func(s) { s.id == id })
+  };
+
+  public func addRaveSet(
+    raveSets : List.List<Types.RaveSet>,
+    nextId : Nat,
+    input : Types.RaveSetInput,
+  ) : Types.RaveSet {
+    let s : Types.RaveSet = {
+      id = nextId;
+      raveEventId = input.raveEventId;
+      nightLabel = input.nightLabel;
+      artistName = input.artistName;
+      stage = input.stage;
+      startTime = input.startTime;
+      endTime = input.endTime;
+      youtubeUrl = input.youtubeUrl;
+      createdAt = Time.now();
+    };
+    raveSets.add(s);
+    s
+  };
+
+  public func updateRaveSet(
+    raveSets : List.List<Types.RaveSet>,
+    id : Common.RaveSetId,
+    input : Types.RaveSetInput,
+  ) : Bool {
+    let idx = raveSets.findIndex(func(s) { s.id == id });
+    switch (idx) {
+      case null { false };
+      case (?i) {
+        let existing = raveSets.at(i);
+        raveSets.put(i, {
+          existing with
+          raveEventId = input.raveEventId;
+          nightLabel = input.nightLabel;
+          artistName = input.artistName;
+          stage = input.stage;
+          startTime = input.startTime;
+          endTime = input.endTime;
+          youtubeUrl = input.youtubeUrl;
+        });
+        true
+      };
+    }
+  };
+
+  public func deleteRaveSet(
+    raveSets : List.List<Types.RaveSet>,
+    id : Common.RaveSetId,
+  ) : Bool {
+    let sizeBefore = raveSets.size();
+    let filtered = raveSets.filter(func(s) { s.id != id });
+    raveSets.clear();
+    raveSets.append(filtered);
+    raveSets.size() < sizeBefore
+  };
+
+  // ── Nightclub Sets ────────────────────────────────────────────────────────────
+
+  public func getNightclubSets(
+    nightclubSets : List.List<Types.NightclubSet>
+  ) : [Types.NightclubSet] {
+    nightclubSets.toArray()
+  };
+
+  public func getNightclubSetsByEvent(
+    nightclubSets : List.List<Types.NightclubSet>,
+    nightclubEventId : Nat,
+  ) : [Types.NightclubSet] {
+    nightclubSets.filter(func(s) { s.nightclubEventId == nightclubEventId }).toArray()
+  };
+
+  public func getNightclubSet(
+    nightclubSets : List.List<Types.NightclubSet>,
+    id : Common.NightclubSetId,
+  ) : ?Types.NightclubSet {
+    nightclubSets.find(func(s) { s.id == id })
+  };
+
+  public func addNightclubSet(
+    nightclubSets : List.List<Types.NightclubSet>,
+    nextId : Nat,
+    input : Types.NightclubSetInput,
+  ) : Types.NightclubSet {
+    let s : Types.NightclubSet = {
+      id = nextId;
+      nightclubEventId = input.nightclubEventId;
+      nightLabel = input.nightLabel;
+      artistName = input.artistName;
+      stage = input.stage;
+      startTime = input.startTime;
+      endTime = input.endTime;
+      youtubeUrl = input.youtubeUrl;
+      createdAt = Time.now();
+    };
+    nightclubSets.add(s);
+    s
+  };
+
+  public func updateNightclubSet(
+    nightclubSets : List.List<Types.NightclubSet>,
+    id : Common.NightclubSetId,
+    input : Types.NightclubSetInput,
+  ) : Bool {
+    let idx = nightclubSets.findIndex(func(s) { s.id == id });
+    switch (idx) {
+      case null { false };
+      case (?i) {
+        let existing = nightclubSets.at(i);
+        nightclubSets.put(i, {
+          existing with
+          nightclubEventId = input.nightclubEventId;
+          nightLabel = input.nightLabel;
+          artistName = input.artistName;
+          stage = input.stage;
+          startTime = input.startTime;
+          endTime = input.endTime;
+          youtubeUrl = input.youtubeUrl;
+        });
+        true
+      };
+    }
+  };
+
+  public func deleteNightclubSet(
+    nightclubSets : List.List<Types.NightclubSet>,
+    id : Common.NightclubSetId,
+  ) : Bool {
+    let sizeBefore = nightclubSets.size();
+    let filtered = nightclubSets.filter(func(s) { s.id != id });
+    nightclubSets.clear();
+    nightclubSets.append(filtered);
+    nightclubSets.size() < sizeBefore
   };
 };

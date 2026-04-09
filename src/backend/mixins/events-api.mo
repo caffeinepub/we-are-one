@@ -2,17 +2,20 @@ import EventTypes "../types/events";
 import Common "../types/common";
 import EventsLib "../lib/events";
 import List "mo:core/List";
-
 mixin (
   categories : List.List<EventTypes.EventCategory>,
   raveEvents : List.List<EventTypes.RaveEvent>,
   nightclubEvents : List.List<EventTypes.NightclubEvent>,
   siteEvents : List.List<EventTypes.SiteEvent>,
+  raveSets : List.List<EventTypes.RaveSet>,
+  nightclubSets : List.List<EventTypes.NightclubSet>,
 ) {
   var nextCategoryId : Nat = categories.size() + 1;
   var nextRaveEventId : Nat = raveEvents.size() + 1;
   var nextNightclubEventId : Nat = nightclubEvents.size() + 1;
   var nextSiteEventId : Nat = siteEvents.size() + 1;
+  var nextRaveSetId : Nat = raveSets.size() + 1;
+  var nextNightclubSetId : Nat = nightclubSets.size() + 1;
 
   // ── Categories ───────────────────────────────────────────────────────────────
 
@@ -112,5 +115,63 @@ mixin (
 
   public func deleteSiteEvent(id : Common.SiteEventId) : async Bool {
     EventsLib.deleteSiteEvent(siteEvents, id)
+  };
+
+  // ── Rave Sets ─────────────────────────────────────────────────────────────────
+
+  public query func getRaveSets() : async [EventTypes.RaveSet] {
+    EventsLib.getRaveSets(raveSets)
+  };
+
+  public query func getRaveSetsByEvent(raveEventId : Nat) : async [EventTypes.RaveSet] {
+    EventsLib.getRaveSetsByEvent(raveSets, raveEventId)
+  };
+
+  public query func getRaveSet(id : Common.RaveSetId) : async ?EventTypes.RaveSet {
+    EventsLib.getRaveSet(raveSets, id)
+  };
+
+  public func addRaveSet(input : EventTypes.RaveSetInput) : async Common.RaveSetId {
+    let s = EventsLib.addRaveSet(raveSets, nextRaveSetId, input);
+    let id = s.id;
+    nextRaveSetId += 1;
+    id
+  };
+
+  public func updateRaveSet(id : Common.RaveSetId, input : EventTypes.RaveSetInput) : async Bool {
+    EventsLib.updateRaveSet(raveSets, id, input)
+  };
+
+  public func deleteRaveSet(id : Common.RaveSetId) : async Bool {
+    EventsLib.deleteRaveSet(raveSets, id)
+  };
+
+  // ── Nightclub Sets ────────────────────────────────────────────────────────────
+
+  public query func getNightclubSets() : async [EventTypes.NightclubSet] {
+    EventsLib.getNightclubSets(nightclubSets)
+  };
+
+  public query func getNightclubSetsByEvent(nightclubEventId : Nat) : async [EventTypes.NightclubSet] {
+    EventsLib.getNightclubSetsByEvent(nightclubSets, nightclubEventId)
+  };
+
+  public query func getNightclubSet(id : Common.NightclubSetId) : async ?EventTypes.NightclubSet {
+    EventsLib.getNightclubSet(nightclubSets, id)
+  };
+
+  public func addNightclubSet(input : EventTypes.NightclubSetInput) : async Common.NightclubSetId {
+    let s = EventsLib.addNightclubSet(nightclubSets, nextNightclubSetId, input);
+    let id = s.id;
+    nextNightclubSetId += 1;
+    id
+  };
+
+  public func updateNightclubSet(id : Common.NightclubSetId, input : EventTypes.NightclubSetInput) : async Bool {
+    EventsLib.updateNightclubSet(nightclubSets, id, input)
+  };
+
+  public func deleteNightclubSet(id : Common.NightclubSetId) : async Bool {
+    EventsLib.deleteNightclubSet(nightclubSets, id)
   };
 };

@@ -20,12 +20,7 @@ export interface SiteEvent {
     festivalId?: bigint;
     location: string;
 }
-export interface EventCategory {
-    id: bigint;
-    name: string;
-    createdAt: bigint;
-    description: string;
-}
+export type RaveSetId = bigint;
 export interface Sponsor {
     id: bigint;
     websiteUrl: string;
@@ -43,10 +38,22 @@ export interface PackageInput {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export interface NightclubSet {
+    id: bigint;
+    startTime: string;
+    endTime: string;
+    nightclubEventId: bigint;
+    createdAt: bigint;
+    nightLabel: string;
+    stage: string;
+    artistName: string;
+    youtubeUrl?: string;
+}
 export interface NightclubEventInput {
     categoryId?: bigint;
     date: string;
     name: string;
+    ticketUrl?: string;
     description: string;
     isStandalone: boolean;
     imageUrl: string;
@@ -54,6 +61,12 @@ export interface NightclubEventInput {
     location: string;
 }
 export type LineupId = bigint;
+export interface EventCategory {
+    id: bigint;
+    name: string;
+    createdAt: bigint;
+    description: string;
+}
 export interface CategoryInput {
     name: string;
     description: string;
@@ -75,6 +88,7 @@ export interface RaveEvent {
     date: string;
     name: string;
     createdAt: bigint;
+    ticketUrl?: string;
     description: string;
     isStandalone: boolean;
     imageUrl: string;
@@ -104,8 +118,26 @@ export interface NewsInput {
     imageUrl: string;
 }
 export type SponsorId = bigint;
-export type DonationGoalId = bigint;
+export interface RaveSetInput {
+    startTime: string;
+    endTime: string;
+    nightLabel: string;
+    stage: string;
+    artistName: string;
+    youtubeUrl?: string;
+    raveEventId: bigint;
+}
 export type NewsId = bigint;
+export type DonationGoalId = bigint;
+export interface NightclubSetInput {
+    startTime: string;
+    endTime: string;
+    nightclubEventId: bigint;
+    nightLabel: string;
+    stage: string;
+    artistName: string;
+    youtubeUrl?: string;
+}
 export type NightclubEventId = bigint;
 export interface Festival {
     id: FestivalId;
@@ -137,12 +169,14 @@ export interface Package {
     festivalId?: FestivalId;
     priceGBP: bigint;
 }
+export type NightclubSetId = bigint;
 export interface NightclubEvent {
     id: bigint;
     categoryId?: bigint;
     date: string;
     name: string;
     createdAt: bigint;
+    ticketUrl?: string;
     description: string;
     isStandalone: boolean;
     imageUrl: string;
@@ -155,6 +189,17 @@ export interface LineupEntry {
     festivalId: FestivalId;
     artistName: string;
     timeSlot: string;
+}
+export interface RaveSet {
+    id: bigint;
+    startTime: string;
+    endTime: string;
+    createdAt: bigint;
+    nightLabel: string;
+    stage: string;
+    artistName: string;
+    youtubeUrl?: string;
+    raveEventId: bigint;
 }
 export interface FestivalInput {
     status: FestivalStatus;
@@ -205,6 +250,7 @@ export interface RaveEventInput {
     categoryId?: bigint;
     date: string;
     name: string;
+    ticketUrl?: string;
     description: string;
     isStandalone: boolean;
     imageUrl: string;
@@ -251,8 +297,10 @@ export interface backendInterface {
     addLineupEntry(input: LineupInput): Promise<LineupId>;
     addNews(input: NewsInput): Promise<NewsId>;
     addNightclubEvent(input: NightclubEventInput): Promise<NightclubEventId>;
+    addNightclubSet(input: NightclubSetInput): Promise<NightclubSetId>;
     addPackage(input: PackageInput): Promise<PackageId>;
     addRaveEvent(input: RaveEventInput): Promise<RaveEventId>;
+    addRaveSet(input: RaveSetInput): Promise<RaveSetId>;
     addSiteEvent(input: SiteEventInput): Promise<SiteEventId>;
     addSponsor(input: SponsorInput): Promise<SponsorId>;
     adminLogin(password: string): Promise<string | null>;
@@ -262,8 +310,10 @@ export interface backendInterface {
     deleteLineupEntry(id: LineupId): Promise<boolean>;
     deleteNews(id: NewsId): Promise<boolean>;
     deleteNightclubEvent(id: NightclubEventId): Promise<boolean>;
+    deleteNightclubSet(id: NightclubSetId): Promise<boolean>;
     deletePackage(id: PackageId): Promise<boolean>;
     deleteRaveEvent(id: RaveEventId): Promise<boolean>;
+    deleteRaveSet(id: RaveSetId): Promise<boolean>;
     deleteSiteEvent(id: SiteEventId): Promise<boolean>;
     deleteSponsor(id: SponsorId): Promise<boolean>;
     getAnalytics(): Promise<Array<Analytics>>;
@@ -278,9 +328,15 @@ export interface backendInterface {
     getNewsArticle(id: NewsId): Promise<NewsArticle | null>;
     getNightclubEvent(id: NightclubEventId): Promise<NightclubEvent | null>;
     getNightclubEvents(): Promise<Array<NightclubEvent>>;
+    getNightclubSet(id: NightclubSetId): Promise<NightclubSet | null>;
+    getNightclubSets(): Promise<Array<NightclubSet>>;
+    getNightclubSetsByEvent(nightclubEventId: bigint): Promise<Array<NightclubSet>>;
     getPackages(): Promise<Array<Package>>;
     getRaveEvent(id: RaveEventId): Promise<RaveEvent | null>;
     getRaveEvents(): Promise<Array<RaveEvent>>;
+    getRaveSet(id: RaveSetId): Promise<RaveSet | null>;
+    getRaveSets(): Promise<Array<RaveSet>>;
+    getRaveSetsByEvent(raveEventId: bigint): Promise<Array<RaveSet>>;
     getSiteEvent(id: SiteEventId): Promise<SiteEvent | null>;
     getSiteEvents(): Promise<Array<SiteEvent>>;
     getSponsor(id: SponsorId): Promise<Sponsor | null>;
@@ -295,8 +351,10 @@ export interface backendInterface {
     updateLineupEntry(id: LineupId, input: LineupInput): Promise<boolean>;
     updateNews(id: NewsId, input: NewsInput): Promise<boolean>;
     updateNightclubEvent(id: NightclubEventId, input: NightclubEventInput): Promise<boolean>;
+    updateNightclubSet(id: NightclubSetId, input: NightclubSetInput): Promise<boolean>;
     updatePackage(id: PackageId, input: PackageInput): Promise<boolean>;
     updateRaveEvent(id: RaveEventId, input: RaveEventInput): Promise<boolean>;
+    updateRaveSet(id: RaveSetId, input: RaveSetInput): Promise<boolean>;
     updateSiteEvent(id: SiteEventId, input: SiteEventInput): Promise<boolean>;
     updateSponsor(id: SponsorId, input: SponsorInput): Promise<boolean>;
 }

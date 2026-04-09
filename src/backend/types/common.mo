@@ -10,4 +10,6 @@ module {
   public type RaveEventId = Nat;
   public type NightclubEventId = Nat;
   public type SiteEventId = Nat;
+  public type RaveSetId = Nat;
+  public type NightclubSetId = Nat;
 };

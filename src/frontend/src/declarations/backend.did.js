@@ -74,6 +74,7 @@ export const NightclubEventInput = IDL.Record({
   'categoryId' : IDL.Opt(IDL.Nat),
   'date' : IDL.Text,
   'name' : IDL.Text,
+  'ticketUrl' : IDL.Opt(IDL.Text),
   'description' : IDL.Text,
   'isStandalone' : IDL.Bool,
   'imageUrl' : IDL.Text,
@@ -81,6 +82,16 @@ export const NightclubEventInput = IDL.Record({
   'location' : IDL.Text,
 });
 export const NightclubEventId = IDL.Nat;
+export const NightclubSetInput = IDL.Record({
+  'startTime' : IDL.Text,
+  'endTime' : IDL.Text,
+  'nightclubEventId' : IDL.Nat,
+  'nightLabel' : IDL.Text,
+  'stage' : IDL.Text,
+  'artistName' : IDL.Text,
+  'youtubeUrl' : IDL.Opt(IDL.Text),
+});
+export const NightclubSetId = IDL.Nat;
 export const PackageType = IDL.Variant({
   'VIP' : IDL.Null,
   'Weekend1' : IDL.Null,
@@ -103,6 +114,7 @@ export const RaveEventInput = IDL.Record({
   'categoryId' : IDL.Opt(IDL.Nat),
   'date' : IDL.Text,
   'name' : IDL.Text,
+  'ticketUrl' : IDL.Opt(IDL.Text),
   'description' : IDL.Text,
   'isStandalone' : IDL.Bool,
   'imageUrl' : IDL.Text,
@@ -111,6 +123,16 @@ export const RaveEventInput = IDL.Record({
   'eventType' : IDL.Text,
 });
 export const RaveEventId = IDL.Nat;
+export const RaveSetInput = IDL.Record({
+  'startTime' : IDL.Text,
+  'endTime' : IDL.Text,
+  'nightLabel' : IDL.Text,
+  'stage' : IDL.Text,
+  'artistName' : IDL.Text,
+  'youtubeUrl' : IDL.Opt(IDL.Text),
+  'raveEventId' : IDL.Nat,
+});
+export const RaveSetId = IDL.Nat;
 export const SiteEventInput = IDL.Record({
   'categoryId' : IDL.Opt(IDL.Nat),
   'date' : IDL.Text,
@@ -194,11 +216,23 @@ export const NightclubEvent = IDL.Record({
   'date' : IDL.Text,
   'name' : IDL.Text,
   'createdAt' : IDL.Int,
+  'ticketUrl' : IDL.Opt(IDL.Text),
   'description' : IDL.Text,
   'isStandalone' : IDL.Bool,
   'imageUrl' : IDL.Text,
   'festivalId' : IDL.Opt(IDL.Nat),
   'location' : IDL.Text,
+});
+export const NightclubSet = IDL.Record({
+  'id' : IDL.Nat,
+  'startTime' : IDL.Text,
+  'endTime' : IDL.Text,
+  'nightclubEventId' : IDL.Nat,
+  'createdAt' : IDL.Int,
+  'nightLabel' : IDL.Text,
+  'stage' : IDL.Text,
+  'artistName' : IDL.Text,
+  'youtubeUrl' : IDL.Opt(IDL.Text),
 });
 export const Package = IDL.Record({
   'id' : PackageId,
@@ -215,12 +249,24 @@ export const RaveEvent = IDL.Record({
   'date' : IDL.Text,
   'name' : IDL.Text,
   'createdAt' : IDL.Int,
+  'ticketUrl' : IDL.Opt(IDL.Text),
   'description' : IDL.Text,
   'isStandalone' : IDL.Bool,
   'imageUrl' : IDL.Text,
   'festivalId' : IDL.Opt(IDL.Nat),
   'location' : IDL.Text,
   'eventType' : IDL.Text,
+});
+export const RaveSet = IDL.Record({
+  'id' : IDL.Nat,
+  'startTime' : IDL.Text,
+  'endTime' : IDL.Text,
+  'createdAt' : IDL.Int,
+  'nightLabel' : IDL.Text,
+  'stage' : IDL.Text,
+  'artistName' : IDL.Text,
+  'youtubeUrl' : IDL.Opt(IDL.Text),
+  'raveEventId' : IDL.Nat,
 });
 export const SiteEvent = IDL.Record({
   'id' : IDL.Nat,
@@ -250,8 +296,10 @@ export const idlService = IDL.Service({
   'addLineupEntry' : IDL.Func([LineupInput], [LineupId], []),
   'addNews' : IDL.Func([NewsInput], [NewsId], []),
   'addNightclubEvent' : IDL.Func([NightclubEventInput], [NightclubEventId], []),
+  'addNightclubSet' : IDL.Func([NightclubSetInput], [NightclubSetId], []),
   'addPackage' : IDL.Func([PackageInput], [PackageId], []),
   'addRaveEvent' : IDL.Func([RaveEventInput], [RaveEventId], []),
+  'addRaveSet' : IDL.Func([RaveSetInput], [RaveSetId], []),
   'addSiteEvent' : IDL.Func([SiteEventInput], [SiteEventId], []),
   'addSponsor' : IDL.Func([SponsorInput], [SponsorId], []),
   'adminLogin' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Text)], []),
@@ -261,8 +309,10 @@ export const idlService = IDL.Service({
   'deleteLineupEntry' : IDL.Func([LineupId], [IDL.Bool], []),
   'deleteNews' : IDL.Func([NewsId], [IDL.Bool], []),
   'deleteNightclubEvent' : IDL.Func([NightclubEventId], [IDL.Bool], []),
+  'deleteNightclubSet' : IDL.Func([NightclubSetId], [IDL.Bool], []),
   'deletePackage' : IDL.Func([PackageId], [IDL.Bool], []),
   'deleteRaveEvent' : IDL.Func([RaveEventId], [IDL.Bool], []),
+  'deleteRaveSet' : IDL.Func([RaveSetId], [IDL.Bool], []),
   'deleteSiteEvent' : IDL.Func([SiteEventId], [IDL.Bool], []),
   'deleteSponsor' : IDL.Func([SponsorId], [IDL.Bool], []),
   'getAnalytics' : IDL.Func([], [IDL.Vec(Analytics)], ['query']),
@@ -289,9 +339,23 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getNightclubEvents' : IDL.Func([], [IDL.Vec(NightclubEvent)], ['query']),
+  'getNightclubSet' : IDL.Func(
+      [NightclubSetId],
+      [IDL.Opt(NightclubSet)],
+      ['query'],
+    ),
+  'getNightclubSets' : IDL.Func([], [IDL.Vec(NightclubSet)], ['query']),
+  'getNightclubSetsByEvent' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Vec(NightclubSet)],
+      ['query'],
+    ),
   'getPackages' : IDL.Func([], [IDL.Vec(Package)], ['query']),
   'getRaveEvent' : IDL.Func([RaveEventId], [IDL.Opt(RaveEvent)], ['query']),
   'getRaveEvents' : IDL.Func([], [IDL.Vec(RaveEvent)], ['query']),
+  'getRaveSet' : IDL.Func([RaveSetId], [IDL.Opt(RaveSet)], ['query']),
+  'getRaveSets' : IDL.Func([], [IDL.Vec(RaveSet)], ['query']),
+  'getRaveSetsByEvent' : IDL.Func([IDL.Nat], [IDL.Vec(RaveSet)], ['query']),
   'getSiteEvent' : IDL.Func([SiteEventId], [IDL.Opt(SiteEvent)], ['query']),
   'getSiteEvents' : IDL.Func([], [IDL.Vec(SiteEvent)], ['query']),
   'getSponsor' : IDL.Func([SponsorId], [IDL.Opt(Sponsor)], ['query']),
@@ -318,8 +382,14 @@ export const idlService = IDL.Service({
       [IDL.Bool],
       [],
     ),
+  'updateNightclubSet' : IDL.Func(
+      [NightclubSetId, NightclubSetInput],
+      [IDL.Bool],
+      [],
+    ),
   'updatePackage' : IDL.Func([PackageId, PackageInput], [IDL.Bool], []),
   'updateRaveEvent' : IDL.Func([RaveEventId, RaveEventInput], [IDL.Bool], []),
+  'updateRaveSet' : IDL.Func([RaveSetId, RaveSetInput], [IDL.Bool], []),
   'updateSiteEvent' : IDL.Func([SiteEventId, SiteEventInput], [IDL.Bool], []),
   'updateSponsor' : IDL.Func([SponsorId, SponsorInput], [IDL.Bool], []),
 });
@@ -393,6 +463,7 @@ export const idlFactory = ({ IDL }) => {
     'categoryId' : IDL.Opt(IDL.Nat),
     'date' : IDL.Text,
     'name' : IDL.Text,
+    'ticketUrl' : IDL.Opt(IDL.Text),
     'description' : IDL.Text,
     'isStandalone' : IDL.Bool,
     'imageUrl' : IDL.Text,
@@ -400,6 +471,16 @@ export const idlFactory = ({ IDL }) => {
     'location' : IDL.Text,
   });
   const NightclubEventId = IDL.Nat;
+  const NightclubSetInput = IDL.Record({
+    'startTime' : IDL.Text,
+    'endTime' : IDL.Text,
+    'nightclubEventId' : IDL.Nat,
+    'nightLabel' : IDL.Text,
+    'stage' : IDL.Text,
+    'artistName' : IDL.Text,
+    'youtubeUrl' : IDL.Opt(IDL.Text),
+  });
+  const NightclubSetId = IDL.Nat;
   const PackageType = IDL.Variant({
     'VIP' : IDL.Null,
     'Weekend1' : IDL.Null,
@@ -422,6 +503,7 @@ export const idlFactory = ({ IDL }) => {
     'categoryId' : IDL.Opt(IDL.Nat),
     'date' : IDL.Text,
     'name' : IDL.Text,
+    'ticketUrl' : IDL.Opt(IDL.Text),
     'description' : IDL.Text,
     'isStandalone' : IDL.Bool,
     'imageUrl' : IDL.Text,
@@ -430,6 +512,16 @@ export const idlFactory = ({ IDL }) => {
     'eventType' : IDL.Text,
   });
   const RaveEventId = IDL.Nat;
+  const RaveSetInput = IDL.Record({
+    'startTime' : IDL.Text,
+    'endTime' : IDL.Text,
+    'nightLabel' : IDL.Text,
+    'stage' : IDL.Text,
+    'artistName' : IDL.Text,
+    'youtubeUrl' : IDL.Opt(IDL.Text),
+    'raveEventId' : IDL.Nat,
+  });
+  const RaveSetId = IDL.Nat;
   const SiteEventInput = IDL.Record({
     'categoryId' : IDL.Opt(IDL.Nat),
     'date' : IDL.Text,
@@ -513,11 +605,23 @@ export const idlFactory = ({ IDL }) => {
     'date' : IDL.Text,
     'name' : IDL.Text,
     'createdAt' : IDL.Int,
+    'ticketUrl' : IDL.Opt(IDL.Text),
     'description' : IDL.Text,
     'isStandalone' : IDL.Bool,
     'imageUrl' : IDL.Text,
     'festivalId' : IDL.Opt(IDL.Nat),
     'location' : IDL.Text,
+  });
+  const NightclubSet = IDL.Record({
+    'id' : IDL.Nat,
+    'startTime' : IDL.Text,
+    'endTime' : IDL.Text,
+    'nightclubEventId' : IDL.Nat,
+    'createdAt' : IDL.Int,
+    'nightLabel' : IDL.Text,
+    'stage' : IDL.Text,
+    'artistName' : IDL.Text,
+    'youtubeUrl' : IDL.Opt(IDL.Text),
   });
   const Package = IDL.Record({
     'id' : PackageId,
@@ -534,12 +638,24 @@ export const idlFactory = ({ IDL }) => {
     'date' : IDL.Text,
     'name' : IDL.Text,
     'createdAt' : IDL.Int,
+    'ticketUrl' : IDL.Opt(IDL.Text),
     'description' : IDL.Text,
     'isStandalone' : IDL.Bool,
     'imageUrl' : IDL.Text,
     'festivalId' : IDL.Opt(IDL.Nat),
     'location' : IDL.Text,
     'eventType' : IDL.Text,
+  });
+  const RaveSet = IDL.Record({
+    'id' : IDL.Nat,
+    'startTime' : IDL.Text,
+    'endTime' : IDL.Text,
+    'createdAt' : IDL.Int,
+    'nightLabel' : IDL.Text,
+    'stage' : IDL.Text,
+    'artistName' : IDL.Text,
+    'youtubeUrl' : IDL.Opt(IDL.Text),
+    'raveEventId' : IDL.Nat,
   });
   const SiteEvent = IDL.Record({
     'id' : IDL.Nat,
@@ -573,8 +689,10 @@ export const idlFactory = ({ IDL }) => {
         [NightclubEventId],
         [],
       ),
+    'addNightclubSet' : IDL.Func([NightclubSetInput], [NightclubSetId], []),
     'addPackage' : IDL.Func([PackageInput], [PackageId], []),
     'addRaveEvent' : IDL.Func([RaveEventInput], [RaveEventId], []),
+    'addRaveSet' : IDL.Func([RaveSetInput], [RaveSetId], []),
     'addSiteEvent' : IDL.Func([SiteEventInput], [SiteEventId], []),
     'addSponsor' : IDL.Func([SponsorInput], [SponsorId], []),
     'adminLogin' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Text)], []),
@@ -584,8 +702,10 @@ export const idlFactory = ({ IDL }) => {
     'deleteLineupEntry' : IDL.Func([LineupId], [IDL.Bool], []),
     'deleteNews' : IDL.Func([NewsId], [IDL.Bool], []),
     'deleteNightclubEvent' : IDL.Func([NightclubEventId], [IDL.Bool], []),
+    'deleteNightclubSet' : IDL.Func([NightclubSetId], [IDL.Bool], []),
     'deletePackage' : IDL.Func([PackageId], [IDL.Bool], []),
     'deleteRaveEvent' : IDL.Func([RaveEventId], [IDL.Bool], []),
+    'deleteRaveSet' : IDL.Func([RaveSetId], [IDL.Bool], []),
     'deleteSiteEvent' : IDL.Func([SiteEventId], [IDL.Bool], []),
     'deleteSponsor' : IDL.Func([SponsorId], [IDL.Bool], []),
     'getAnalytics' : IDL.Func([], [IDL.Vec(Analytics)], ['query']),
@@ -612,9 +732,23 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getNightclubEvents' : IDL.Func([], [IDL.Vec(NightclubEvent)], ['query']),
+    'getNightclubSet' : IDL.Func(
+        [NightclubSetId],
+        [IDL.Opt(NightclubSet)],
+        ['query'],
+      ),
+    'getNightclubSets' : IDL.Func([], [IDL.Vec(NightclubSet)], ['query']),
+    'getNightclubSetsByEvent' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Vec(NightclubSet)],
+        ['query'],
+      ),
     'getPackages' : IDL.Func([], [IDL.Vec(Package)], ['query']),
     'getRaveEvent' : IDL.Func([RaveEventId], [IDL.Opt(RaveEvent)], ['query']),
     'getRaveEvents' : IDL.Func([], [IDL.Vec(RaveEvent)], ['query']),
+    'getRaveSet' : IDL.Func([RaveSetId], [IDL.Opt(RaveSet)], ['query']),
+    'getRaveSets' : IDL.Func([], [IDL.Vec(RaveSet)], ['query']),
+    'getRaveSetsByEvent' : IDL.Func([IDL.Nat], [IDL.Vec(RaveSet)], ['query']),
     'getSiteEvent' : IDL.Func([SiteEventId], [IDL.Opt(SiteEvent)], ['query']),
     'getSiteEvents' : IDL.Func([], [IDL.Vec(SiteEvent)], ['query']),
     'getSponsor' : IDL.Func([SponsorId], [IDL.Opt(Sponsor)], ['query']),
@@ -645,8 +779,14 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Bool],
         [],
       ),
+    'updateNightclubSet' : IDL.Func(
+        [NightclubSetId, NightclubSetInput],
+        [IDL.Bool],
+        [],
+      ),
     'updatePackage' : IDL.Func([PackageId, PackageInput], [IDL.Bool], []),
     'updateRaveEvent' : IDL.Func([RaveEventId, RaveEventInput], [IDL.Bool], []),
+    'updateRaveSet' : IDL.Func([RaveSetId, RaveSetInput], [IDL.Bool], []),
     'updateSiteEvent' : IDL.Func([SiteEventId, SiteEventInput], [IDL.Bool], []),
     'updateSponsor' : IDL.Func([SponsorId, SponsorInput], [IDL.Bool], []),
   });

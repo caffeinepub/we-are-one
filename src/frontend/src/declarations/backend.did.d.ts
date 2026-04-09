@@ -128,6 +128,7 @@ export interface NightclubEvent {
   'date' : string,
   'name' : string,
   'createdAt' : bigint,
+  'ticketUrl' : [] | [string],
   'description' : string,
   'isStandalone' : boolean,
   'imageUrl' : string,
@@ -139,11 +140,33 @@ export interface NightclubEventInput {
   'categoryId' : [] | [bigint],
   'date' : string,
   'name' : string,
+  'ticketUrl' : [] | [string],
   'description' : string,
   'isStandalone' : boolean,
   'imageUrl' : string,
   'festivalId' : [] | [bigint],
   'location' : string,
+}
+export interface NightclubSet {
+  'id' : bigint,
+  'startTime' : string,
+  'endTime' : string,
+  'nightclubEventId' : bigint,
+  'createdAt' : bigint,
+  'nightLabel' : string,
+  'stage' : string,
+  'artistName' : string,
+  'youtubeUrl' : [] | [string],
+}
+export type NightclubSetId = bigint;
+export interface NightclubSetInput {
+  'startTime' : string,
+  'endTime' : string,
+  'nightclubEventId' : bigint,
+  'nightLabel' : string,
+  'stage' : string,
+  'artistName' : string,
+  'youtubeUrl' : [] | [string],
 }
 export interface Package {
   'id' : PackageId,
@@ -176,6 +199,7 @@ export interface RaveEvent {
   'date' : string,
   'name' : string,
   'createdAt' : bigint,
+  'ticketUrl' : [] | [string],
   'description' : string,
   'isStandalone' : boolean,
   'imageUrl' : string,
@@ -188,12 +212,34 @@ export interface RaveEventInput {
   'categoryId' : [] | [bigint],
   'date' : string,
   'name' : string,
+  'ticketUrl' : [] | [string],
   'description' : string,
   'isStandalone' : boolean,
   'imageUrl' : string,
   'festivalId' : [] | [bigint],
   'location' : string,
   'eventType' : string,
+}
+export interface RaveSet {
+  'id' : bigint,
+  'startTime' : string,
+  'endTime' : string,
+  'createdAt' : bigint,
+  'nightLabel' : string,
+  'stage' : string,
+  'artistName' : string,
+  'youtubeUrl' : [] | [string],
+  'raveEventId' : bigint,
+}
+export type RaveSetId = bigint;
+export interface RaveSetInput {
+  'startTime' : string,
+  'endTime' : string,
+  'nightLabel' : string,
+  'stage' : string,
+  'artistName' : string,
+  'youtubeUrl' : [] | [string],
+  'raveEventId' : bigint,
 }
 export type Season = { 'Winter' : null } |
   { 'Summer' : null };
@@ -243,8 +289,10 @@ export interface _SERVICE {
   'addLineupEntry' : ActorMethod<[LineupInput], LineupId>,
   'addNews' : ActorMethod<[NewsInput], NewsId>,
   'addNightclubEvent' : ActorMethod<[NightclubEventInput], NightclubEventId>,
+  'addNightclubSet' : ActorMethod<[NightclubSetInput], NightclubSetId>,
   'addPackage' : ActorMethod<[PackageInput], PackageId>,
   'addRaveEvent' : ActorMethod<[RaveEventInput], RaveEventId>,
+  'addRaveSet' : ActorMethod<[RaveSetInput], RaveSetId>,
   'addSiteEvent' : ActorMethod<[SiteEventInput], SiteEventId>,
   'addSponsor' : ActorMethod<[SponsorInput], SponsorId>,
   'adminLogin' : ActorMethod<[string], [] | [string]>,
@@ -254,8 +302,10 @@ export interface _SERVICE {
   'deleteLineupEntry' : ActorMethod<[LineupId], boolean>,
   'deleteNews' : ActorMethod<[NewsId], boolean>,
   'deleteNightclubEvent' : ActorMethod<[NightclubEventId], boolean>,
+  'deleteNightclubSet' : ActorMethod<[NightclubSetId], boolean>,
   'deletePackage' : ActorMethod<[PackageId], boolean>,
   'deleteRaveEvent' : ActorMethod<[RaveEventId], boolean>,
+  'deleteRaveSet' : ActorMethod<[RaveSetId], boolean>,
   'deleteSiteEvent' : ActorMethod<[SiteEventId], boolean>,
   'deleteSponsor' : ActorMethod<[SponsorId], boolean>,
   'getAnalytics' : ActorMethod<[], Array<Analytics>>,
@@ -270,9 +320,15 @@ export interface _SERVICE {
   'getNewsArticle' : ActorMethod<[NewsId], [] | [NewsArticle]>,
   'getNightclubEvent' : ActorMethod<[NightclubEventId], [] | [NightclubEvent]>,
   'getNightclubEvents' : ActorMethod<[], Array<NightclubEvent>>,
+  'getNightclubSet' : ActorMethod<[NightclubSetId], [] | [NightclubSet]>,
+  'getNightclubSets' : ActorMethod<[], Array<NightclubSet>>,
+  'getNightclubSetsByEvent' : ActorMethod<[bigint], Array<NightclubSet>>,
   'getPackages' : ActorMethod<[], Array<Package>>,
   'getRaveEvent' : ActorMethod<[RaveEventId], [] | [RaveEvent]>,
   'getRaveEvents' : ActorMethod<[], Array<RaveEvent>>,
+  'getRaveSet' : ActorMethod<[RaveSetId], [] | [RaveSet]>,
+  'getRaveSets' : ActorMethod<[], Array<RaveSet>>,
+  'getRaveSetsByEvent' : ActorMethod<[bigint], Array<RaveSet>>,
   'getSiteEvent' : ActorMethod<[SiteEventId], [] | [SiteEvent]>,
   'getSiteEvents' : ActorMethod<[], Array<SiteEvent>>,
   'getSponsor' : ActorMethod<[SponsorId], [] | [Sponsor]>,
@@ -293,8 +349,13 @@ export interface _SERVICE {
     [NightclubEventId, NightclubEventInput],
     boolean
   >,
+  'updateNightclubSet' : ActorMethod<
+    [NightclubSetId, NightclubSetInput],
+    boolean
+  >,
   'updatePackage' : ActorMethod<[PackageId, PackageInput], boolean>,
   'updateRaveEvent' : ActorMethod<[RaveEventId, RaveEventInput], boolean>,
+  'updateRaveSet' : ActorMethod<[RaveSetId, RaveSetInput], boolean>,
   'updateSiteEvent' : ActorMethod<[SiteEventId, SiteEventInput], boolean>,
   'updateSponsor' : ActorMethod<[SponsorId, SponsorInput], boolean>,
 }

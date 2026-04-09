@@ -22,6 +22,7 @@ module {
     categoryId : ?Nat;
     eventType : Text;
     isStandalone : Bool;
+    ticketUrl : ?Text;
     createdAt : Int;
   };
 
@@ -35,6 +36,7 @@ module {
     categoryId : ?Nat;
     eventType : Text;
     isStandalone : Bool;
+    ticketUrl : ?Text;
   };
 
   public type NightclubEvent = {
@@ -47,6 +49,7 @@ module {
     festivalId : ?Nat;
     categoryId : ?Nat;
     isStandalone : Bool;
+    ticketUrl : ?Text;
     createdAt : Int;
   };
 
@@ -59,6 +62,7 @@ module {
     festivalId : ?Nat;
     categoryId : ?Nat;
     isStandalone : Bool;
+    ticketUrl : ?Text;
   };
 
   public type SiteEvent = {
@@ -81,5 +85,49 @@ module {
     imageUrl : Text;
     categoryId : ?Nat;
     festivalId : ?Nat;
+  };
+
+  public type RaveSet = {
+    id : Nat;
+    raveEventId : Nat;
+    nightLabel : Text;
+    artistName : Text;
+    stage : Text;
+    startTime : Text;
+    endTime : Text;
+    youtubeUrl : ?Text;
+    createdAt : Int;
+  };
+
+  public type RaveSetInput = {
+    raveEventId : Nat;
+    nightLabel : Text;
+    artistName : Text;
+    stage : Text;
+    startTime : Text;
+    endTime : Text;
+    youtubeUrl : ?Text;
+  };
+
+  public type NightclubSet = {
+    id : Nat;
+    nightclubEventId : Nat;
+    nightLabel : Text;
+    artistName : Text;
+    stage : Text;
+    startTime : Text;
+    endTime : Text;
+    youtubeUrl : ?Text;
+    createdAt : Int;
+  };
+
+  public type NightclubSetInput = {
+    nightclubEventId : Nat;
+    nightLabel : Text;
+    artistName : Text;
+    stage : Text;
+    startTime : Text;
+    endTime : Text;
+    youtubeUrl : ?Text;
   };
 };

@@ -46,6 +46,29 @@ type Season =
    Summer;
    Winter;
  };
+type RaveSetInput = 
+ record {
+   artistName: text;
+   endTime: text;
+   nightLabel: text;
+   raveEventId: nat;
+   stage: text;
+   startTime: text;
+   youtubeUrl: opt text;
+ };
+type RaveSetId = nat;
+type RaveSet = 
+ record {
+   artistName: text;
+   createdAt: int;
+   endTime: text;
+   id: nat;
+   nightLabel: text;
+   raveEventId: nat;
+   stage: text;
+   startTime: text;
+   youtubeUrl: opt text;
+ };
 type RaveEventInput = 
  record {
    categoryId: opt nat;
@@ -57,6 +80,7 @@ type RaveEventInput =
    isStandalone: bool;
    location: text;
    name: text;
+   ticketUrl: opt text;
  };
 type RaveEventId = nat;
 type RaveEvent = 
@@ -72,6 +96,7 @@ type RaveEvent =
    isStandalone: bool;
    location: text;
    name: text;
+   ticketUrl: opt text;
  };
 type PackageType = 
  variant {
@@ -103,6 +128,29 @@ type Package =
    packageType: PackageType;
    priceGBP: nat;
  };
+type NightclubSetInput = 
+ record {
+   artistName: text;
+   endTime: text;
+   nightLabel: text;
+   nightclubEventId: nat;
+   stage: text;
+   startTime: text;
+   youtubeUrl: opt text;
+ };
+type NightclubSetId = nat;
+type NightclubSet = 
+ record {
+   artistName: text;
+   createdAt: int;
+   endTime: text;
+   id: nat;
+   nightLabel: text;
+   nightclubEventId: nat;
+   stage: text;
+   startTime: text;
+   youtubeUrl: opt text;
+ };
 type NightclubEventInput = 
  record {
    categoryId: opt nat;
@@ -113,6 +161,7 @@ type NightclubEventInput =
    isStandalone: bool;
    location: text;
    name: text;
+   ticketUrl: opt text;
  };
 type NightclubEventId = nat;
 type NightclubEvent = 
@@ -127,6 +176,7 @@ type NightclubEvent =
    isStandalone: bool;
    location: text;
    name: text;
+   ticketUrl: opt text;
  };
 type NewsInput = 
  record {
@@ -267,8 +317,10 @@ service : {
   addLineupEntry: (input: LineupInput) -> (LineupId);
   addNews: (input: NewsInput) -> (NewsId);
   addNightclubEvent: (input: NightclubEventInput) -> (NightclubEventId);
+  addNightclubSet: (input: NightclubSetInput) -> (NightclubSetId);
   addPackage: (input: PackageInput) -> (PackageId);
   addRaveEvent: (input: RaveEventInput) -> (RaveEventId);
+  addRaveSet: (input: RaveSetInput) -> (RaveSetId);
   addSiteEvent: (input: SiteEventInput) -> (SiteEventId);
   addSponsor: (input: SponsorInput) -> (SponsorId);
   adminLogin: (password: text) -> (opt text);
@@ -278,8 +330,10 @@ service : {
   deleteLineupEntry: (id: LineupId) -> (bool);
   deleteNews: (id: NewsId) -> (bool);
   deleteNightclubEvent: (id: NightclubEventId) -> (bool);
+  deleteNightclubSet: (id: NightclubSetId) -> (bool);
   deletePackage: (id: PackageId) -> (bool);
   deleteRaveEvent: (id: RaveEventId) -> (bool);
+  deleteRaveSet: (id: RaveSetId) -> (bool);
   deleteSiteEvent: (id: SiteEventId) -> (bool);
   deleteSponsor: (id: SponsorId) -> (bool);
   getAnalytics: () -> (vec Analytics) query;
@@ -294,9 +348,16 @@ service : {
   getNewsArticle: (id: NewsId) -> (opt NewsArticle) query;
   getNightclubEvent: (id: NightclubEventId) -> (opt NightclubEvent) query;
   getNightclubEvents: () -> (vec NightclubEvent) query;
+  getNightclubSet: (id: NightclubSetId) -> (opt NightclubSet) query;
+  getNightclubSets: () -> (vec NightclubSet) query;
+  getNightclubSetsByEvent: (nightclubEventId: nat) ->
+   (vec NightclubSet) query;
   getPackages: () -> (vec Package) query;
   getRaveEvent: (id: RaveEventId) -> (opt RaveEvent) query;
   getRaveEvents: () -> (vec RaveEvent) query;
+  getRaveSet: (id: RaveSetId) -> (opt RaveSet) query;
+  getRaveSets: () -> (vec RaveSet) query;
+  getRaveSetsByEvent: (raveEventId: nat) -> (vec RaveSet) query;
   getSiteEvent: (id: SiteEventId) -> (opt SiteEvent) query;
   getSiteEvents: () -> (vec SiteEvent) query;
   getSponsor: (id: SponsorId) -> (opt Sponsor) query;
@@ -313,8 +374,11 @@ service : {
   updateNews: (id: NewsId, input: NewsInput) -> (bool);
   updateNightclubEvent: (id: NightclubEventId, input: NightclubEventInput) ->
    (bool);
+  updateNightclubSet: (id: NightclubSetId, input: NightclubSetInput) ->
+   (bool);
   updatePackage: (id: PackageId, input: PackageInput) -> (bool);
   updateRaveEvent: (id: RaveEventId, input: RaveEventInput) -> (bool);
+  updateRaveSet: (id: RaveSetId, input: RaveSetInput) -> (bool);
   updateSiteEvent: (id: SiteEventId, input: SiteEventInput) -> (bool);
   updateSponsor: (id: SponsorId, input: SponsorInput) -> (bool);
 }
