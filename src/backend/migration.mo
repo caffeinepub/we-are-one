@@ -3,20 +3,28 @@ import EventTypes "types/events";
 import NewsTypes "types/news";
 import DonationTypes "types/donations";
 import SponsorTypes "types/sponsors";
+import Common "types/common";
 import List "mo:core/List";
 import Set "mo:core/Set";
 
 module {
   // ── Old actor shape matches the currently deployed state ─────────────────────
-  // The deployed canister has duplicate festivals (72 instead of 24) because
-  // seeding ran unconditionally on every deploy. The migration deduplicates
-  // festivals by name, keeping only the first occurrence of each.
+  // LineupEntry in the deployed canister has no day/weekend fields.
+  // Migration maps old entries to new shape with day = null and weekend = null.
+
+  type OldLineupEntry = {
+    id : Common.LineupId;
+    festivalId : Common.FestivalId;
+    artistName : Text;
+    stage : Text;
+    timeSlot : Text;
+  };
 
   type OldActor = {
     festivals : List.List<FestivalTypes.Festival>;
     packages : List.List<FestivalTypes.Package>;
     newsArticles : List.List<NewsTypes.NewsArticle>;
-    lineupEntries : List.List<NewsTypes.LineupEntry>;
+    lineupEntries : List.List<OldLineupEntry>;
     donationGoals : List.List<DonationTypes.DonationGoal>;
     sponsors : List.List<SponsorTypes.Sponsor>;
     categories : List.List<EventTypes.EventCategory>;
@@ -55,10 +63,24 @@ module {
     deduped
   };
 
+  // Migrate lineup entries from old shape (no day/weekend) to new shape.
+  func migrateLineupEntries(src : List.List<OldLineupEntry>) : List.List<NewsTypes.LineupEntry> {
+    let result = List.empty<NewsTypes.LineupEntry>();
+    for (e in src.values()) {
+      result.add({
+        e with
+        day = null : ?Text;
+        weekend = null : ?Text;
+      });
+    };
+    result
+  };
+
   public func run(old : OldActor) : NewActor {
     {
       old with
       festivals = dedupFestivalsByName(old.festivals);
+      lineupEntries = migrateLineupEntries(old.lineupEntries);
     }
   };
 };

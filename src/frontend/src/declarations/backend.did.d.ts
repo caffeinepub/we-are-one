@@ -95,6 +95,8 @@ export type FestivalStatus = { 'Active' : null } |
   { 'ComingSoon' : null };
 export interface LineupEntry {
   'id' : LineupId,
+  'day' : [] | [string],
+  'weekend' : [] | [string],
   'stage' : string,
   'festivalId' : FestivalId,
   'artistName' : string,
@@ -102,6 +104,8 @@ export interface LineupEntry {
 }
 export type LineupId = bigint;
 export interface LineupInput {
+  'day' : [] | [string],
+  'weekend' : [] | [string],
   'stage' : string,
   'festivalId' : FestivalId,
   'artistName' : string,

@@ -23,6 +23,8 @@ module {
     artistName : Text;
     stage : Text;
     timeSlot : Text;
+    day : ?Text;
+    weekend : ?Text;
   };
 
   public type LineupInput = {
@@ -30,5 +32,7 @@ module {
     artistName : Text;
     stage : Text;
     timeSlot : Text;
+    day : ?Text;
+    weekend : ?Text;
   };
 };

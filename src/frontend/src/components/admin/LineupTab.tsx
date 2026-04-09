@@ -25,6 +25,9 @@ const S = {
   } as React.CSSProperties,
 };
 
+const DAY_OPTIONS = ["", "Friday", "Saturday", "Sunday", "Monday"] as const;
+const WEEKEND_OPTIONS = ["", "Weekend 1", "Weekend 2", "Both"] as const;
+
 // ── Modal Form ────────────────────────────────────────────────────────────────
 
 interface LineupFormProps {
@@ -45,15 +48,20 @@ function LineupForm({
   const [artistName, setArtistName] = useState(entry?.artistName ?? "");
   const [stage, setStage] = useState(entry?.stage ?? "");
   const [timeSlot, setTimeSlot] = useState(entry?.timeSlot ?? "");
+  const [day, setDay] = useState(entry?.day ?? "");
+  const [weekend, setWeekend] = useState(entry?.weekend ?? "");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSave({
+    const input: LineupInput = {
       festivalId,
       artistName: artistName.trim(),
       stage: stage.trim(),
       timeSlot: timeSlot.trim(),
-    });
+      day: day || undefined,
+      weekend: weekend || undefined,
+    };
+    onSave(input);
   }
 
   const inputStyle: React.CSSProperties = {
@@ -75,6 +83,10 @@ function LineupForm({
     letterSpacing: "0.08em",
     color: "oklch(0.5 0 0)",
   };
+  const selectStyle: React.CSSProperties = {
+    ...inputStyle,
+    cursor: "pointer",
+  };
 
   return (
     <div
@@ -82,7 +94,7 @@ function LineupForm({
       style={{ background: "oklch(0 0 0 / 0.7)", backdropFilter: "blur(6px)" }}
     >
       <div
-        className="w-full max-w-md rounded-2xl p-6"
+        className="w-full max-w-lg rounded-2xl p-6"
         style={{
           background: "oklch(0.1 0.02 260)",
           border: "2px solid oklch(0.65 0.2 180 / 0.3)",
@@ -134,7 +146,7 @@ function LineupForm({
               required
               value={stage}
               onChange={(e) => setStage(e.target.value)}
-              placeholder="e.g. Main Stage, Mainstage, Freedom Stage"
+              placeholder="e.g. Main Stage, Freedom Stage"
               style={inputStyle}
               data-ocid="lineup-form-stage"
             />
@@ -154,6 +166,55 @@ function LineupForm({
               style={inputStyle}
               data-ocid="lineup-form-timeslot"
             />
+          </div>
+
+          {/* Day + Weekend row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="lineup-day" style={labelStyle}>
+                Day
+              </label>
+              <select
+                id="lineup-day"
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+                style={selectStyle}
+                data-ocid="lineup-form-day"
+              >
+                {DAY_OPTIONS.map((d) => (
+                  <option
+                    key={d}
+                    value={d}
+                    style={{ background: "oklch(0.1 0.02 260)" }}
+                  >
+                    {d === "" ? "— Any Day —" : d}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="lineup-weekend" style={labelStyle}>
+                Weekend
+              </label>
+              <select
+                id="lineup-weekend"
+                value={weekend}
+                onChange={(e) => setWeekend(e.target.value)}
+                style={selectStyle}
+                data-ocid="lineup-form-weekend"
+              >
+                {WEEKEND_OPTIONS.map((w) => (
+                  <option
+                    key={w}
+                    value={w}
+                    style={{ background: "oklch(0.1 0.02 260)" }}
+                  >
+                    {w === "" ? "— Any Weekend —" : w}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="flex gap-3 pt-2">
@@ -197,6 +258,18 @@ type ModalState =
   | { type: "add" }
   | { type: "edit"; entry: LineupEntry };
 
+function shortDay(day?: string) {
+  if (!day) return "-";
+  return day.slice(0, 3);
+}
+function shortWeekend(weekend?: string) {
+  if (!weekend) return "-";
+  if (weekend === "Weekend 1") return "W1";
+  if (weekend === "Weekend 2") return "W2";
+  if (weekend === "Both") return "Both";
+  return weekend;
+}
+
 export default function LineupTab() {
   const { data: festivals = [] } = useFestivals();
   const [selectedFestivalId, setSelectedFestivalId] = useState<bigint | null>(
@@ -214,10 +287,29 @@ export default function LineupTab() {
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
 
-  const sorted = [...lineup].sort(
-    (a, b) =>
-      a.stage.localeCompare(b.stage) || a.timeSlot.localeCompare(b.timeSlot),
-  );
+  const weekendOrder: Record<string, number> = {
+    "Weekend 1": 0,
+    "Weekend 2": 1,
+    Both: 2,
+  };
+  const dayOrder: Record<string, number> = {
+    Friday: 0,
+    Saturday: 1,
+    Sunday: 2,
+    Monday: 3,
+  };
+
+  const sorted = [...lineup].sort((a, b) => {
+    const wA = weekendOrder[a.weekend ?? ""] ?? 99;
+    const wB = weekendOrder[b.weekend ?? ""] ?? 99;
+    if (wA !== wB) return wA - wB;
+    const dA = dayOrder[a.day ?? ""] ?? 99;
+    const dB = dayOrder[b.day ?? ""] ?? 99;
+    if (dA !== dB) return dA - dB;
+    return (
+      a.stage.localeCompare(b.stage) || a.timeSlot.localeCompare(b.timeSlot)
+    );
+  });
 
   function handleSave(input: LineupInput) {
     if (modal.type === "add") {
@@ -290,7 +382,14 @@ export default function LineupTab() {
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: "1px solid oklch(0.2 0.01 260)" }}>
-              {["Artist", "Stage", "Time Slot", "Actions"].map((h) => (
+              {[
+                "Artist",
+                "Stage",
+                "Time Slot",
+                "Day",
+                "Weekend",
+                "Actions",
+              ].map((h) => (
                 <th
                   key={h}
                   className="px-4 py-3 text-left text-xs font-display uppercase tracking-wider"
@@ -322,6 +421,42 @@ export default function LineupTab() {
                   style={{ color: "oklch(0.65 0.18 70)" }}
                 >
                   {entry.timeSlot}
+                </td>
+                {/* Day badge */}
+                <td className="px-4 py-3 text-xs font-display font-bold">
+                  {entry.day ? (
+                    <span
+                      style={{
+                        color: "oklch(0.65 0.2 180)",
+                        background: "oklch(0.65 0.2 180 / 0.08)",
+                        border: "1px solid oklch(0.65 0.2 180 / 0.3)",
+                        borderRadius: "0.5rem",
+                        padding: "0.15rem 0.5rem",
+                      }}
+                    >
+                      {shortDay(entry.day)}
+                    </span>
+                  ) : (
+                    <span style={S.tdMuted}>-</span>
+                  )}
+                </td>
+                {/* Weekend badge */}
+                <td className="px-4 py-3 text-xs font-display font-bold">
+                  {entry.weekend ? (
+                    <span
+                      style={{
+                        color: "oklch(0.55 0.23 310)",
+                        background: "oklch(0.55 0.23 310 / 0.08)",
+                        border: "1px solid oklch(0.55 0.23 310 / 0.3)",
+                        borderRadius: "0.5rem",
+                        padding: "0.15rem 0.5rem",
+                      }}
+                    >
+                      {shortWeekend(entry.weekend)}
+                    </span>
+                  ) : (
+                    <span style={S.tdMuted}>-</span>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">

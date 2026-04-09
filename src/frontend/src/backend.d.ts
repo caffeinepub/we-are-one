@@ -106,6 +106,8 @@ export type EventCategoryId = bigint;
 export type PackageId = bigint;
 export type RaveEventId = bigint;
 export interface LineupInput {
+    day?: string;
+    weekend?: string;
     stage: string;
     festivalId: FestivalId;
     artistName: string;
@@ -185,6 +187,8 @@ export interface NightclubEvent {
 }
 export interface LineupEntry {
     id: LineupId;
+    day?: string;
+    weekend?: string;
     stage: string;
     festivalId: FestivalId;
     artistName: string;

@@ -198,18 +198,22 @@ type NewsArticle =
 type LineupInput = 
  record {
    artistName: text;
+   day: opt text;
    festivalId: FestivalId;
    stage: text;
    timeSlot: text;
+   weekend: opt text;
  };
 type LineupId = nat;
 type LineupEntry = 
  record {
    artistName: text;
+   day: opt text;
    festivalId: FestivalId;
    id: LineupId;
    stage: text;
    timeSlot: text;
+   weekend: opt text;
  };
 type FestivalStatus = 
  variant {

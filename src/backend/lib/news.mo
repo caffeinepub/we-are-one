@@ -85,6 +85,8 @@ module {
       artistName = input.artistName;
       stage = input.stage;
       timeSlot = input.timeSlot;
+      day = input.day;
+      weekend = input.weekend;
     };
     lineup.add(entry);
     entry
@@ -106,6 +108,8 @@ module {
           artistName = input.artistName;
           stage = input.stage;
           timeSlot = input.timeSlot;
+          day = input.day;
+          weekend = input.weekend;
         });
         true
       };

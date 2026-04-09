@@ -48,10 +48,12 @@ type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
 type LineupEntry__807292321 =
   {
     artistName : Text;
+    day : ?Text;
     festivalId : FestivalId__1051950078;
     id : LineupId__691289596;
     stage : Text;
-    timeSlot : Text
+    timeSlot : Text;
+    weekend : ?Text
   };
 type LineupId__691289596 = Nat;
 type List__415060402<T> = List__790383201<T>;
@@ -101,6 +103,14 @@ type NightclubSet__953722509 =
   };
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldLineupEntry__26019845 =
+  {
+    artistName : Text;
+    festivalId : FestivalId__1051950078;
+    id : LineupId__691289596;
+    stage : Text;
+    timeSlot : Text
+  };
 type PackageId__581373409 = Nat;
 type PackageType__306656939 =
   {
@@ -177,7 +187,7 @@ actor ({
   in categories : List__415060402<EventCategory__543662769>;
   in donationGoals : List__415060402<DonationGoal__9242658>;
   in festivals : List__415060402<Festival__978544918>;
-  in lineupEntries : List__415060402<LineupEntry__807292321>;
+  in lineupEntries : List__415060402<OldLineupEntry__26019845>;
   in newsArticles : List__415060402<NewsArticle__407119424>;
   stable var nextCategoryId : Nat;
   stable var nextDonationGoalId : Nat;

@@ -56,6 +56,8 @@ export const FestivalInput = IDL.Record({
 });
 export const FestivalId = IDL.Nat;
 export const LineupInput = IDL.Record({
+  'day' : IDL.Opt(IDL.Text),
+  'weekend' : IDL.Opt(IDL.Text),
   'stage' : IDL.Text,
   'festivalId' : FestivalId,
   'artistName' : IDL.Text,
@@ -197,6 +199,8 @@ export const Festival = IDL.Record({
 });
 export const LineupEntry = IDL.Record({
   'id' : LineupId,
+  'day' : IDL.Opt(IDL.Text),
+  'weekend' : IDL.Opt(IDL.Text),
   'stage' : IDL.Text,
   'festivalId' : FestivalId,
   'artistName' : IDL.Text,
@@ -445,6 +449,8 @@ export const idlFactory = ({ IDL }) => {
   });
   const FestivalId = IDL.Nat;
   const LineupInput = IDL.Record({
+    'day' : IDL.Opt(IDL.Text),
+    'weekend' : IDL.Opt(IDL.Text),
     'stage' : IDL.Text,
     'festivalId' : FestivalId,
     'artistName' : IDL.Text,
@@ -586,6 +592,8 @@ export const idlFactory = ({ IDL }) => {
   });
   const LineupEntry = IDL.Record({
     'id' : LineupId,
+    'day' : IDL.Opt(IDL.Text),
+    'weekend' : IDL.Opt(IDL.Text),
     'stage' : IDL.Text,
     'festivalId' : FestivalId,
     'artistName' : IDL.Text,
