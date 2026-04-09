@@ -1,11 +1,20 @@
-import { Calendar, MapPin, Music2, Tag, Zap } from "lucide-react";
+import {
+  Calendar,
+  ExternalLink,
+  Gem,
+  MapPin,
+  Music2,
+  Tag,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
 import {
   useCategories,
   useFestivals,
   useRaveEvents,
+  useSponsors,
 } from "../hooks/useBackend";
-import type { RaveEvent } from "../types/festival";
+import type { RaveEvent, Sponsor } from "../types/festival";
 
 // ── Laser beam decoration ────────────────────────────────────────────────────
 
@@ -80,6 +89,119 @@ function PulseRings() {
   );
 }
 
+// ── Headline Sponsor Strip ────────────────────────────────────────────────────
+
+function HeadlineSponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
+  if (!sponsors.length) return null;
+  return (
+    <section
+      className="relative overflow-hidden py-6"
+      style={{
+        background:
+          "linear-gradient(90deg, oklch(0.09 0.04 200 / 0.6), oklch(0.07 0.03 220 / 0.8), oklch(0.09 0.04 200 / 0.6))",
+        borderTop: "1px solid oklch(0.92 0.04 200 / 0.15)",
+        borderBottom: "1px solid oklch(0.92 0.04 200 / 0.15)",
+      }}
+      data-ocid="rave-headline-sponsors"
+    >
+      {/* Shimmer line */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 80% at 50% 50%, oklch(0.92 0.04 200 / 0.04) 0%, transparent 70%)",
+        }}
+      />
+      <div className="container relative mx-auto max-w-6xl px-4">
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <div className="flex items-center gap-2 shrink-0">
+            <Gem
+              size={13}
+              style={{
+                color: "oklch(0.92 0.04 200)",
+                filter: "drop-shadow(0 0 6px oklch(0.92 0.04 200 / 0.8))",
+              }}
+            />
+            <span
+              className="text-xs font-display font-black uppercase tracking-[0.25em] whitespace-nowrap"
+              style={{
+                color: "oklch(0.92 0.04 200)",
+                textShadow: "0 0 10px oklch(0.92 0.04 200 / 0.7)",
+              }}
+            >
+              Headline Sponsor
+            </span>
+            <Gem
+              size={13}
+              style={{
+                color: "oklch(0.92 0.04 200)",
+                filter: "drop-shadow(0 0 6px oklch(0.92 0.04 200 / 0.8))",
+              }}
+            />
+          </div>
+          <div
+            className="hidden sm:block h-px flex-shrink-0 w-6"
+            style={{ background: "oklch(0.92 0.04 200 / 0.3)" }}
+          />
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {sponsors.map((s) => (
+              <a
+                key={s.id.toString()}
+                href={s.websiteUrl || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 rounded-xl px-5 py-2.5 transition-smooth hover:scale-105"
+                style={{
+                  background: "oklch(0.12 0.04 200 / 0.5)",
+                  border: "1px solid oklch(0.92 0.04 200 / 0.25)",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    "oklch(0.92 0.04 200 / 0.6)";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 0 20px oklch(0.92 0.04 200 / 0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    "oklch(0.92 0.04 200 / 0.25)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                }}
+                data-ocid={`rave-headline-sponsor-${s.id.toString()}`}
+              >
+                {s.logoUrl ? (
+                  <img
+                    src={s.logoUrl}
+                    alt={s.name}
+                    className="h-8 w-16 object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <span
+                    className="font-display font-black uppercase tracking-wider text-sm"
+                    style={{ color: "oklch(0.92 0.04 200)" }}
+                  >
+                    {s.name}
+                  </span>
+                )}
+                {s.websiteUrl && (
+                  <ExternalLink
+                    size={11}
+                    className="opacity-0 group-hover:opacity-100 transition-smooth"
+                    style={{ color: "oklch(0.92 0.04 200)" }}
+                  />
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Event Card ───────────────────────────────────────────────────────────────
 
 interface RaveEventCardProps {
@@ -115,7 +237,6 @@ function RaveEventCard({
       }}
       data-ocid={`rave-card-${event.id.toString()}`}
     >
-      {/* Image */}
       <div
         className="relative h-52 w-full shrink-0 overflow-hidden"
         style={{ background: "oklch(0.15 0.025 260)" }}
@@ -134,7 +255,6 @@ function RaveEventCard({
             <Zap size={48} style={{ color: "oklch(0.65 0.2 180 / 0.2)" }} />
           </div>
         )}
-        {/* Gradient overlay */}
         <div
           className="absolute inset-0"
           style={{
@@ -142,7 +262,6 @@ function RaveEventCard({
               "linear-gradient(to top, oklch(0.11 0.025 260) 0%, transparent 50%)",
           }}
         />
-        {/* Event type badge */}
         {event.eventType && (
           <span
             className="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-display font-bold uppercase tracking-wider"
@@ -171,7 +290,6 @@ function RaveEventCard({
         )}
       </div>
 
-      {/* Body */}
       <div className="flex flex-1 flex-col gap-3 p-5">
         <h3
           className="font-display font-bold uppercase tracking-wide leading-tight"
@@ -274,7 +392,12 @@ export default function RavePage() {
   const { data: events = [], isLoading } = useRaveEvents();
   const { data: festivals = [] } = useFestivals();
   const { data: categories = [] } = useCategories();
+  const { data: allSponsors = [] } = useSponsors();
   const [filterFestival, setFilterFestival] = useState<string>("all");
+
+  const headlineSponsors = allSponsors.filter(
+    (s: Sponsor) => s.tier.toLowerCase() === "headline",
+  );
 
   const festivalsWithRave = festivals.filter((f) =>
     events.some(
@@ -363,7 +486,6 @@ export default function RavePage() {
             ignites.
           </p>
 
-          {/* Stats */}
           {!isLoading && events.length > 0 && (
             <div className="mx-auto mt-8 flex items-center justify-center gap-8">
               {[
@@ -396,6 +518,9 @@ export default function RavePage() {
           )}
         </div>
       </section>
+
+      {/* Headline Sponsor Strip */}
+      <HeadlineSponsorStrip sponsors={headlineSponsors} />
 
       {/* Filter bar */}
       {!isLoading && events.length > 0 && (

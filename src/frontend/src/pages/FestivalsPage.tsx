@@ -5,6 +5,7 @@ import {
   ChevronDown,
   ChevronUp,
   DollarSign,
+  Gem,
   Headphones,
   MapPin,
   Music,
@@ -18,10 +19,11 @@ import { useMemo, useState } from "react";
 import ComingSoonModal from "../components/ComingSoonModal";
 import {
   useFestivals,
+  useSponsors,
   useSponsorsByFestival,
   useTicketUrls,
 } from "../hooks/useBackend";
-import type { Festival } from "../types/festival";
+import type { Festival, Sponsor } from "../types/festival";
 import {
   EventType,
   FestivalStatus,
@@ -100,9 +102,26 @@ function FestivalSponsors({
   festivalId,
   accentColor,
 }: { festivalId: bigint; accentColor: string }) {
-  const { data: sponsors = [] } = useSponsorsByFestival(festivalId);
-  if (!sponsors.length) return null;
+  const { data: festivalSponsors = [] } = useSponsorsByFestival(festivalId);
+  const { data: allSponsors = [] } = useSponsors();
+
+  // Headline sponsors appear on every festival
+  const headlineSponsors = allSponsors.filter(
+    (s: Sponsor) => s.tier.toLowerCase() === "headline",
+  );
+
+  // Merge: headline first, then festival-specific (deduplicated)
+  const combined = [
+    ...headlineSponsors,
+    ...festivalSponsors.filter(
+      (s) => !headlineSponsors.some((h) => h.id === s.id),
+    ),
+  ];
+
+  if (!combined.length) return null;
+
   const accentAlpha = (a: number) => accentColor.replace(")", ` / ${a})`);
+
   return (
     <div
       className="rounded-xl p-4"
@@ -118,36 +137,72 @@ function FestivalSponsors({
         Festival Sponsors
       </p>
       <div className="flex flex-wrap gap-3">
-        {sponsors.map((s) =>
-          s.logoUrl ? (
-            <a
-              key={s.id.toString()}
-              href={s.websiteUrl || undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={s.name}
-              className="flex h-9 w-14 items-center justify-center overflow-hidden rounded-lg transition-smooth hover:scale-105"
-              style={{
-                background: "oklch(0.18 0.02 260)",
-                textDecoration: "none",
-              }}
-            >
+        {headlineSponsors.map((s) => (
+          <a
+            key={s.id.toString()}
+            href={s.websiteUrl || undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={s.name}
+            className="flex items-center gap-2 rounded-lg px-3 py-1.5 transition-smooth hover:scale-105"
+            style={{
+              background: "oklch(0.18 0.04 200 / 0.5)",
+              border: "1px solid oklch(0.92 0.04 200 / 0.3)",
+              textDecoration: "none",
+            }}
+          >
+            {s.logoUrl ? (
               <img
                 src={s.logoUrl}
                 alt={s.name}
-                className="h-full w-full object-contain p-1"
+                className="h-6 w-10 object-contain"
               />
-            </a>
-          ) : (
-            <span
-              key={s.id.toString()}
-              className="flex h-9 items-center rounded-lg px-3 text-xs font-display font-bold uppercase tracking-wider"
-              style={{ background: "oklch(0.18 0.02 260)", color: accentColor }}
-            >
-              {s.name}
-            </span>
-          ),
-        )}
+            ) : (
+              <span
+                className="text-xs font-display font-bold uppercase tracking-wider"
+                style={{ color: "oklch(0.92 0.04 200)" }}
+              >
+                {s.name}
+              </span>
+            )}
+            <Gem size={10} style={{ color: "oklch(0.92 0.04 200)" }} />
+          </a>
+        ))}
+        {festivalSponsors
+          .filter((s) => !headlineSponsors.some((h) => h.id === s.id))
+          .map((s) =>
+            s.logoUrl ? (
+              <a
+                key={s.id.toString()}
+                href={s.websiteUrl || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={s.name}
+                className="flex h-9 w-14 items-center justify-center overflow-hidden rounded-lg transition-smooth hover:scale-105"
+                style={{
+                  background: "oklch(0.18 0.02 260)",
+                  textDecoration: "none",
+                }}
+              >
+                <img
+                  src={s.logoUrl}
+                  alt={s.name}
+                  className="h-full w-full object-contain p-1"
+                />
+              </a>
+            ) : (
+              <span
+                key={s.id.toString()}
+                className="flex h-9 items-center rounded-lg px-3 text-xs font-display font-bold uppercase tracking-wider"
+                style={{
+                  background: "oklch(0.18 0.02 260)",
+                  color: accentColor,
+                }}
+              >
+                {s.name}
+              </span>
+            ),
+          )}
       </div>
     </div>
   );
@@ -471,7 +526,7 @@ function GridCard({
       }}
       data-ocid="festival-grid-card"
     >
-      {/* Banner — clickable toggle area */}
+      {/* Banner */}
       <button
         type="button"
         onClick={onToggle}
@@ -513,7 +568,6 @@ function GridCard({
           </div>
         )}
 
-        {/* Season badge */}
         <div
           className="absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider font-display"
           style={{
@@ -525,8 +579,6 @@ function GridCard({
         >
           {seasonLabel}
         </div>
-
-        {/* Status badge */}
         <div
           className="absolute top-3 right-3 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider font-display"
           style={
@@ -547,8 +599,6 @@ function GridCard({
         >
           {comingSoon ? "Coming Soon" : "Active"}
         </div>
-
-        {/* Expand indicator */}
         <div
           className="absolute bottom-3 right-3 rounded-full p-1.5 transition-smooth"
           style={{
@@ -561,7 +611,7 @@ function GridCard({
         </div>
       </button>
 
-      {/* Card body — non-interactive info */}
+      {/* Card body */}
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex items-center gap-2">
           <span
@@ -712,7 +762,6 @@ function FestivalSection({
 
   return (
     <section className="space-y-6" data-ocid="festival-section">
-      {/* Section heading */}
       <div className="flex items-center gap-4">
         <h2
           className="text-2xl md:text-3xl font-display font-bold uppercase tracking-wider"
@@ -741,7 +790,6 @@ function FestivalSection({
         </span>
       </div>
 
-      {/* Grid with inline detail panel */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {festivals.map((festival) => (
           <GridCard
@@ -798,7 +846,6 @@ function FilterBar({
       data-ocid="filter-bar"
     >
       <div className="mx-auto max-w-7xl flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-        {/* Season filters */}
         <div className="flex items-center gap-1.5 flex-wrap">
           {SEASON_FILTERS.map((s) => (
             <button
@@ -826,13 +873,11 @@ function FilterBar({
           ))}
         </div>
 
-        {/* Divider */}
         <div
           className="hidden sm:block h-6 w-px"
           style={{ background: "oklch(0.25 0.02 260 / 0.5)" }}
         />
 
-        {/* Event type filters */}
         <div className="flex items-center gap-1.5 flex-wrap">
           {EVENT_FILTERS.map((e) => (
             <button
@@ -860,7 +905,6 @@ function FilterBar({
           ))}
         </div>
 
-        {/* Search */}
         <div className="relative flex-1 min-w-0 sm:max-w-xs ml-auto">
           <Search
             size={14}
@@ -969,7 +1013,6 @@ export default function FestivalsPage() {
   const hasResults = filtered.length > 0;
   const isFiltered =
     seasonFilter !== "All" || eventFilter !== "All" || search.trim() !== "";
-
   const uniqueCountries = useMemo(
     () => [...new Set(festivals.map((f) => f.country))].length,
     [festivals],
@@ -980,12 +1023,11 @@ export default function FestivalsPage() {
       className="min-h-screen"
       style={{ background: "oklch(0.06 0.01 260)" }}
     >
-      {/* ── Hero Banner ── */}
+      {/* Hero Banner */}
       <header
         className="relative overflow-hidden"
         style={{ background: "oklch(0.06 0.01 260)" }}
       >
-        {/* Animated gradient bg */}
         <div
           className="absolute inset-0"
           style={{
@@ -993,7 +1035,6 @@ export default function FestivalsPage() {
               "radial-gradient(ellipse at 20% 50%, oklch(0.65 0.2 180 / 0.12) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, oklch(0.55 0.23 310 / 0.1) 0%, transparent 50%), radial-gradient(ellipse at 50% 0%, oklch(0.65 0.18 70 / 0.08) 0%, transparent 50%)",
           }}
         />
-        {/* Animated orbs */}
         <div
           className="absolute top-8 left-1/4 h-40 w-40 rounded-full animate-pulse pointer-events-none"
           style={{
@@ -1011,7 +1052,6 @@ export default function FestivalsPage() {
             animationDelay: "1s",
           }}
         />
-        {/* Grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{
@@ -1062,7 +1102,6 @@ export default function FestivalsPage() {
             </p>
           </motion.div>
 
-          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1098,7 +1137,6 @@ export default function FestivalsPage() {
         </div>
       </header>
 
-      {/* ── Filter Bar ── */}
       <FilterBar
         seasonFilter={seasonFilter}
         eventFilter={eventFilter}
@@ -1108,9 +1146,7 @@ export default function FestivalsPage() {
         onSearchChange={setSearch}
       />
 
-      {/* ── Content ── */}
       <main className="mx-auto max-w-7xl px-4 py-12 space-y-16">
-        {/* Loading skeletons */}
         {isLoading && (
           <div className="space-y-12">
             <section className="space-y-6">
@@ -1124,20 +1160,9 @@ export default function FestivalsPage() {
                 <FestivalSkeleton />
               </div>
             </section>
-            <section className="space-y-6">
-              <div
-                className="h-8 w-56 rounded animate-pulse"
-                style={{ background: "oklch(0.15 0.02 260)" }}
-              />
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <FestivalSkeleton />
-                <FestivalSkeleton />
-              </div>
-            </section>
           </div>
         )}
 
-        {/* Festival sections */}
         {!isLoading && hasResults && (
           <>
             <FestivalSection
@@ -1161,7 +1186,6 @@ export default function FestivalsPage() {
           </>
         )}
 
-        {/* Empty state */}
         {!isLoading && !hasResults && (
           <motion.div
             initial={{ opacity: 0 }}

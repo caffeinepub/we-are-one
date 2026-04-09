@@ -1,11 +1,13 @@
-import { ExternalLink, Handshake, Star } from "lucide-react";
+import { ExternalLink, Gem, Handshake, Star } from "lucide-react";
 import { useSponsors } from "../hooks/useBackend";
 import type { Sponsor } from "../types/festival";
 
-const TIER_ORDER = ["Gold", "Silver", "Bronze", "Partner"];
+const TIER_ORDER = ["Headline", "Gold", "Silver", "Bronze", "Partner"];
 
 function tierColor(tier: string): string {
   switch (tier.toLowerCase()) {
+    case "headline":
+      return "oklch(0.92 0.04 200)";
     case "gold":
       return "oklch(0.65 0.18 70)";
     case "silver":
@@ -19,6 +21,8 @@ function tierColor(tier: string): string {
 
 function tierGlow(tier: string): string {
   switch (tier.toLowerCase()) {
+    case "headline":
+      return "0 0 40px oklch(0.92 0.04 200 / 0.4), 0 0 80px oklch(0.8 0.06 210 / 0.2)";
     case "gold":
       return "0 0 24px oklch(0.65 0.18 70 / 0.3)";
     case "silver":
@@ -32,6 +36,8 @@ function tierGlow(tier: string): string {
 
 function tierGridCols(tier: string): string {
   switch (tier.toLowerCase()) {
+    case "headline":
+      return "grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2";
     case "gold":
       return "grid gap-6 sm:grid-cols-2 lg:grid-cols-3";
     case "silver":
@@ -39,6 +45,157 @@ function tierGridCols(tier: string): string {
     default:
       return "grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
   }
+}
+
+// ── Headline Sponsor Card ──────────────────────────────────────────────────────
+
+function HeadlineSponsorCard({ sponsor }: { sponsor: Sponsor }) {
+  const content = (
+    <div
+      className="group relative flex flex-col md:flex-row items-center gap-6 overflow-hidden rounded-2xl p-8 cursor-pointer transition-smooth"
+      style={{
+        background:
+          "linear-gradient(135deg, oklch(0.1 0.04 200), oklch(0.08 0.03 220), oklch(0.1 0.05 260))",
+        border: "1px solid oklch(0.92 0.04 200 / 0.25)",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.borderColor =
+          "oklch(0.92 0.04 200 / 0.6)";
+        (e.currentTarget as HTMLElement).style.boxShadow =
+          "0 0 60px oklch(0.92 0.04 200 / 0.2), 0 0 120px oklch(0.8 0.06 210 / 0.1)";
+        (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.borderColor =
+          "oklch(0.92 0.04 200 / 0.25)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+      }}
+      data-ocid={`headline-sponsor-card-${sponsor.id.toString()}`}
+    >
+      {/* Shimmer overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-smooth"
+        style={{
+          background:
+            "linear-gradient(105deg, transparent 40%, oklch(0.92 0.04 200 / 0.06) 50%, transparent 60%)",
+          backgroundSize: "200% 100%",
+        }}
+      />
+      {/* Animated corner glow */}
+      <div
+        className="pointer-events-none absolute -top-4 -right-4 h-32 w-32 rounded-full animate-pulse"
+        style={{
+          background:
+            "radial-gradient(circle, oklch(0.92 0.04 200 / 0.12), transparent 70%)",
+          animationDuration: "4s",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute -bottom-4 -left-4 h-24 w-24 rounded-full animate-pulse"
+        style={{
+          background:
+            "radial-gradient(circle, oklch(0.8 0.06 210 / 0.1), transparent 70%)",
+          animationDuration: "6s",
+          animationDelay: "1s",
+        }}
+      />
+
+      {/* Logo */}
+      <div className="relative shrink-0">
+        {sponsor.logoUrl ? (
+          <div
+            className="flex h-28 w-44 items-center justify-center overflow-hidden rounded-xl"
+            style={{
+              background: "oklch(0.15 0.03 200)",
+              border: "1px solid oklch(0.92 0.04 200 / 0.3)",
+              boxShadow: "0 0 24px oklch(0.92 0.04 200 / 0.15)",
+            }}
+          >
+            <img
+              src={sponsor.logoUrl}
+              alt={sponsor.name}
+              className="h-full w-full object-contain p-3"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            className="flex h-28 w-28 items-center justify-center rounded-xl font-display text-4xl font-black"
+            style={{
+              background: "oklch(0.15 0.03 200)",
+              border: "1px solid oklch(0.92 0.04 200 / 0.3)",
+              color: "oklch(0.92 0.04 200)",
+            }}
+          >
+            {sponsor.name.charAt(0)}
+          </div>
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0 text-center md:text-left">
+        <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+          <Gem size={14} style={{ color: "oklch(0.92 0.04 200)" }} />
+          <span
+            className="text-xs font-display font-black uppercase tracking-[0.3em]"
+            style={{
+              color: "oklch(0.92 0.04 200)",
+              textShadow: "0 0 12px oklch(0.92 0.04 200 / 0.8)",
+            }}
+          >
+            Headline Sponsor
+          </span>
+          <Gem size={14} style={{ color: "oklch(0.92 0.04 200)" }} />
+        </div>
+        <h3
+          className="font-display text-3xl font-black uppercase tracking-wider mb-2"
+          style={{
+            color: "oklch(0.96 0.02 200)",
+            textShadow: "0 0 16px oklch(0.92 0.04 200 / 0.5)",
+          }}
+        >
+          {sponsor.name}
+        </h3>
+        <p
+          className="font-body text-sm mb-4"
+          style={{ color: "oklch(0.65 0 0)" }}
+        >
+          Official headline sponsor of all WE ARE ONE events — festivals, raves
+          & nightclub events worldwide.
+        </p>
+        {sponsor.websiteUrl && (
+          <span
+            className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-display font-bold uppercase tracking-wider"
+            style={{
+              background: "oklch(0.92 0.04 200 / 0.1)",
+              border: "1px solid oklch(0.92 0.04 200 / 0.4)",
+              color: "oklch(0.92 0.04 200)",
+            }}
+          >
+            <ExternalLink size={13} />
+            Visit Website
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  if (sponsor.websiteUrl) {
+    return (
+      <a
+        href={sponsor.websiteUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none" }}
+      >
+        {content}
+      </a>
+    );
+  }
+  return content;
 }
 
 // ── Sponsor Card ──────────────────────────────────────────────────────────────
@@ -151,6 +308,7 @@ export default function SponsorsPage() {
     (t) => !TIER_ORDER.includes(t),
   );
   const allTiers = [...orderedTiers, ...otherTiers];
+  const headlineSponsors = grouped.Headline ?? [];
 
   return (
     <div
@@ -165,7 +323,6 @@ export default function SponsorsPage() {
             "linear-gradient(180deg, oklch(0.12 0.04 60) 0%, oklch(0.08 0.02 260) 100%)",
         }}
       >
-        {/* Radial glow */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -173,7 +330,6 @@ export default function SponsorsPage() {
               "radial-gradient(ellipse 60% 50% at 50% 0%, oklch(0.65 0.18 70 / 0.15) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 20% 80%, oklch(0.65 0.2 180 / 0.08) 0%, transparent 60%)",
           }}
         />
-        {/* Animated orbs */}
         <div
           className="pointer-events-none absolute top-10 left-1/4 h-48 w-48 rounded-full animate-pulse"
           style={{
@@ -194,7 +350,7 @@ export default function SponsorsPage() {
 
         <div className="relative container mx-auto max-w-3xl px-4">
           <div
-            className="mx-auto mb-6 flex h-18 w-18 items-center justify-center rounded-full"
+            className="mx-auto mb-6 flex items-center justify-center rounded-full"
             style={{
               width: "4.5rem",
               height: "4.5rem",
@@ -230,15 +386,14 @@ export default function SponsorsPage() {
             possible. Together we create magic across the globe.
           </p>
 
-          {/* Stats */}
           {sponsors.length > 0 && (
             <div className="mt-10 flex flex-wrap items-center justify-center gap-10">
               {[
                 { label: "Partners", value: sponsors.length.toString() },
                 { label: "Tiers", value: allTiers.length.toString() },
                 {
-                  label: "Gold",
-                  value: (grouped.Gold?.length ?? 0).toString(),
+                  label: "Headline",
+                  value: headlineSponsors.length.toString(),
                 },
               ].map(({ label, value }) => (
                 <div key={label} className="flex flex-col items-center">
@@ -314,19 +469,42 @@ export default function SponsorsPage() {
           <div className="space-y-16">
             {allTiers.map((tier) => {
               const color = tierColor(tier);
+              const isHeadline = tier.toLowerCase() === "headline";
               return (
                 <div key={tier}>
                   {/* Tier heading */}
                   <div className="mb-8 flex items-center gap-4">
+                    {isHeadline && (
+                      <Gem
+                        size={18}
+                        style={{
+                          color: "oklch(0.92 0.04 200)",
+                          filter:
+                            "drop-shadow(0 0 8px oklch(0.92 0.04 200 / 0.8))",
+                        }}
+                      />
+                    )}
                     <h2
                       className="font-display text-2xl font-bold uppercase tracking-widest"
                       style={{
                         color,
-                        textShadow: `0 0 10px ${color.replace(")", " / 0.6)")}, 0 0 20px ${color.replace(")", " / 0.25)")}`,
+                        textShadow: isHeadline
+                          ? `0 0 16px ${color.replace(")", " / 0.8)")}, 0 0 32px ${color.replace(")", " / 0.3)")}`
+                          : `0 0 10px ${color.replace(")", " / 0.6)")}, 0 0 20px ${color.replace(")", " / 0.25)")}`,
                       }}
                     >
-                      {tier}
+                      {isHeadline ? "Headline Sponsor" : tier}
                     </h2>
+                    {isHeadline && (
+                      <Gem
+                        size={18}
+                        style={{
+                          color: "oklch(0.92 0.04 200)",
+                          filter:
+                            "drop-shadow(0 0 8px oklch(0.92 0.04 200 / 0.8))",
+                        }}
+                      />
+                    )}
                     <div
                       className="h-px flex-1"
                       style={{
@@ -346,15 +524,33 @@ export default function SponsorsPage() {
                     </span>
                   </div>
 
+                  {/* Headline description */}
+                  {isHeadline && (
+                    <p
+                      className="mb-6 text-center font-body text-sm max-w-xl mx-auto"
+                      style={{ color: "oklch(0.55 0 0)" }}
+                    >
+                      Proudly sponsoring all WE ARE ONE events — festivals,
+                      raves and nightclub events around the world.
+                    </p>
+                  )}
+
                   {/* Cards */}
                   <div className={tierGridCols(tier)}>
-                    {grouped[tier].map((sponsor) => (
-                      <SponsorCard
-                        key={sponsor.id.toString()}
-                        sponsor={sponsor}
-                        tier={tier}
-                      />
-                    ))}
+                    {grouped[tier].map((sponsor) =>
+                      isHeadline ? (
+                        <HeadlineSponsorCard
+                          key={sponsor.id.toString()}
+                          sponsor={sponsor}
+                        />
+                      ) : (
+                        <SponsorCard
+                          key={sponsor.id.toString()}
+                          sponsor={sponsor}
+                          tier={tier}
+                        />
+                      ),
+                    )}
                   </div>
                 </div>
               );

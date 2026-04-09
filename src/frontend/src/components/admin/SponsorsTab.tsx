@@ -44,10 +44,17 @@ const S = {
   } as React.CSSProperties,
 };
 
-const TIERS = ["Gold", "Silver", "Bronze", "Partner"];
+// Headline is first — site-wide coverage, no festival selection needed
+const TIERS = ["Headline", "Gold", "Silver", "Bronze", "Partner"];
 
 function tierBadgeStyle(tier: string) {
   switch (tier.toLowerCase()) {
+    case "headline":
+      return {
+        background: "oklch(0.92 0.04 200 / 0.12)",
+        border: "1px solid oklch(0.92 0.04 200 / 0.5)",
+        color: "oklch(0.92 0.04 200)",
+      };
     case "gold":
       return {
         background: "oklch(0.65 0.18 70 / 0.15)",
@@ -99,6 +106,8 @@ function SponsorForm({
     sponsor?.festivalIds ?? [],
   );
 
+  const isHeadline = tier.toLowerCase() === "headline";
+
   function toggleFestival(id: bigint) {
     setSelectedFestivalIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
@@ -112,7 +121,8 @@ function SponsorForm({
       logoUrl: logoUrl.trim(),
       websiteUrl: websiteUrl.trim(),
       tier: tier.trim(),
-      festivalIds: selectedFestivalIds,
+      // Headline sponsors are site-wide — send empty array, handled by tier check on frontend
+      festivalIds: isHeadline ? [] : selectedFestivalIds,
     });
   }
 
@@ -179,11 +189,30 @@ function SponsorForm({
             >
               {TIERS.map((t) => (
                 <option key={t} value={t}>
-                  {t}
+                  {t === "Headline" ? "Headline (All Events)" : t}
                 </option>
               ))}
             </select>
           </div>
+
+          {/* Headline info note */}
+          {isHeadline && (
+            <div
+              className="rounded-xl px-4 py-3 text-sm font-body"
+              style={{
+                background: "oklch(0.92 0.04 200 / 0.06)",
+                border: "1px solid oklch(0.92 0.04 200 / 0.25)",
+                color: "oklch(0.75 0.03 200)",
+              }}
+            >
+              <strong style={{ color: "oklch(0.92 0.04 200)" }}>
+                Headline sponsors
+              </strong>{" "}
+              are automatically associated with all WE ARE ONE events —
+              festivals, raves and nightclub events. No festival selection is
+              needed.
+            </div>
+          )}
 
           <div>
             <label htmlFor="sp-logo" style={S.label}>
@@ -215,8 +244,8 @@ function SponsorForm({
             />
           </div>
 
-          {/* Festival associations */}
-          {festivals.length > 0 && (
+          {/* Festival associations — hidden for Headline tier */}
+          {!isHeadline && festivals.length > 0 && (
             <div>
               <span style={S.label}>Associated Festivals</span>
               <div
@@ -303,6 +332,8 @@ type ModalState =
   | { type: "add" }
   | { type: "edit"; sponsor: Sponsor };
 
+const TIER_SORT_ORDER = ["Headline", "Gold", "Silver", "Bronze", "Partner"];
+
 export default function SponsorsTab() {
   const { data: sponsors = [] } = useSponsors();
   const { data: festivals = [] } = useFestivals();
@@ -314,8 +345,9 @@ export default function SponsorsTab() {
   const [deleteConfirm, setDeleteConfirm] = useState<bigint | null>(null);
 
   const sorted = [...sponsors].sort((a, b) => {
-    const order = ["Gold", "Silver", "Bronze", "Partner"];
-    return order.indexOf(a.tier) - order.indexOf(b.tier);
+    const ai = TIER_SORT_ORDER.indexOf(a.tier);
+    const bi = TIER_SORT_ORDER.indexOf(b.tier);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
   });
 
   function festivalNames(ids: bigint[]): string {
@@ -442,7 +474,9 @@ export default function SponsorsTab() {
                   style={S.tdMuted}
                 >
                   <span className="line-clamp-2">
-                    {festivalNames(sponsor.festivalIds)}
+                    {sponsor.tier.toLowerCase() === "headline"
+                      ? "All Events"
+                      : festivalNames(sponsor.festivalIds)}
                   </span>
                 </td>
                 <td className="px-4 py-3">
